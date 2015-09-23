@@ -51,3 +51,8 @@ Now you can make changes all you want. Once ready click the commit button in Int
 Back in GitHub Desktop you can also commit if you have not done so. Then go to Repository and then push. This will put your changes on github for us to see. 
 
 Let me know if anyone has questions
+
+Demo:
+The prod branch automatically deploys to the production server on any commit:
+Temp URL (We should get a domain name):
+http://pacman.michaelauchterlonie.com
