@@ -1,67 +1,75 @@
 ﻿<!DOCTYPE html>
+<!-- Mike A - TEST -->
+<!-- I was able to get continuous integration working with github, ftp and appveyor. master commits will automatically upload to pacman.michaelauchterlonie.com. I should buy another domain name.-->
 
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <title>Pacman</title>
     <link rel="stylesheet" href="css/pacman.css">
+    <script src="javascript/jquery.1.11.3.min.js"></script>
 </head>
 
 <body>
-<!-- Mike A - TEST -->
-<!-- I was able to get continuous integration working with github, ftp and appveyor. master commits will upload to pacman.michaelauchterlonie.com. I should buy another domain name.-->
 
-<div class="container">
-    <div class="main">
-        <!-- Display this message if Javascript is disabled -->
-        <noscript>
-            <h2>Enable Javascript!</h2>
-            <p>This HTML 5 app requires Javascript to run. Please check that Javascript is enabled in your browser.</p>
-        </noscript>
 
-        <!-- main game content -->
-        <div class="content" id="game-content">
+    <div class="container">
+        <div class="main">
+            <!-- Display this message if Javascript is disabled -->
+            <noscript>
+                <h2>Enable Javascript!</h2>
+                <p>This HTML 5 app requires Javascript to run. Please check that Javascript is enabled in your browser.</p>
+            </noscript>
+
             <!-- main game content -->
-            <div class="game wrapper">
+            <div class="content" id="game-content">
+                <!-- main game content -->
+                <div class="game wrapper">
+                    <!-- canvas -->
+                    <div id="canvas-container">
+                        <!-- size should change -->
+                        <canvas id="myCanvas">
+                            <p>Canvas not supported</p>
+                        </canvas>
 
-                <div class="score">Score:</div>
-                <div class="lives">Lives: </div>
 
-                <!-- canvas -->
-                <div id="canvas-container">
-                    <div id="canvas-overlay-container">
-                        <div id="canvas-overlay-content">
-                            <div id="title">Pacman Canvas</div>
-                            <div><p id="text">Click to Play</p></div>
+                        <div id="canvas-overlay-container">
+                            <div id="canvas-overlay-content">                              
+                                <div id="title"><img src="images/pacman-logo.png" style="width:60%" alt="Pac Man Font"></div>
+                                <div><p id="text">Click to Play</p></div>
+
+                                <div class="score">Score:</div>
+                                <div class="lives">Lives: </div>
+                                <div id="credits">Credits: 0</div>
+                            </div>
                         </div>
+                     
+
+
                     </div>
-                    <!-- size should change -->
-                    <canvas id="myCanvas" width="540" height="390">
-                        <p>Canvas not supported</p>
-                    </canvas>
+
+                    <!-- in Game Controls -->
+                    <div class="controls" id="game-buttons">
+                        <!-- On Screen Buttons & support of arrow keys... mobile swipe??-->
+
+
+                    </div>
+                    <!-- inGame Controls End -->
+                    <!-- Game Menu -->
+                    <div class="controls" id="menu-buttons">
+                        <!-- New Game; Highscore; Instructions; Info -->
+
+                    </div>
+                    <!-- Game Menu End -->
+                    <!-- Sounds-->
+                    <audio src="sounds/pacman_coinin.wav" autoplay></audio>
+                    <!-- Sounds End-->
                 </div>
-
-                <!-- in Game Controls -->
-                <div class="controls" id="game-buttons">
-                    <!-- On Screen Buttons & support of arrow keys... mobile swipe??-->
-
-
-                </div>
-                <!-- inGame Controls End -->
-
-                <!-- Game Menu -->
-                <div class="controls" id="menu-buttons">
-                    <!-- New Game; Highscore; Instructions; Info -->
-
-                </div>
-                <!-- Game Menu End -->
-
             </div>
         </div>
     </div>
-</div>
 
-<script src="pacman.js" type="text/javascript"></script>
-
+    <script src="javascript/pacman.js" type="text/javascript"></script>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Owl-576542.svg" alt="Night Owls" title="Night Owls" height="30" style="position:absolute;bottom:0;left:0;" />
 </body>
 </html>
