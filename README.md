@@ -24,10 +24,19 @@ This might ask you to register the root directory under vcs, just click yes.
 
 Here is the project! YAY!
 
-The master branch is our production copy. 
-We will be creating branches for different tasks and merging them into Master once they are ready to be released
+I have already created a couple branches.
 
-For now you can create your own branch GitHub Desktop (I recommend watching the 30 second tutorial) and naming it yourname-feature-branch
+Master - default
+
+prod - our production release
+
+uat - a functioning branch used for testing
+
+develop - used for current development
+
+We will each branch off of the develop branch with our on branches for development.
+
+For now you can create your own branch FROM DEVELOP! from GitHub Desktop (I recommend watching the 30 second tutorial) and naming it yourname-feature-branch
 
 so mine would be zweifel-feature-branch. Click publish so the branch goes to github online
 
