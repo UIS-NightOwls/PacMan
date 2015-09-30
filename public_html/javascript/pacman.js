@@ -416,7 +416,7 @@ $(document).ready(function () {
 
     ghost1.onload = function () {
         renderContent();
-        drawSprite(ghost1, 272 - spriteSize / 2, 300 - spriteSize / 2, null);
+        drawSprite(ghost1, 266 - spriteSize / 2, 300 - spriteSize / 2, null);
     }
 
     var ghost2 = new Image();
@@ -442,5 +442,15 @@ $(document).ready(function () {
         renderContent();
         drawSprite(ghost4, 300 - spriteSize / 2, 334 - spriteSize / 2, null);
     }
+
+    function keyEventListener(event) {
+        var x = event.keyCode;
+        console.log("keyCode:",x);
+        if (x == 83) {  // 83 is the 's' key
+            
+          document.getElementById("song1").play();
+        }
+    }
+    document.body.addEventListener("keyup", keyEventListener, false);
   
 });
