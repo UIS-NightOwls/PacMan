@@ -1,0 +1,32 @@
+Game is 30 blocks wide by 32 blocks tall
+
+Each block is 20 x 20
+
+The following are unique blocks to draw:
+
+// pacman's path
+0   = blank block
+1   = pac dot (food)
+2   = power up pac dot
+
+// inner walls
+3   = horizontal line in the middle
+4   = vertical line in the middle
+5   = arc from bottom middle to right middle
+6   = arc from left middle to bottom middle
+7   = arc from right middle to top middle
+8   = arc from top middle to left middle
+
+// outer walls
+a   = horizontal line on top
+b   = vertical line on right
+c   = horizontal line on bottom
+d   = vertical line on left
+e   = arc in kitty corner down right connecting outer walls
+f   = arc in kitty corner down left connecting outer walls
+g   = arc in kitty corner up left connecting outer walls
+h   = arc in kitty corner up right connecting outer walls
+i   = horizontal line on top and vertical line on left
+j   = horizontal line on top and vertical line on right
+k   = horizontal line on bottom and vertical line on right
+l   = horizontal line on bottom and vertical line on left

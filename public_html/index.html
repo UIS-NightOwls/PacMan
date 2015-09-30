@@ -24,40 +24,39 @@
             <!-- main game content -->
             <div class="content" id="game-content">
                 <!-- main game content -->
-                <div class="game wrapper">
+                <div class="gameWrapper">
                     <!-- canvas -->
                     <div id="canvas-container">
-                        <!-- size should change -->
-                        <canvas id="myCanvas">
-                            <p>Canvas not supported</p>
-                        </canvas>
-
-
                         <div id="canvas-overlay-container">
                             <div id="canvas-overlay-content">                              
-                                <div id="title"><img src="images/pacman-logo.png" style="width:60%" alt="Pac Man Font"></div>
-                                <div><p id="text">Click to Play</p></div>
-
+                                <div id="title">
+                                    <img src="images/pacman-logo.png" style="width:60%" alt="Pac Man Font">
+                                </div>
+                                <div>
+                                    <p id="text">Click to Play</p>
+                                </div>
                                 <div class="score">Score:</div>
                                 <div class="lives">Lives: </div>
                                 <div id="credits">Credits: 0</div>
                             </div>
                         </div>
-                     
 
-
+                        <!-- size should change -->
+                        <div class="canvas-content">
+                            <canvas id="myCanvas" width="600" height="640">
+                                <p>Canvas not supported</p>
+                            </canvas>
+                        </div>
                     </div>
 
                     <!-- in Game Controls -->
-                    <div class="controls" id="game-buttons">
+                    <div class="controls" id="game-buttons" style="color:white">
                         <!-- On Screen Buttons & support of arrow keys... mobile swipe??-->
-
-
                     </div>
                     <!-- inGame Controls End -->
                     <!-- Game Menu -->
                     <div class="controls" id="menu-buttons">
-                        <!-- New Game; Highscore; Instructions; Info -->
+                         <!--New Game; Highscore; Instructions; Info -->
 
                     </div>
                     <!-- Game Menu End -->
