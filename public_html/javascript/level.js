@@ -8,32 +8,10 @@ $(document).ready(function () {
     }, 200);
     var canvas = document.getElementById("myCanvas");
     var context = canvas.getContext("2d");
-    // resize the canvas to fill browser window dynamically
-    window.addEventListener('resize', resizeCanvas, false);
-
-    function resizeCanvas() {
-        var ratio = $("#canvas-container").width() / 600 ;
-        console.log(ratio);
-        context.scale(ratio, ratio);
-      //  canvas.setAttribute('style', 'width: ' + (width * scale) + '; height: ' + (height * scale) + ';');
-       // canvas.width = $("#canvas-container").width();
-       // canvas.height = $("#canvas-container").height();
-
-        /**
-         * Your drawings need to be inside this function otherwise they will be reset when 
-         * you resize the browser window and the canvas goes will be cleared.
-         */
-        //drawStuff();
-    }
-    resizeCanvas();
-
-
     var gridBlockSize = 20;
     var wallLineWidth = 2;
     var wallColor = "blue";
     var testGridColor = "red";
-
-
     
     var gameGridArray = [   
         'e','0','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','0','f', 
@@ -392,55 +370,6 @@ $(document).ready(function () {
 
         context.restore();
     }
-
-   
-
-  
-       
-   
-    function drawSprite(img, x, y, dir) {
-        context.drawImage(img, x, y);
-    }
- 
-    var spriteSize = 32;
-    var img = new Image();
-    img.src = "images/sprites/pacman-right-1.png";
-
-    img.onload = function () {
-        renderContent();
-        drawSprite(img, 300 - spriteSize / 2, 490 - spriteSize / 2, null);
-    }
-
-    var ghost1 = new Image();
-    ghost1.src = "images/sprites/ghost1-right.png";
-
-    ghost1.onload = function () {
-        renderContent();
-        drawSprite(ghost1, 272 - spriteSize / 2, 300 - spriteSize / 2, null);
-    }
-
-    var ghost2 = new Image();
-    ghost2.src = "images/sprites/ghost2-right.png";
-
-    ghost2.onload = function () {
-        renderContent();
-        drawSprite(ghost2, 300 - spriteSize / 2, 300 - spriteSize / 2, null);
-    }
-
-    var ghost3 = new Image();
-    ghost3.src = "images/sprites/ghost3-right.png";
-
-    ghost3.onload = function () {
-        renderContent();
-        drawSprite(ghost3, 334 - spriteSize / 2, 300 - spriteSize / 2, null);
-    }
-
-    var ghost4 = new Image();
-    ghost4.src = "images/sprites/ghost4-right.png";
-
-    ghost4.onload = function () {
-        renderContent();
-        drawSprite(ghost4, 300 - spriteSize / 2, 334 - spriteSize / 2, null);
-    }
-  
+    
+    renderContent();
 });
