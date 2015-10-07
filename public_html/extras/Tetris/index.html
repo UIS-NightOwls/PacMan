@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<html lang='en'>
+<head>
+	<title>Tetris</title>
+	<!--<script src='main.js'></script>-->
+	
+<script>
+	
+window.addEventListener('load', function(){
+	console.log('Loaded');
+	/* I like having an object for storing global variables especially for debugging.*/
+	window.GLOBAL = {};
+	window.GLOBAL.canvasFactory = canvasCreator();
+	window.GLOBAL.pieceFactory = pieceCreator(window.GLOBAL.canvasFactory.canvases[0].getContext('2d'), 
+								 22,
+								 11);
+	gc = window.GLOBAL.canvasFactory;
+	pc = window.GLOBAL.pieceFactory;
+
+	window.GLOBAL.canvasFactory.canvas.setVisible();
+	pc.createPiece();
+	window.GLOBAL.Game = Game(gc,pc);
+	window.GLOBAL.Game.init();
+
+	
+
+
+});
+
+function canvasCreator(){ /* This handles all canvas objects*/ 
+	var canvases = []; /* This will contain all of our canvases/levels */
+	var canvas = {};
+	var DEFAULTS = {};
+	DEFAULTS.width = 160;
+	DEFAULTS.height = 320;
+
+	var e_canvas = document.getElementsByTagName('canvas');
+	var canvCount = e_canvas.length; /* detect if change made*/
+	var obs = new MutationObserver(function(){ /* used for checking in number of canvases in object changed*/
+		if(document.getElementsByTagName('canvas').length !== canvCount){
+			console.log('Change in number of canvases detected');
+			e_canvas = document.getElementsByTagName('canvas');
+			canvCount = e_canvas.length;
+		}
+	});
+
+	function allCanvas(func){
+		for(var i = 0, j = canvases.length; i < j; i++){
+			func(canvases[i]);			
+		}
+	}
+
+	function setGridPoints(row, column){
+		var ctx = this.getContext('2d');
+		var width = this.width;
+		var height = this.height;
+		this.width = this.width;
+		if(typeof arguments[0] === 'undefined'){
+			console.log('No argunments')
+		}else if(window.isFinite(arguments[0]) && typeof arguments[1] === 'undefined'){
+			for(var i = 0; i < row; i++){
+				ctx.fillRect((width / row) * i, 0, 1, 1);
+			}
+		}else{
+			for(var j = 0; j < column; j++){
+				for(var i = 0; i < row; i++){
+					ctx.fillRect((width / row) * i, (height / column) * j, 1, 1);
+				}
+
+			}
+
+
+		}
+
+	}
+
+	obs.observe(document.body, {childList: true});
+
+	return (function(){
+
+
+		function setScale(size){ /* This allows us to easily scale a canvas based on size*/
+			console.log(this.width * size);
+			console.log(size);
+
+			console.log('width: ' + Math.floor(this.width * size) + ';height: ' + Math.floor(this.height * size) +';');
+			console.log('before ' + this.getAttribute('style'));
+
+			this.setAttribute('style', 'border: double; border-width: thin;'  + ' width: '+ Math.floor(this.width * size) +'px;height: ' + Math.floor(this.height * size) +'px;');
+			//console.log(this);
+		}
+
+		function setResolution(w, h){
+			if(arguments.length > 2 || arguments.length === 0){
+				console.log("please enter arguments");
+				return;
+			}
+			if(arguments.length === 1){
+				console.log('this is fun cuz arg1');
+				console.log(this.width + " " + this.height + " " + this.scale);
+				this.width = this.width * arguments[0];
+				this.height = this.height * arguments[0];
+
+				this.scale = this.scale / arguments[0];
+				console.log(this.width + " " + this.height + " " + this.scale);
+
+
+				this.setAttribute('style', 'border: double; border-width: thin;' + ' width: '+ Math.floor(this.width * this.scale) +'px;height: ' + Math.floor(this.height * this.scale) +'px;');				
+				this.width = this.width;
+				return;
+			}
+			if(Math.floor(w / this.w) !== Math.floor(h / this.h)){
+				console.log('scaling impacted to match width');
+			
+				this.width = w;
+				this.height = h;
+				this.scale = w / this.w;
+				this.setAttribute('style', 'border: double; border-width: thin;' + ' width: '+ Math.floor(this.width * this.scale) +'px;height: ' + Math.floor(this.height * this.scale) +'px;');
+
+			}
+			this.width = this.width;
+		}
+
+		function setVisible(ele, border){
+			if(this.visible === false){
+				this.setScale(this.scale);
+				this.visible = true;
+				document.body.appendChild(this);
+			}else{
+				this.visible = false;
+				this.parentNode.removeChild(this);
+			}
+
+
+		}
+
+		if(e_canvas.length > 0){
+			canvas = e_canvas[0]; /*main canvas*/
+			canvases = e_canvas;
+			allCanvas(function(eachCanvas){ /* adds scale method to canvas*/
+				eachCanvas.setVisible = setVisible;
+				eachCanvas.setScale = setScale;
+				eachCanvas.setResolution = setResolution;
+				eachCanvas.setGridPoints = setGridPoints;
+				eachCanvas.scale = 1;
+				eachCanvas.visible = true;
+			});
+
+		}else{
+			canvas = document.createElement('canvas'); /*main canvas*/
+			canvas.setVisible = setVisible;
+			canvas.setScale = setScale;
+			canvas.setGridPoints = setGridPoints;
+			canvas.setResolution = setResolution;
+			canvas.width = DEFAULTS.width;
+			canvas.height = DEFAULTS.height;
+
+			canvas.scale = 1;
+			canvas.visible = false;
+			canvases.push(canvas); /*keep all canvases*/
+		}
+
+
+		return {
+			render: function(){
+				canvas.width = canvas.width;
+			},
+			canvas: canvas,
+			canvases: canvases,
+			createCanvas: function(){
+				var canv = document.createElement('canvas');
+				//canv.thinBorder = 'border: double; border-width: thin;';
+
+				canv.setScale = setScale;
+				canv.scale = 1;
+				canv.setVisible = setVisible;
+				canv.visible = false;
+				canv.setGridPoints = setGridPoints;
+				canv.setResolution = setResolution;
+				if(arguments.length === 0){
+					canv.width = DEFAULTS.width;
+					canv.height = DEFAULTS.height;
+				}else if(arguments.length === 3){
+					canv.width = arguments[0];
+					canv.height = arguments[1];
+					canv.setScale(arguments[2]);
+					canv.scale = arguments[2];
+				}
+
+				canvases.push(canv);
+			},
+			changeDefaults: function(input, value){
+				//console.log(DEFAULTS);
+				DEFAULTS[input] = value;
+			},
+			stopObserving: function(){
+				console.log('Stopping Canvas count Observing');
+				obs.disconnect();
+			}
+
+
+		};
+	})();
+
+
+
+}
+
+
+function pieceCreator(ctx,row,column){
+	var canvas = ctx.canvas;
+
+	var r = [0, 1, -1, 0];
+	var blockCount = row*column; /* value of blocks */
+	var blocks = new ArrayBuffer(blockCount);
+	for(var i = 0, j = blockCount; i < j; blocks[i] = 0, i++);
+	var blockSize = Math.floor(Math.floor(canvas.width / row) * 0.8);
+	console.log('This is the size of each block: ' +blockSize);
+	var pieces = [];
+	var width = canvas.width;
+	var height = canvas.height;
+
+	var pos = [Math.floor(column/2), 0];
+	
+
+	
+	var movingPieces = [];
+	var staticPieces = [];
+	return (function(){
+
+
+		function piece(setPiece){
+			this.pieceType = Math.floor(Math.random() * 10) % 6 // pieceTypes.length;
+			this.moving = true;
+			this.x = Math.floor(row / 2), this.y = 0;
+			if(typeof arguments[0] === 'undefined'){
+				this.blockSet = this.pieceTypes[this.pieceType].slice();
+			}else{
+				this.blockSet = this.pieceTypes[setPiece].slice();
+			}
+		}
+		piece.prototype.rotate = function(){
+			var x, y;
+			for(var i = 0, j = this.blockSet.length; i < j; i+=2){
+
+				x =(this.blockSet[i] * 0) + (this.blockSet[i + 1] * -1);
+				y = (this.blockSet[i] * 1) + (this.blockSet[i + 1] * 0);;
+				this.blockSet[i] = x;
+				this.blockSet[i + 1]  = y;
+			}
+		}
+		piece.prototype.moveLeft = function(){
+			console.log('press left');
+			console.log('x: ' + this.x)
+			if(this.x - 1 < 0){
+				return;
+			}
+
+			for(var i = 0, j = this.blockSet.length; i < j; i+=2){
+
+				console.log('x: ' + (this.blockSet[i + 1] + (this.x - 1)));
+				if(this.blockSet[i + 1] + (this.x - 1) - 1 < 0){
+					return;
+				}
+			}
+			console.log('');
+			this.x--;
+		}
+		piece.prototype.moveRight = function(){
+			console.log('press left');
+			console.log('x: ' + this.x)
+			if(this.x + 1 > (column * 2)){
+				return;
+			}
+			for(var i = 0, j = this.blockSet.length; i < j; i+=2){
+				console.log('x: ' + (this.blockSet[i + 1] + (this.x + 1)));
+				if(this.blockSet[i + 1] + (this.x) + 1 > (column * 2)){
+					return;
+				}
+			}
+			console.log('');
+			this.x++;
+		}
+		piece.prototype.moveDown = function(){
+
+		}
+		piece.prototype.drop = function(){
+
+		}
+
+ 	  	piece.prototype.pieceTypes = [[-1, 0,  1, 0, 2, 0],
+									  [-1, 0,  1, 0, 1, 1],
+								 	  [-1, 0, -1, 1, 1, 0],
+									  [-1, 0, -1, 1, 0, 1],
+								      [-1, 1,  0, 1, 1, 0],
+								 	  [-1, 0,  0, 1, 1, 0],
+								 	  [-1, 0,  0, 1, 1, 1]];
+
+		piece.prototype.ctx = ctx;
+
+		piece.prototype.practiceRotation = function(){
+			console.log(this.y);
+			this.draw();
+			this.y += 5;
+			this.rotate();
+		}
+		piece.prototype.draw = function(){
+
+			this.ctx.fillRect(((width / row) * this.x), ((width / row) * this.y), blockSize, blockSize);
+			this.ctx.fillRect(((width / row) * (this.blockSet[0] + this.x)), ((width / row) * (this.blockSet[1] + this.y)), blockSize, blockSize);
+			this.ctx.fillRect(((width / row) * (this.blockSet[2]  + this.x)), ((width / row) * (this.blockSet[3]  + this.y)), blockSize, blockSize);
+			this.ctx.fillRect(((width / row) * (this.blockSet[4]  + this.x)), ((width / row) * (this.blockSet[5]  + this.y)), blockSize, blockSize);
+		}
+
+		return {
+			pieces: pieces,
+			createPiece: function(){
+				if(typeof arguments[0] === 'undefined'){
+					pieces.push(new piece());
+				}else{
+					pieces.push(new piece(arguments[0]));
+				}
+			},
+			removePiece: function(){
+
+			},
+			drawBlocks: function(){
+				for(var i = 0; i < blockCount; i++){
+					if(blocks[i] === 1){
+						ctx.fillRect();
+					}
+				}
+			}
+		};
+
+	})();
+
+}
+	
+function UserControls(canvas, piece){
+	//var canvas = (typeof input === undefined) ? window.GLOBAL.canvasFactory.canvas : input;
+	canvas.tabIndex = 1;
+	console.log("isthisrunning");
+	canvas.addEventListener('keydown', function(evt){
+		if(evt.keyCode === 37){
+			piece.moveLeft();
+		}else if(evt.keyCode === 38){
+			piece.rotate()
+		}else if(evt.keyCode === 39){
+			piece.moveRight();
+		}else if(evt.keyCode === 40){
+			piece.drop();
+		}
+
+	},false);
+
+}
+
+function Game(canvasCreator, pieceFactory){
+	UserControls(canvasCreator.canvases[0],pieceFactory.pieces[0]);
+	var time = 0;
+	var lvl = 1;
+	function init(){
+		pieceFactory.createPiece();
+		render();
+	}
+
+	function render(){	
+		if(time % Math.floor(100 / lvl) === 0){
+			update();
+		}
+		canvasCreator.render();
+		pieceFactory.pieces[0].draw();
+		time++;
+		window.requestAnimationFrame(render);
+	}
+
+	function update(){
+		pieceFactory.pieces[0].y = pieceFactory.pieces[0].y + 1;
+	}
+	return{
+		init: init,
+		increaseLvl: function(){
+			lvl++;
+		}
+
+	};
+
+}
+
+
+	
+</script>
+</head>
+<body>
+
+</body>
+</html>
