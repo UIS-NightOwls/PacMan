@@ -1,3 +1,5 @@
+@import url(https://fonts.googleapis.com/css?family=Press+Start+2P);
+
 body, html {
     margin: 0;
     padding: 0;
@@ -26,4 +28,13 @@ body {
     text-align: center;
     /*width: 100%;*/
     color: #fff;
+}
+.game_font {
+font-size:18px;
+font-family: 'Press Start 2P', cursive;
+font-weight:300
+}
+@font-face {
+    font-family: 'ARCADECLASSIC';
+    src: url('fonts/arcade_classic_pizz/ARCADECLASSIC.TTF') format('truetype');
 }
