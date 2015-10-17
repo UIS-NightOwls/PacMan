@@ -7,6 +7,7 @@
     <meta charset="utf-8" />
     <title>Pacman</title>
     <link rel="stylesheet" href="css/pacman.css">
+
     <script src="javascript/jquery.1.11.3.min.js"></script>
 </head>
 
@@ -27,17 +28,21 @@
                 <div class="gameWrapper">
                     <!-- canvas -->
                     <div id="canvas-container">
-                        <div id="canvas-overlay-container">
+                        <div id="canvas-overlay-container" >
                             <div id="canvas-overlay-content">                              
                                 <div id="title">
                                     <img src="images/pacman-logo.png" style="width:60%" alt="Pac Man Font">
                                 </div>
-                                <div>
-                                    <p id="startbutton">Press 's' to Start</p>
+                                
+                                <div style="position:absolute;width:600px;">
+                                    <!--<p id="startbutton">Press 's' to Start</p>-->
+                                    <span class="game_font" style="top:20px;left:-80px;position:absolute">1UP</span>
+                                    <span class="game_font" style="top:20px;left:300px;position:absolute">HIGH SCORE</span>
+                                    <span class="game_font" style="top:20px;left:80px;position:absolute">2UP</span>
+                                    
+                                      <span class="game_font" style="top:620px;left:-80px;position:absolute">CREDIT</span>
                                 </div>
-                                <div class="score">Score:</div>
-                                <div class="lives">Lives: </div>
-                                <div id="credits">Credits: 0</div>
+                            
                             </div>
                         </div>
 
@@ -47,7 +52,11 @@
                                 <p>Canvas not supported</p>
                             </canvas>
                         </div>
+                    
+
                     </div>
+
+                  
 
                     <!-- in Game Controls -->
                     <div class="controls" id="game-buttons" style="color:white">

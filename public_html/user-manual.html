@@ -1,0 +1,165 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+        }
+
+        a {
+            color: yellow !important;
+        }
+
+        li {
+            padding: 0 0 32px 0;
+        }
+        td {
+        border:1px solid #ccc;
+        padding:16px;
+        }
+        table {
+        border-collapse:collapse
+        }
+            table td:first-child {
+            text-align:center
+            }
+
+    </style>
+</head>
+<body>
+    <h1>Pac-Man User Manual</h1>
+    <nav>
+        <ul>
+            <li><a href="#instructions">Instructions</a></li>
+        </ul>
+    </nav>
+    <h2 id=instructions>Instructions</h2>
+    <h3>Credits and Player</h3>
+    <p>
+        <ul>
+            <li>
+                Insert Coin / Press 'c' to recieve credits to play.
+            </li>
+            <li>One credit will allow 1 player game mode to begin.</li>
+            <li>Two or more credits will allow 1 or 2 player game mode to begin.</li>
+            <li>Each credit will allow a maximum of 3 lives per player.</li>
+            <li>Once the appropriate credtis are entered choose 1 or 2 player mode by pressing '1' or '2'.</li>
+        </ul>
+    </p>
+    <h3>Objectives</h3>
+    <p>
+        <ul>
+            <li>
+
+
+                Players control Pac-Man's <img src="images/sprites/pacman-right-2.png" /> movements and should avoid the 4 ghosts.
+                <img src="images/sprites/ghost1-right.png" />
+                <img src="images/sprites/ghost2-right.png" />
+                <img src="images/sprites/ghost3-right.png" />
+                <img src="images/sprites/ghost4-right.png" />
+            </li>
+            <li>Pac-Man may move Up, Right, Down, and Left by using the arrow keys on the keyboard.</li>
+            <li>
+                Pac-Man should try to eat all of the dots
+                <img src="images/sprites/dot.png" />
+                <img src="images/sprites/dot.png" />
+                <img src="images/sprites/dot.png" />
+                <img src="images/sprites/dot.png" />
+                <img src="images/sprites/dot.png" />
+                <img src="images/sprites/dot.png" />
+                <img src="images/sprites/dot.png" />
+                <img src="images/sprites/dot.png" /> Each dot is worth 10 points.
+            </li>
+
+            <li>
+                There are also 4 flashing energizers
+                <img src="images/sprites/energizer.png" />
+                <img src="images/sprites/energizer.png" />
+                <img src="images/sprites/energizer.png" />
+                <img src="images/sprites/energizer.png" /> that are worth 50 points.
+            </li>
+            <li>
+                After eating a flashing energizer <img src="images/sprites/energizer.png" /> Pac-Man <img src="images/sprites/pacman-right-2.png" /> can attack the ghosts that are blue.
+                <img src="images/sprites/ghost-run-right.png" />
+                <img src="images/sprites/ghost-run-right.png" />
+                <img src="images/sprites/ghost-run-right.png" />
+                <img src="images/sprites/ghost-run-right.png" />
+            </li>
+            <li>Beware of flashing ghosts which are about to change back to dangerous colors.</li>
+            <li>Players may not move through walls or into ghost starting location.</li>
+            <li>Players and ghosts may teleport to the opposite side of the level by using the openings on the edges.</li>
+        </ul>
+    </p>
+
+    <h3>Scoring Points</h3>
+    <p>
+        <table>
+            <tr>
+                <td><img src="images/sprites/dot.png" /></td>
+                <td>Dot</td>
+               
+                <td>10 Points</td>
+            </tr>
+            <tr>
+                <td><img src="images/sprites/energizer.png" /></td>
+                <td>Energizer</td>
+              
+                <td>50 Points</td>
+            </tr>
+
+            <tr>
+                <td>
+                    <img src="images/sprites/ghost-run-right.png" height=20 />
+                    <img src="images/sprites/ghost-run-right.png" height=20 />
+                    <img src="images/sprites/ghost-run-right.png" height=20 />
+                    <img src="images/sprites/ghost-run-right.png" height=20 />
+                </td>
+                <td>Blue Ghosts</td>
+
+                <td>200, 400, 800, 1,600 Points each when eaten during the effect of a single energizer</td>
+            </tr>
+
+            <tr>
+                <td>[imgMissing]</td>
+                <td>Cherry</td>
+                <td>100 Points</td>
+            </tr>
+            <tr>
+                <td>[imgMissing]</td>
+                <td>Strawberry</td>
+                <td>200 Points</td>
+            </tr>
+            <tr>
+                <td>[imgMissing]</td>
+                <td>Orange</td>
+                <td>500 Points</td>
+            </tr>
+            <tr>
+                <td>?</td>
+                <td>Mystery Fruit</td>
+                <td>700 Points</td>
+            </tr>
+            <tr>
+                <td>?</td>
+                <td>Mystery Fruit</td>
+                <td>1,000 Points</td>
+            </tr>
+            <tr>
+                <td>?</td>
+                <td>Mystery Fruit</td>
+                <td>2,000 Points</td>
+            </tr>
+            <tr>
+                <td><img src="images/sprites/pacman-right-2.png" /></td>
+                <td>Extra Life</td>
+                <td>10,000 Points</td>
+            </tr>
+
+        </table>
+       
+    </p>
+</body>
+</html>
