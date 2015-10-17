@@ -28,35 +28,54 @@
                 <div class="gameWrapper">
                     <!-- canvas -->
                     <div id="canvas-container">
-                        <div id="canvas-overlay-container" >
-                            <div id="canvas-overlay-content">                              
-                                <div id="title">
+                        <div id="canvas-overlay-container">
+                            <div id="canvas-overlay-content">
+                                <div id="title" style="text-align:center">
                                     <img src="images/pacman-logo.png" style="width:60%" alt="Pac Man Font">
                                 </div>
-                                
-                                <div style="position:absolute;width:600px;">
+
+                                <div style="position:absolute;width:100%;">
                                     <!--<p id="startbutton">Press 's' to Start</p>-->
-                                    <span class="game_font" style="top:20px;left:-80px;position:absolute">1UP</span>
-                                    <span class="game_font" style="top:20px;left:300px;position:absolute">HIGH SCORE</span>
-                                    <span class="game_font" style="top:20px;left:80px;position:absolute">2UP</span>
-                                    
-                                      <span class="game_font" style="top:620px;left:-80px;position:absolute">CREDIT</span>
+
+                                    <span class="game_font" style="color:red;top:420px;left:200px;position:absolute;text-align:center;width:200px;">GAME&nbsp;&nbsp;OVER</span>
+
+                                    <span class="game_font" style="top:20px;left:60px;position:absolute">1UP</span>
+                                    <span class="game_font" style="top:40px;left:95px;position:absolute" id="player1score">00</span>
+                                    <span class="game_font" style="top:20px;left:220px;position:absolute">HIGH SCORE</span>
+                                    <span class="game_font" style="top:20px;left:220px;position:absolute" id="highscore"></span>
+                                    <span class="game_font" style="top:20px;right:60px;position:absolute">2UP</span>
+                                    <span class="game_font" style="top:20px;right:60px;position:absolute" id="player2score"></span>
+                                    <span class="game_font" style="top:720px;left:40px;position:absolute">CREDIT&nbsp;&nbsp;0</span>
+                                    <a href='user-manual.html' target='_blank' class="game_font" style="top:750px;left:40px;position:absolute">INSTRUCTIONS</a>
+                                    <div style="position:absolute;left:-200px">
+                                        <h3>Links:</h3>
+                                        <ul style="margin:0;padding:0">
+                                            <li>
+                                                <a href="user-manual.html">User Manual</a>
+
+
+                                            </li>
+                                            <li>
+                                                <a href="tests.html">Tests</a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
-                            
+
                             </div>
                         </div>
 
                         <!-- size should change -->
-                        <div class="canvas-content">
+                        <div class="canvas-content" style="padding:60px 0;">
                             <canvas id="myCanvas" width="600" height="640">
                                 <p>Canvas not supported</p>
                             </canvas>
                         </div>
-                    
+
 
                     </div>
 
-                  
+
 
                     <!-- in Game Controls -->
                     <div class="controls" id="game-buttons" style="color:white">
@@ -65,7 +84,7 @@
                     <!-- inGame Controls End -->
                     <!-- Game Menu -->
                     <div class="controls" id="menu-buttons">
-                         <!--New Game; Highscore; Instructions; Info -->
+                        <!--New Game; Highscore; Instructions; Info -->
 
                     </div>
                     <!-- Game Menu End -->
