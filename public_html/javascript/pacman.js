@@ -22,6 +22,10 @@ $(document).ready(function(){
     var pacManMouth = Math.PI/6;
     var pacManSpeed = 5;
     var pacManMoving = true;
+    var pacManMovingRight = false;
+    var pacManMovingLeft = false;
+    var pacManMovingUp = false;
+    var pacManMovingDown = false;
     
     var gameGridArray = [ 
         //   1           4   5                   10                 15                   20                 25              29
@@ -397,19 +401,26 @@ $(document).ready(function(){
         
         switch (e.keyCode){
             case 38:	// UP Arrow Key pressed
+                setAllMovingFalse();
+                pacManMovingUp = true;
                 movePacManUp();
             case 87:	// W pressed
                 break;
             case 40:	// DOWN Arrow Key pressed
+                setAllMovingFalse();
+                pacManMovingDown = true;
                 movePacManDown();
             case 83:	// S pressed 
                 break;
             case 37:	// LEFT Arrow Key pressed
+                setAllMovingFalse();
+                pacManMovingLeft = true;
                 movePacManLeft();
             case 65:	// A pressed
                 break;
             case 39:	// RIGHT Arrow Key pressed
-                //pacManCoordX = pacManCoordX + pacManSpeed;
+                setAllMovingFalse();
+                pacManMovingRight = true;
                 movePacManRight();
             case 68:	// D pressed
                 break;
@@ -419,14 +430,21 @@ $(document).ready(function(){
         //document.getElementById("debug-help").innerHTML = "(" + pacManGridX + ", " + pacManGridY + ") (" + pacManCoordX + ", " + pacManCoordY + ")";
     }
     
+    function setAllMovingFalse(){
+        pacManMovingRight = false;
+        pacManMovingLeft =false;
+        pacManMovingUp = false;
+        pacManMovingDown = false;
+    }
+    
     function movePacManRight(){
         var tempCoordX = pacManCoordX + pacManSpeed;
 
         movePacManHorizontal(tempCoordX, 1);
-        if(pacManMoving){
-            //setTimeout(function(){
-            //    movePacManRight();
-            //}, 250);
+        if(pacManMovingRight){
+            setTimeout(function(){
+                movePacManRight();
+            }, 250);
         }
         
     }
@@ -434,10 +452,10 @@ $(document).ready(function(){
         var tempCoordX = pacManCoordX - pacManSpeed;
         movePacManHorizontal(tempCoordX , -1);
 
-        if(pacManMoving){
-            //setTimeout(function(){
-            //    movePacManLeft();
-            //}, 250);
+        if(pacManMovingLeft){
+            setTimeout(function(){
+                movePacManLeft();
+            }, 250);
         }
     }
     function movePacManHorizontal(x, delta){
@@ -473,10 +491,22 @@ $(document).ready(function(){
     function movePacManUp(){
         var tempCoordY = pacManCoordY - pacManSpeed;
         movePacManVertical(tempCoordY);
+
+        if(pacManMovingUp){
+            setTimeout(function(){
+                movePacManUp();
+            }, 250);
+        }
     }
     function movePacManDown(){
         var tempCoordY = pacManCoordY + pacManSpeed;
         movePacManVertical(tempCoordY);
+
+        if(pacManMovingDown){
+            setTimeout(function(){
+                movePacManDown();
+            }, 250);
+        }
     }
     function movePacManVertical(y){
         var tempGridY = Math.floor(y / gridBlockSize);
