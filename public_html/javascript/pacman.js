@@ -401,27 +401,35 @@ $(document).ready(function(){
         
         switch (e.keyCode){
             case 38:	// UP Arrow Key pressed
-                setAllMovingFalse();
-                pacManMovingUp = true;
-                movePacManUp();
+                if(!pacManMovingUp){
+                    setAllMovingFalse();
+                    pacManMovingUp = true;
+                    movePacManUp();
+                }
             case 87:	// W pressed
                 break;
             case 40:	// DOWN Arrow Key pressed
-                setAllMovingFalse();
-                pacManMovingDown = true;
-                movePacManDown();
+                if(!pacManMovingDown){
+                    setAllMovingFalse();
+                    pacManMovingDown = true;
+                    movePacManDown(); 
+                }
             case 83:	// S pressed 
                 break;
             case 37:	// LEFT Arrow Key pressed
-                setAllMovingFalse();
-                pacManMovingLeft = true;
-                movePacManLeft();
+                if(!pacManMovingLeft){
+                    setAllMovingFalse();
+                    pacManMovingLeft = true;
+                    movePacManLeft();  
+                }
             case 65:	// A pressed
                 break;
             case 39:	// RIGHT Arrow Key pressed
-                setAllMovingFalse();
-                pacManMovingRight = true;
-                movePacManRight();
+                if(!pacManMovingRight){
+                    setAllMovingFalse();
+                    pacManMovingRight = true;
+                    movePacManRight();
+                }
             case 68:	// D pressed
                 break;
         }
