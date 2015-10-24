@@ -1,50 +1,71 @@
 /**
  * Created by bzweifel on 9/22/15.
  */
-$(document).ready(function () {
+$(document).ready(function(){
     console.log("JQuery is Ready")
     setTimeout(function () {
         $("#credits").html("Credits: 1")
     }, 200);
     var canvas = document.getElementById("myCanvas");
     var context = canvas.getContext("2d");
-    var gridBlockSize = 20;
+    
+    var blocksPerRow = 30;
+    var gridBlockSize = canvas.width/blocksPerRow;
     var wallLineWidth = 2;
     var wallColor = "blue";
     var testGridColor = "red";
+    var pacManGridX = 15;
+    var pacManGridY = 24;
+    var pacManCoordX = pacManGridX * gridBlockSize;
+    var pacManCoordY = pacManGridY * gridBlockSize + gridBlockSize/2;
+    var pacManRadius = gridBlockSize - gridBlockSize/4;
+    var pacManMouth = Math.PI/6;
+    var pacManSpeed = 5;
+    var pacManMoving = true;
     
-    var gameGridArray = [   
+    var gameGridArray = [ 
+        //   1           4   5                   10                 15                   20                 25              29
         'e','0','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','0','f', 
         '0','5','3','3','3','3','3','3','3','3','3','3','3','3','6','5','3','3','3','3','3','3','3','3','3','3','3','3','6','0', 
         'b','4','1','1','1','1','1','1','1','1','1','1','1','1','4','4','1','1','1','1','1','1','1','1','1','1','1','1','4','d',
         'b','4','1','5','3','3','6','1','5','3','3','3','6','1','4','4','1','5','3','3','3','6','1','5','3','3','6','1','4','d',
         'b','4','2','4','0','0','4','1','4','0','0','0','4','1','4','4','1','4','0','0','0','4','1','4','0','0','4','2','4','d',
-        'b','4','1','8','3','3','7','1','8','3','3','3','7','1','8','7','1','8','3','3','3','7','1','8','3','3','7','1','4','d', 
+        
+        //   1           4   5                   10                 15                   20                 25              29
+        'b','4','1','8','3','3','7','1','8','3','3','3','7','1','8','7','1','8','3','3','3','7','1','8','3','3','7','1','4','d', //5
         'b','4','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','4','d',
         'b','4','1','5','3','3','6','1','5','6','1','5','3','3','3','3','3','3','6','1','5','6','1','5','3','3','6','1','4','d',
         'b','4','1','8','3','3','7','1','4','4','1','8','3','3','6','5','3','3','7','1','4','4','1','8','3','3','7','1','4','d',
         'b','4','1','1','1','1','1','1','4','4','1','1','1','1','4','4','1','1','1','1','4','4','1','1','1','1','1','1','4','d',
-        '0','8','3','3','3','3','6','1','4','8','3','3','6','0','4','4','0','5','3','3','7','4','1','5','3','3','3','3','7','0', 
+
+        //   1           4   5                   10                 15                   20                 25              29
+        '0','8','3','3','3','3','6','1','4','8','3','3','6','0','4','4','0','5','3','3','7','4','1','5','3','3','3','3','7','0', //10
         'h','0','a','a','a','j','4','1','4','5','3','3','7','0','4','4','0','8','3','3','6','4','1','4','i','a','a','a','0','g',
         '0','0','0','0','0','b','4','1','4','4','0','0','0','0','8','7','0','0','0','0','4','4','1','4','d','0','0','0','0','0',
         '0','c','c','c','c','k','4','1','4','4','0','0','c','c','c','c','c','c','0','0','4','4','1','4','l','c','c','c','c','0',
         '0','3','3','3','3','3','7','1','8','7','0','b','0','0','0','0','0','0','d','0','8','7','1','8','3','3','3','3','3','0',
-        '0','0','0','0','0','0','0','1','0','0','0','b','0','0','0','0','0','0','d','0','0','0','1','0','0','0','0','0','0','0', 
+
+        //   1           4   5                   10                 15                   20                 25              29
+        '0','0','0','0','0','0','0','1','0','0','0','b','0','0','0','0','0','0','d','0','0','0','1','0','0','0','0','0','0','0', //15
         '0','3','3','3','3','3','6','1','5','6','0','b','0','0','0','0','0','0','d','0','5','6','1','5','3','3','3','3','3','0',
         '0','a','a','a','a','j','4','1','4','4','0','0','a','a','a','a','a','a','0','0','4','4','1','4','i','a','a','a','a','0',
         '0','0','0','0','0','b','4','1','4','4','0','0','0','0','0','0','0','0','0','0','4','4','1','4','d','0','0','0','0','0',
         'e','0','c','c','c','k','4','1','4','4','0','5','3','3','3','3','3','3','6','0','4','4','1','4','l','c','c','c','0','f',
-        '0','5','3','3','3','3','7','1','8','7','0','8','3','3','6','5','3','3','7','0','8','7','1','8','3','3','3','3','6','0', 
+
+        //   1           4   5                   10                 15                   20                 25              29
+        '0','5','3','3','3','3','7','1','8','7','0','8','3','3','6','5','3','3','7','0','8','7','1','8','3','3','3','3','6','0', //20
         'b','4','1','1','1','1','1','1','1','1','1','1','1','1','4','4','1','1','1','1','1','1','1','1','1','1','1','1','4','d',
         'b','4','1','5','3','3','6','1','5','3','3','3','6','1','4','4','1','5','3','3','3','6','1','5','3','3','6','1','4','d',
         'b','4','1','8','3','6','4','1','8','3','3','3','7','1','8','7','1','8','3','3','3','7','1','4','5','3','7','1','4','d',
         'b','4','2','1','1','4','4','1','1','1','1','1','1','1','0','0','1','1','1','1','1','1','1','4','4','1','1','2','4','d',
-        'b','8','3','6','1','4','4','1','5','6','1','5','3','3','3','3','3','3','6','1','5','6','1','4','4','1','5','3','7','d', 
+
+        //   1           4   5                   10                 15                   20                 25              29
+        'b','8','3','6','1','4','4','1','5','6','1','5','3','3','3','3','3','3','6','1','5','6','1','4','4','1','5','3','7','d', //25
         'b','5','3','7','1','8','7','1','4','4','1','8','3','3','6','5','3','3','7','1','4','4','1','8','7','1','8','3','6','d',
         'b','4','1','1','1','1','1','1','4','4','1','1','1','1','4','4','1','1','1','1','4','4','1','1','1','1','1','1','4','d',
         'b','4','1','5','3','3','3','3','7','8','3','3','6','1','4','4','1','5','3','3','7','8','3','3','3','3','6','1','4','d',
         'b','4','1','8','3','3','3','3','3','3','3','3','7','1','8','7','1','8','3','3','3','3','3','3','3','3','7','1','4','d',
-        'b','4','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','4','d',
+        'b','4','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','4','d', //30
         '0','8','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','7','0',
         'h','0','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','0','g'
         ];
@@ -54,11 +75,15 @@ $(document).ready(function () {
         //draw things
         //drawTestGrid(testGridColor);
         drawGame();
-
+        drawPacMan();
         context.restore();
     }
+    
+    function continueGame(){
+        drawGame();
+        drawPacMan();
+    }
     function drawTestGrid(color){
-        context.save();
         context.lineWidth = 1;
         context.strokeStyle = color;
         
@@ -80,7 +105,6 @@ $(document).ready(function () {
             context.closePath();
             context.stroke();
         }
-        context.restore();
     }
     
     function drawGame(){
@@ -215,7 +239,6 @@ $(document).ready(function () {
     }
     
     function drawPacDot(gridX, gridY){
-        context.save();
         context.lineWidth = wallLineWidth;
         context.strokeStyle = "yellow";
 
@@ -231,11 +254,9 @@ $(document).ready(function () {
         context.closePath();
         context.stroke();
 
-        context.restore();
     }
     
      function drawPacPowerDots(gridX, gridY){
-         context.save();
          context.lineWidth = wallLineWidth;
          context.strokeStyle = "yellow";
 
@@ -250,8 +271,6 @@ $(document).ready(function () {
          context.fill();
          context.closePath();
          context.stroke();
-
-         context.restore();
      }
     
     function drawOuterWallRight(gridX,gridY){
@@ -323,7 +342,6 @@ $(document).ready(function () {
 
         //create arc
         createArc(centerX, centerY, gridBlockSize, Math.PI, 1.5 * Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-
     }
     
     function drawOuterTopLeftArc(gridX, gridY){
@@ -345,19 +363,15 @@ $(document).ready(function () {
     }
     
     function createArc(centerX, centerY, radius, radianStart, radianEnd){
-        context.save();
         context.lineWidth = wallLineWidth;
         context.strokeStyle = wallColor;
         
         context.beginPath();
         context.arc(centerX, centerY, radius, radianStart, radianEnd); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
         context.stroke();
-
-        context.restore();
     }
     
     function createWall(startX, startY, endX, endY){
-        context.save();
         context.lineWidth = wallLineWidth;
         context.strokeStyle = wallColor;
 
@@ -367,9 +381,122 @@ $(document).ready(function () {
         context.lineTo(endX , endY);
         context.closePath();
         context.stroke();
-
-        context.restore();
     }
     
+    function drawPacMan(){
+        context.lineWidth = pacManRadius;
+        context.strokeStyle = "yellow";
+
+        context.beginPath();
+        context.arc(pacManCoordX, pacManCoordY, pacManRadius/2, pacManMouth , 2 * Math.PI - (pacManMouth));
+        context.stroke();
+    }
+    
+    function checkKey(e){
+        e = e || window.event;
+        
+        switch (e.keyCode){
+            case 38:	// UP Arrow Key pressed
+                movePacManUp();
+            case 87:	// W pressed
+                break;
+            case 40:	// DOWN Arrow Key pressed
+                movePacManDown();
+            case 83:	// S pressed 
+                break;
+            case 37:	// LEFT Arrow Key pressed
+                movePacManLeft();
+            case 65:	// A pressed
+                break;
+            case 39:	// RIGHT Arrow Key pressed
+                //pacManCoordX = pacManCoordX + pacManSpeed;
+                movePacManRight();
+            case 68:	// D pressed
+                break;
+        }
+        //context.clearRect(0,0,canvas.width,canvas.height);
+        //renderContent();
+        //document.getElementById("debug-help").innerHTML = "(" + pacManGridX + ", " + pacManGridY + ") (" + pacManCoordX + ", " + pacManCoordY + ")";
+    }
+    
+    function movePacManRight(){
+        var tempCoordX = pacManCoordX + pacManSpeed;
+
+        movePacManHorizontal(tempCoordX, 1);
+        if(pacManMoving){
+            //setTimeout(function(){
+            //    movePacManRight();
+            //}, 250);
+        }
+        
+    }
+    function movePacManLeft(){
+        var tempCoordX = pacManCoordX - pacManSpeed;
+        movePacManHorizontal(tempCoordX , -1);
+
+        if(pacManMoving){
+            //setTimeout(function(){
+            //    movePacManLeft();
+            //}, 250);
+        }
+    }
+    function movePacManHorizontal(x, delta){
+        var tempGridX = Math.floor(x / gridBlockSize);
+        var gameGridIndex = pacManGridY * blocksPerRow + tempGridX;
+        var nextGameGridIndex = pacManGridY * blocksPerRow + tempGridX + delta;
+
+        if(gameGridArray[gameGridIndex] == "1" || gameGridArray[gameGridIndex] == "0"){
+
+            gameGridArray[gameGridIndex] = "0";
+            pacManCoordX = x;
+            pacManGridX = tempGridX;
+        }
+        else if(gameGridArray[gameGridIndex] == "2"){
+            gameGridArray[gameGridIndex] = "0";
+            pacManCoordX = x;
+            pacManGridX = tempGridX;
+            //Power up
+            
+        }
+        // Can he continue moving?
+        else {
+            if(Math.floor((x+(pacManSpeed*2))/gridBlockSize) == tempGridX + delta && 
+                (gameGridArray[nextGameGridIndex] != "1" || 
+                gameGridArray[nextGameGridIndex] != "2" )){
+                pacManMoving = false;
+            }
+        }
+        document.getElementById("debug-help2").innerHTML = gameGridArray[gameGridIndex-1] + " " + gameGridArray[gameGridIndex] + " " + gameGridArray[gameGridIndex+1];
+        context.clearRect(0,0,canvas.width,canvas.height);
+        renderContent();
+    }
+    function movePacManUp(){
+        var tempCoordY = pacManCoordY - pacManSpeed;
+        movePacManVertical(tempCoordY);
+    }
+    function movePacManDown(){
+        var tempCoordY = pacManCoordY + pacManSpeed;
+        movePacManVertical(tempCoordY);
+    }
+    function movePacManVertical(y){
+        var tempGridY = Math.floor(y / gridBlockSize);
+        var gameGridIndex = tempGridY * blocksPerRow + pacManGridX;
+
+        if(gameGridArray[gameGridIndex] == "1" || gameGridArray[gameGridIndex] == "2"){
+            gameGridArray[gameGridIndex] = "0";
+            pacManCoordY = y;
+            pacManGridY = tempGridY;
+        }
+        else if(gameGridArray[gameGridIndex] == "0"){
+            pacManCoordY = y;
+            pacManGridY = tempGridY;
+        }
+        document.getElementById("debug-help2").innerHTML = gameGridArray[gameGridIndex-1] + " " + gameGridArray[gameGridIndex] + " " + gameGridArray[gameGridIndex+1];
+        context.clearRect(0,0,canvas.width,canvas.height);
+        renderContent();
+    }
+    
+    window.addEventListener('keydown',checkKey,true);
     renderContent();
 });
+
