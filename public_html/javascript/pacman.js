@@ -23,22 +23,23 @@ $(document).ready(function(){
         this.desDirection    = "right"
     };
     var pacMan = new character();
-    
+
     function renderContent(){
         context.save();
         drawPacMan();
         context.restore();
     }
-    
-    function drawPacMan(){
-        pacManContext.lineWidth = pacManRadius;
-        pacManContext.strokeStyle = "yellow";
 
-        pacManContext.beginPath();
+    function drawPacMan(){
+            pacManContext.lineWidth = pacManRadius;
+            pacManContext.strokeStyle = "yellow";
+
+            pacManContext.beginPath();
         pacManContext.arc(pacMan.coordX, pacMan.coordY, pacManRadius/2, pacManMouth , 2 * Math.PI - (pacManMouth));
-        pacManContext.stroke();
-    }
+            pacManContext.stroke();
+        }
     
+    // User moves Pac Man
     function checkKey(e){
         e = e || window.event;
         switch (e.keyCode){
@@ -61,81 +62,76 @@ $(document).ready(function(){
             default :
                 break;
         }
-        if(!gameStarted){
+        if(!gameStarted || !pacMan.isMoving){
             gameStarted = true;
             movePacMan();
         }
-        //context.clearRect(0,0,canvas.width,canvas.height);
-        //renderContent();
-        //document.getElementById("debug-help").innerHTML = "(" + pacManGridX + ", " + pacManGridY + ") (" + pacManCoordX + ", " + pacManCoordY + ")";
     }
-    
     function movePacMan(){
-        var keepMoving = true;
-        if(isCharacterinCenter(pacMan)){
-            if(canCharacterMoveinDirection(pacMan, pacMan.desDirection)){
+        pacMan.isMoving = true;
+        if(isCharacterInCenter(pacMan)){
+            if(canCharacterMoveInDirection(pacMan, pacMan.desDirection)){
                 pacMan.curDirection = pacMan.desDirection;
-                movePacManInCurrentDirection();
+                moveCharInCurrentDirection(pacMan);
             }
             else{
-                if(canCharacterMoveinDirection(pacMan, pacMan.curDirection)){
+                if(canCharacterMoveInDirection(pacMan, pacMan.curDirection)){
                     pacMan.desDirection = pacMan.curDirection;
-                    movePacManInCurrentDirection();
+                    moveCharInCurrentDirection(pacMan);
                 }
                 else{
                     // stop PacMan
-                    keepMoving = false;
+                    pacMan.isMoving = false;
                 }
             }
         }
         else{
-            movePacManInCurrentDirection();
+            moveCharInCurrentDirection(pacMan);
         }
         
-        if(keepMoving){
+        if(pacMan.isMoving){
             setTimeout(function(){
                 movePacMan();
             }, 100);
         }
     }
     
-    function movePacManInCurrentDirection(){
-        var dir = pacMan.curDirection;
-        switch (dir){
+    // Below are functions to be used by Ghosts and PacMan
+    function moveCharInCurrentDirection(char){
+        switch (char.curDirection){
             case 'up':
-                movePacManUp();
+                moveCharacterUp(char);
                 break;
             case 'down':
-                movePacManDown();
+                moveCharacterDown(char);
                 break;
             case 'right':
-                movePacManRight();
+                moveCharacterRight(char);
                 break;
             case 'left':
-                movePacManLeft();
+                moveCharacterLeft(char);
                 break;
             default:
                 return false;
         }
     }
-    
-    function movePacManRight(){
-        var tempCoordX = pacMan.coordX + pacMan.speed;
-        movePacManHorizontal(tempCoordX);
+    function moveCharacterRight(char){
+        var tempCoordX = char.coordX + char.speed;
+        moveCharacterHorizontal(tempCoordX, char);
     }
-    function movePacManLeft(){
-        var tempCoordX = pacMan.coordX - pacMan.speed;
-        movePacManHorizontal(tempCoordX);
+    function moveCharacterLeft(char){
+        var tempCoordX = char.coordX - char.speed;
+        moveCharacterHorizontal(tempCoordX, char);
     }
-    function movePacManHorizontal(x){
+    function moveCharacterHorizontal(x, char){
         var tempGridX = Math.floor(x / gridBlockSize);
-        var gameGridIndex = pacMan.gridY * blocksPerRow + tempGridX;
-        var previousCoordX = pacMan.gridX * gridBlockSize;
-        var previousCoordY = pacMan.gridY * gridBlockSize;
+        var gameGridIndex = char.gridY * blocksPerRow + tempGridX;
+        var previousCoordX = char.gridX * gridBlockSize;
+        var previousCoordY = char.gridY * gridBlockSize;
     
         gameGridArray[gameGridIndex] = "0";
-        pacMan.coordX = x;
-        pacMan.gridX = tempGridX;
+        char.coordX = x;
+        char.gridX = tempGridX;
         //Power up
         
         document.getElementById("debug-help2").innerHTML = gameGridArray[gameGridIndex-1] + " " + gameGridArray[gameGridIndex] + " " + gameGridArray[gameGridIndex+1];
@@ -145,40 +141,38 @@ $(document).ready(function(){
         
         drawPacMan();
     }
-    function movePacManUp(){
-        var tempCoordY = pacMan.coordY - pacMan.speed;
-        movePacManVertical(tempCoordY);
+    function moveCharacterUp(char){
+        var tempCoordY = char.coordY - char.speed;
+        moveCharacterVertical(tempCoordY, char);
     }
-    function movePacManDown(){
-        var tempCoordY = pacMan.coordY + pacMan.speed;
+    function moveCharacterDown(char){
+        var tempCoordY = char.coordY + char.speed;
         
-        movePacManVertical(tempCoordY);
+        moveCharacterVertical(tempCoordY, char);
     }
-    function movePacManVertical(y){
+    function moveCharacterVertical(y, char){
         var tempGridY = Math.floor(y / gridBlockSize);
         var gameGridIndex = tempGridY * blocksPerRow + pacMan.gridX;
-        var previousCoordX = pacMan.gridX * gridBlockSize;
-        var previousCoordY = pacMan.gridY * gridBlockSize;
+        var previousCoordX = char.gridX * gridBlockSize;
+        var previousCoordY = char.gridY * gridBlockSize;
         
         gameGridArray[gameGridIndex] = "0";
-        pacMan.coordY = y;
-        pacMan.gridY = tempGridY;
+        char.coordY = y;
+        char.gridY = tempGridY;
         
         document.getElementById("debug-help2").innerHTML = gameGridArray[gameGridIndex-1] + " " + gameGridArray[gameGridIndex] + " " + gameGridArray[gameGridIndex+1];
         context.clearRect(previousCoordX-wallLineWidth,previousCoordY-wallLineWidth,gridBlockSize+wallLineWidth*2,gridBlockSize+wallLineWidth*2);
         pacManContext.clearRect(0,0,pacManCanvas.width,pacManCanvas.height);
         drawPacMan();
     }
-    
-    function isCharacterinCenter(character){
+    function isCharacterInCenter(character){
         return (
             (character.coordX == character.gridX * gridBlockSize + gridBlockSize/2)
             &&
             (character.coordY == character.gridY * gridBlockSize + gridBlockSize/2)
         )
     }
-    
-    function canCharacterMoveinDirection(character, direction){
+    function canCharacterMoveInDirection(character, direction){
         var gameGridIndex;
         switch (direction){
             case 'up':
