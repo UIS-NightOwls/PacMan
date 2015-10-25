@@ -1,456 +1,204 @@
 /**
  * Created by bzweifel on 9/22/15.
  */
-$(document).ready(function () {
+$(document).ready(function(){
     console.log("JQuery is Ready")
     setTimeout(function () {
         $("#credits").html("Credits: 1")
     }, 200);
-    var canvas = document.getElementById("myCanvas");
-    var context = canvas.getContext("2d");
-    // resize the canvas to fill browser window dynamically
-    window.addEventListener('resize', resizeCanvas, false);
-
-    function resizeCanvas() {
-        var ratio = $("#canvas-container").width() / 600 ;
-        console.log(ratio);
-        context.scale(ratio, ratio);
-      //  canvas.setAttribute('style', 'width: ' + (width * scale) + '; height: ' + (height * scale) + ';');
-       // canvas.width = $("#canvas-container").width();
-       // canvas.height = $("#canvas-container").height();
-
-        /**
-         * Your drawings need to be inside this function otherwise they will be reset when 
-         * you resize the browser window and the canvas goes will be cleared.
-         */
-        //drawStuff();
-    }
-    resizeCanvas();
-
-
-    var gridBlockSize = 20;
-    var wallLineWidth = 2;
-    var wallColor = "blue";
-    var testGridColor = "red";
-
-
+    var pacManCanvas = document.getElementById("pacman");
+    var pacManContext = pacManCanvas.getContext("2d");
     
-    var gameGridArray = [   
-        'e','0','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','0','f', 
-        '0','5','3','3','3','3','3','3','3','3','3','3','3','3','6','5','3','3','3','3','3','3','3','3','3','3','3','3','6','0', 
-        'b','4','1','1','1','1','1','1','1','1','1','1','1','1','4','4','1','1','1','1','1','1','1','1','1','1','1','1','4','d',
-        'b','4','1','5','3','3','6','1','5','3','3','3','6','1','4','4','1','5','3','3','3','6','1','5','3','3','6','1','4','d',
-        'b','4','2','4','0','0','4','1','4','0','0','0','4','1','4','4','1','4','0','0','0','4','1','4','0','0','4','2','4','d',
-        'b','4','1','8','3','3','7','1','8','3','3','3','7','1','8','7','1','8','3','3','3','7','1','8','3','3','7','1','4','d', 
-        'b','4','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','4','d',
-        'b','4','1','5','3','3','6','1','5','6','1','5','3','3','3','3','3','3','6','1','5','6','1','5','3','3','6','1','4','d',
-        'b','4','1','8','3','3','7','1','4','4','1','8','3','3','6','5','3','3','7','1','4','4','1','8','3','3','7','1','4','d',
-        'b','4','1','1','1','1','1','1','4','4','1','1','1','1','4','4','1','1','1','1','4','4','1','1','1','1','1','1','4','d',
-        '0','8','3','3','3','3','6','1','4','8','3','3','6','0','4','4','0','5','3','3','7','4','1','5','3','3','3','3','7','0', 
-        'h','0','a','a','a','j','4','1','4','5','3','3','7','0','4','4','0','8','3','3','6','4','1','4','i','a','a','a','0','g',
-        '0','0','0','0','0','b','4','1','4','4','0','0','0','0','8','7','0','0','0','0','4','4','1','4','d','0','0','0','0','0',
-        '0','c','c','c','c','k','4','1','4','4','0','0','c','c','c','c','c','c','0','0','4','4','1','4','l','c','c','c','c','0',
-        '0','3','3','3','3','3','7','1','8','7','0','b','0','0','0','0','0','0','d','0','8','7','1','8','3','3','3','3','3','0',
-        '0','0','0','0','0','0','0','1','0','0','0','b','0','0','0','0','0','0','d','0','0','0','1','0','0','0','0','0','0','0', 
-        '0','3','3','3','3','3','6','1','5','6','0','b','0','0','0','0','0','0','d','0','5','6','1','5','3','3','3','3','3','0',
-        '0','a','a','a','a','j','4','1','4','4','0','0','a','a','a','a','a','a','0','0','4','4','1','4','i','a','a','a','a','0',
-        '0','0','0','0','0','b','4','1','4','4','0','0','0','0','0','0','0','0','0','0','4','4','1','4','d','0','0','0','0','0',
-        'e','0','c','c','c','k','4','1','4','4','0','5','3','3','3','3','3','3','6','0','4','4','1','4','l','c','c','c','0','f',
-        '0','5','3','3','3','3','7','1','8','7','0','8','3','3','6','5','3','3','7','0','8','7','1','8','3','3','3','3','6','0', 
-        'b','4','1','1','1','1','1','1','1','1','1','1','1','1','4','4','1','1','1','1','1','1','1','1','1','1','1','1','4','d',
-        'b','4','1','5','3','3','6','1','5','3','3','3','6','1','4','4','1','5','3','3','3','6','1','5','3','3','6','1','4','d',
-        'b','4','1','8','3','6','4','1','8','3','3','3','7','1','8','7','1','8','3','3','3','7','1','4','5','3','7','1','4','d',
-        'b','4','2','1','1','4','4','1','1','1','1','1','1','1','0','0','1','1','1','1','1','1','1','4','4','1','1','2','4','d',
-        'b','8','3','6','1','4','4','1','5','6','1','5','3','3','3','3','3','3','6','1','5','6','1','4','4','1','5','3','7','d', 
-        'b','5','3','7','1','8','7','1','4','4','1','8','3','3','6','5','3','3','7','1','4','4','1','8','7','1','8','3','6','d',
-        'b','4','1','1','1','1','1','1','4','4','1','1','1','1','4','4','1','1','1','1','4','4','1','1','1','1','1','1','4','d',
-        'b','4','1','5','3','3','3','3','7','8','3','3','6','1','4','4','1','5','3','3','7','8','3','3','3','3','6','1','4','d',
-        'b','4','1','8','3','3','3','3','3','3','3','3','7','1','8','7','1','8','3','3','3','3','3','3','3','3','7','1','4','d',
-        'b','4','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','4','d',
-        '0','8','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','7','0',
-        'h','0','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','0','g'
-        ];
+    var pacManRadius = gridBlockSize - gridBlockSize/4;
+    var pacManMouth = Math.PI/6;
+    var gameStarted = false;
     
+    var character = function(){
+        this.gridX           = 15;
+        this.gridY           = 24;
+        this.coordX          = this.gridX * gridBlockSize;
+        this.coordY          = this.gridY * gridBlockSize + gridBlockSize/2;
+        // characters velocity is displacement/milliseconds ( 5px per 100 milliseconds)
+        this.displacement    = 5; //in pixels
+        this.milliseconds     = 100;
+        this.curDirection    = "right";
+        this.desDirection    = "right";
+    };
+    var pacMan = new character();
+
     function renderContent(){
         context.save();
-        //draw things
-        //drawTestGrid(testGridColor);
-        drawGame();
+        drawPacMan();
+        context.restore();
+    }
 
-        context.restore();
-    }
-    function drawTestGrid(color){
-        context.save();
-        context.lineWidth = 1;
-        context.strokeStyle = color;
-        
-        // horizontal grid lines
-        for(var i = 0; i <= canvas.height; i = i + gridBlockSize)
-        {
-            context.beginPath();
-            context.moveTo(0, i);
-            context.lineTo(canvas.width, i);
-            context.closePath();
-            context.stroke();
+    function drawPacMan(){
+            pacManContext.lineWidth = pacManRadius;
+            pacManContext.strokeStyle = "yellow";
+
+            pacManContext.beginPath();
+        pacManContext.arc(pacMan.coordX, pacMan.coordY, pacManRadius/2, pacManMouth , 2 * Math.PI - (pacManMouth));
+            pacManContext.stroke();
         }
-        // vertical grid lines
-        for(var j = 0; j <= canvas.width; j = j + gridBlockSize)
-        {
-            context.beginPath();
-            context.moveTo(j, 0);
-            context.lineTo(j, canvas.height);
-            context.closePath();
-            context.stroke();
-        }
-        context.restore();
-    }
     
-    function drawGame(){
-        var maxGridx = canvas.width / gridBlockSize;
-        var maxGridy = canvas.height / gridBlockSize;
-        var gridCount = 0;
-        for(var y=0; y <= maxGridy; y++){
-            for(var x=0; x < maxGridx;x++){
-                switch (gameGridArray[gridCount]){
-                    case '0':
-                        break;
-                    case '1':
-                        drawPacDot(x,y);
-                        break;
-                    case '2':
-                        drawPacPowerDots(x,y);
-                        break;
-                    case '3':
-                        drawHorizontalWall(x,y);
-                        break;
-                    case '4':
-                        drawVerticalWall(x,y);
-                        break;
-                    case '5':
-                        drawBottomRightArc(x,y);
-                        break;
-                    case '6':
-                        drawBottomLeftArc(x,y);
-                        break;
-                    case '7':
-                        drawTopLeftArc(x,y);
-                        break;
-                    case '8':
-                        drawTopRightArc(x,y);
-                        break;
-                    case 'a':
-                        drawOuterWallTop(x,y);
-                        break;
-                    case 'b':
-                        drawOuterWallRight(x,y);
-                        break;
-                    case 'c':
-                        drawOuterWallBottom(x,y);
-                        break;
-                    case 'd':
-                        drawOuterWallLeft(x,y);
-                        break;
-                    case 'e':
-                        drawOuterBottomRightArc(x,y);
-                        break;
-                    case 'f':
-                        drawOuterBottomLeftArc(x,y);
-                        break;
-                    case 'g':
-                        drawOuterTopLeftArc(x,y);
-                        break;
-                    case 'h':
-                        drawOuterTopRightArc(x,y);
-                        break;
-                    case'i':
-                        drawOuterWallTopLeft(x,y);
-                        break;
-                    case 'j':
-                        drawOuterWallTopRight(x,y);
-                        break;
-                    case 'k':
-                        drawOuterWallBottomRight(x,y);
-                        break;
-                    case 'l':
-                        drawOuterWallBottomLeft(x,y);
-                        break;
-                    default :
-                        break;
+    // User moves Pac Man
+    function checkKey(e){
+        e = e || window.event;
+        switch (e.keyCode){
+            case 38:	// UP Arrow Key pressed
+            case 87:	// W pressed
+                pacMan.desDirection = "up";
+                break;
+            case 40:	// DOWN Arrow Key pressed
+            case 83:	// S pressed 
+                pacMan.desDirection = "down";
+                break;
+            case 37:	// LEFT Arrow Key pressed
+            case 65:	// A pressed
+                pacMan.desDirection = "left";
+                break;
+            case 39:	// RIGHT Arrow Key pressed
+            case 68:	// D pressed
+                pacMan.desDirection = "right";
+                break;
+            default :
+                break;
+        }
+        if(!gameStarted || !pacMan.isMoving){
+            gameStarted = true;
+            movePacMan();
+        }
+    }
+    function movePacMan(){
+        pacMan.isMoving = true;
+        if(isCharacterInCenter(pacMan)){
+            if(canCharacterMoveInDirection(pacMan, pacMan.desDirection)){
+                pacMan.curDirection = pacMan.desDirection;
+                moveCharInCurrentDirection(pacMan);
+            }
+            else{
+                if(canCharacterMoveInDirection(pacMan, pacMan.curDirection)){
+                    pacMan.desDirection = pacMan.curDirection;
+                    moveCharInCurrentDirection(pacMan);
                 }
-                gridCount++;
+                else{
+                    // stop PacMan
+                    pacMan.isMoving = false;
+                }
             }
         }
-    }
-    
-    function drawHorizontalWall(gridX, gridY){
-        // starting (x,y) pixels
-        var startX = gridX * gridBlockSize;
-        var startY = gridY * gridBlockSize + (gridBlockSize/2);
+        else{
+            moveCharInCurrentDirection(pacMan);
+        }
         
-        // create a line based
-        createWall(startX,startY,startX+gridBlockSize,startY);
-    }
-    
-    function drawVerticalWall(gridX, gridY){
-        // starting (x,y) pixels
-        var startX = gridX * gridBlockSize + (gridBlockSize/2);
-        var startY = gridY * gridBlockSize ;
-
-        // create a line based
-        createWall(startX,startY,startX,startY+gridBlockSize);
-    }
-    
-    function drawBottomLeftArc(gridX, gridY){
-        //starting (x,y) pixels
-        var centerX = gridX * gridBlockSize;
-        var centerY = gridY * gridBlockSize + gridBlockSize;
-        
-        //create arc
-        createArc(centerX, centerY, gridBlockSize/2, 1.5 * Math.PI, 0); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-    }
-    
-    function drawBottomRightArc(gridX, gridY){
-        //starting (x,y) pixels
-        var centerX = gridX * gridBlockSize + gridBlockSize;
-        var centerY = gridY * gridBlockSize + gridBlockSize;
-
-        //create arc
-        createArc(centerX, centerY, gridBlockSize/2, Math.PI, 1.5 * Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-    }
-    
-    function drawTopLeftArc(gridX, gridY){
-        //starting (x,y) pixels
-        var centerX = gridX * gridBlockSize;
-        var centerY = gridY * gridBlockSize;
-
-        //create arc
-        createArc(centerX, centerY, gridBlockSize/2, 0, .5 * Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-    }
-    
-    function drawTopRightArc(gridX, gridY){
-        //starting (x,y) pixels
-        var centerX = gridX * gridBlockSize + gridBlockSize;
-        var centerY = gridY * gridBlockSize;
-
-        //create arc
-        createArc(centerX, centerY, gridBlockSize/2, .5 * Math.PI, Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-    }
-    
-    function drawPacDot(gridX, gridY){
-        context.save();
-        context.lineWidth = wallLineWidth;
-        context.strokeStyle = "yellow";
-
-        //starting (x,y) pixels
-        var centerX = gridX * gridBlockSize + gridBlockSize/2;
-        var centerY = gridY * gridBlockSize + gridBlockSize/2;
-
-        //create arc
-        context.beginPath();
-        context.arc(centerX, centerY, gridBlockSize/(gridBlockSize/2), 0, 2*Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-        context.fillStyle = "yellow";
-        context.fill();
-        context.closePath();
-        context.stroke();
-
-        context.restore();
-    }
-    
-     function drawPacPowerDots(gridX, gridY){
-         context.save();
-         context.lineWidth = wallLineWidth;
-         context.strokeStyle = "yellow";
-
-         //starting (x,y) pixels
-         var centerX = gridX * gridBlockSize + gridBlockSize/2;
-         var centerY = gridY * gridBlockSize + gridBlockSize/2;
-
-         //create arc
-         context.beginPath();
-         context.arc(centerX, centerY, gridBlockSize/2, 0, 2*Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-         context.fillStyle = "yellow";
-         context.fill();
-         context.closePath();
-         context.stroke();
-
-         context.restore();
-     }
-    
-    function drawOuterWallRight(gridX,gridY){
-        // starting (x,y) pixels
-        var startX = gridX * gridBlockSize + gridBlockSize;
-        var startY = gridY * gridBlockSize ;
-
-        // create a line based
-        createWall(startX,startY,startX,startY+gridBlockSize);
-    }
-    
-    function drawOuterWallLeft(gridX,gridY){
-        // starting (x,y) pixels
-        var startX = gridX * gridBlockSize;
-        var startY = gridY * gridBlockSize ;
-
-        // create a line based
-        createWall(startX,startY,startX,startY+gridBlockSize);
-    }
-
-    function drawOuterWallBottom(gridX,gridY){
-        // starting (x,y) pixels
-        var startX = gridX * gridBlockSize ;
-        var startY = gridY * gridBlockSize + gridBlockSize;
-
-        // create a line based
-        createWall(startX,startY,startX+gridBlockSize, startY);
-    }
-
-    function drawOuterWallTop(gridX,gridY){
-        // starting (x,y) pixels
-        var startX = gridX * gridBlockSize ;
-        var startY = gridY * gridBlockSize ;
-
-        // create a line based
-        createWall(startX,startY,startX+gridBlockSize,startY);
-    }
-    
-    function drawOuterWallTopLeft(gridX,gridY){
-        drawOuterWallTop(gridX,gridY);
-        drawOuterWallLeft(gridX,gridY);
-    }
-    function drawOuterWallBottomLeft(gridX,gridY){
-        drawOuterWallBottom(gridX,gridY);
-        drawOuterWallLeft(gridX,gridY);
-    }
-    function drawOuterWallTopRight(gridX,gridY){
-        drawOuterWallTop(gridX,gridY);
-        drawOuterWallRight(gridX,gridY);
-    }
-    function drawOuterWallBottomRight(gridX,gridY){
-        drawOuterWallBottom(gridX,gridY);
-        drawOuterWallRight(gridX,gridY);
-    }
-
-    function drawOuterBottomLeftArc(gridX, gridY){
-        //starting (x,y) pixels
-        var centerX = gridX * gridBlockSize - gridBlockSize;
-        var centerY = gridY * gridBlockSize + gridBlockSize*2;
-
-        //create arc
-        createArc(centerX, centerY, gridBlockSize, 1.5 * Math.PI, 0); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-    }
-    
-    function drawOuterBottomRightArc(gridX, gridY){
-        //starting (x,y) pixels
-        var centerX = gridX * gridBlockSize + gridBlockSize*2;
-        var centerY = gridY * gridBlockSize + gridBlockSize*2;
-
-        //create arc
-        createArc(centerX, centerY, gridBlockSize, Math.PI, 1.5 * Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-
-    }
-    
-    function drawOuterTopLeftArc(gridX, gridY){
-        //starting (x,y) pixels
-        var centerX = gridX * gridBlockSize - gridBlockSize;
-        var centerY = gridY * gridBlockSize - gridBlockSize;
-
-        //create arc
-        createArc(centerX, centerY, gridBlockSize, 0, .5 * Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-    }
-    
-    function drawOuterTopRightArc(gridX, gridY){
-        //starting (x,y) pixels
-        var centerX = gridX * gridBlockSize + gridBlockSize*2;
-        var centerY = gridY * gridBlockSize - gridBlockSize;
-
-        //create arc
-        createArc(centerX, centerY, gridBlockSize, .5 * Math.PI, Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-    }
-    
-    function createArc(centerX, centerY, radius, radianStart, radianEnd){
-        context.save();
-        context.lineWidth = wallLineWidth;
-        context.strokeStyle = wallColor;
-        
-        context.beginPath();
-        context.arc(centerX, centerY, radius, radianStart, radianEnd); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-        context.stroke();
-
-        context.restore();
-    }
-    
-    function createWall(startX, startY, endX, endY){
-        context.save();
-        context.lineWidth = wallLineWidth;
-        context.strokeStyle = wallColor;
-
-        // create a line based
-        context.beginPath();
-        context.moveTo(startX, startY);
-        context.lineTo(endX , endY);
-        context.closePath();
-        context.stroke();
-
-        context.restore();
-    }
-
-   
-
-  
-       
-   
-    function drawSprite(img, x, y, dir) {
-        context.drawImage(img, x, y);
-    }
- 
-    var spriteSize = 32;
-    var img = new Image();
-    img.src = "images/sprites/pacman-right-1.png";
-
-    img.onload = function () {
-        renderContent();
-        drawSprite(img, 300 - spriteSize / 2, 490 - spriteSize / 2, null);
-    }
-
-    var ghost1 = new Image();
-    ghost1.src = "images/sprites/ghost1-right.png";
-
-    ghost1.onload = function () {
-        renderContent();
-        drawSprite(ghost1, 266 - spriteSize / 2, 300 - spriteSize / 2, null);
-    }
-
-    var ghost2 = new Image();
-    ghost2.src = "images/sprites/ghost2-right.png";
-
-    ghost2.onload = function () {
-        renderContent();
-        drawSprite(ghost2, 300 - spriteSize / 2, 300 - spriteSize / 2, null);
-    }
-
-    var ghost3 = new Image();
-    ghost3.src = "images/sprites/ghost3-right.png";
-
-    ghost3.onload = function () {
-        renderContent();
-        drawSprite(ghost3, 334 - spriteSize / 2, 300 - spriteSize / 2, null);
-    }
-
-    var ghost4 = new Image();
-    ghost4.src = "images/sprites/ghost4-right.png";
-
-    ghost4.onload = function () {
-        renderContent();
-        drawSprite(ghost4, 300 - spriteSize / 2, 334 - spriteSize / 2, null);
-    }
-
-    function keyEventListener(event) {
-        var x = event.keyCode;
-        console.log("keyCode:",x);
-        if (x == 83) {  // 83 is the 's' key
-            
-          document.getElementById("song1").play();
+        if(pacMan.isMoving){
+            setTimeout(function(){
+                movePacMan();
+            }, pacMan.milliseconds);
         }
     }
-    document.body.addEventListener("keyup", keyEventListener, false);
-  
+    
+    // Below are functions to be used by Ghosts and PacMan
+    function moveCharInCurrentDirection(char){
+        switch (char.curDirection){
+            case 'up':
+                moveCharacterUp(char);
+                break;
+            case 'down':
+                moveCharacterDown(char);
+                break;
+            case 'right':
+                moveCharacterRight(char);
+                break;
+            case 'left':
+                moveCharacterLeft(char);
+                break;
+            default:
+                return false;
+        }
+    }
+    function moveCharacterRight(char){
+        var tempCoordX = char.coordX + char.displacement;
+        moveCharacterHorizontal(tempCoordX, char);
+    }
+    function moveCharacterLeft(char){
+        var tempCoordX = char.coordX - char.displacement;
+        moveCharacterHorizontal(tempCoordX, char);
+    }
+    function moveCharacterHorizontal(x, char){
+        var tempGridX = Math.floor(x / gridBlockSize);
+        var gameGridIndex = char.gridY * blocksPerRow + tempGridX;
+        var previousCoordX = char.gridX * gridBlockSize;
+        var previousCoordY = char.gridY * gridBlockSize;
+    
+        gameGridArray[gameGridIndex] = "0";
+        char.coordX = x;
+        char.gridX = tempGridX;
+        //Power up
+        
+        document.getElementById("debug-help2").innerHTML = gameGridArray[gameGridIndex-1] + " " + gameGridArray[gameGridIndex] + " " + gameGridArray[gameGridIndex+1];
+
+        context.clearRect(previousCoordX-wallLineWidth,previousCoordY-wallLineWidth,gridBlockSize+wallLineWidth*2,gridBlockSize+wallLineWidth*2);
+        pacManContext.clearRect(0,0,pacManCanvas.width,pacManCanvas.height);
+        
+        drawPacMan();
+    }
+    function moveCharacterUp(char){
+        var tempCoordY = char.coordY - char.displacement;
+        moveCharacterVertical(tempCoordY, char);
+    }
+    function moveCharacterDown(char){
+        var tempCoordY = char.coordY + char.displacement;
+        
+        moveCharacterVertical(tempCoordY, char);
+    }
+    function moveCharacterVertical(y, char){
+        var tempGridY = Math.floor(y / gridBlockSize);
+        var gameGridIndex = tempGridY * blocksPerRow + pacMan.gridX;
+        var previousCoordX = char.gridX * gridBlockSize;
+        var previousCoordY = char.gridY * gridBlockSize;
+        
+        gameGridArray[gameGridIndex] = "0";
+        char.coordY = y;
+        char.gridY = tempGridY;
+        
+        document.getElementById("debug-help2").innerHTML = gameGridArray[gameGridIndex-1] + " " + gameGridArray[gameGridIndex] + " " + gameGridArray[gameGridIndex+1];
+        context.clearRect(previousCoordX-wallLineWidth,previousCoordY-wallLineWidth,gridBlockSize+wallLineWidth*2,gridBlockSize+wallLineWidth*2);
+        pacManContext.clearRect(0,0,pacManCanvas.width,pacManCanvas.height);
+        drawPacMan();
+    }
+    function isCharacterInCenter(character){
+        return (
+            (character.coordX == character.gridX * gridBlockSize + gridBlockSize/2)
+            &&
+            (character.coordY == character.gridY * gridBlockSize + gridBlockSize/2)
+        )
+    }
+    function canCharacterMoveInDirection(character, direction){
+        var gameGridIndex;
+        switch (direction){
+            case 'up':
+                gameGridIndex = character.gridY * blocksPerRow + pacMan.gridX - blocksPerRow;
+                return (gameGridArray[gameGridIndex] == 0 || gameGridArray[gameGridIndex] ==1 || gameGridArray[gameGridIndex] == 2);
+                break;
+            case 'down':
+                gameGridIndex = character.gridY * blocksPerRow + pacMan.gridX + blocksPerRow;
+                return (gameGridArray[gameGridIndex] == 0 || gameGridArray[gameGridIndex] ==1 || gameGridArray[gameGridIndex] == 2);
+                break;
+            case 'right':
+                gameGridIndex = character.gridY * blocksPerRow + character.gridX + 1;
+                return (gameGridArray[gameGridIndex] == 0 || gameGridArray[gameGridIndex] ==1 || gameGridArray[gameGridIndex] == 2);
+                break;
+            case 'left':
+                gameGridIndex = character.gridY * blocksPerRow + character.gridX - 1;
+                return (gameGridArray[gameGridIndex] == 0 || gameGridArray[gameGridIndex] ==1 || gameGridArray[gameGridIndex] == 2);
+                break;
+            default:
+                return false;
+        }
+
+    }
+    
+    window.addEventListener('keydown',checkKey,true);
+    renderContent();
 });
