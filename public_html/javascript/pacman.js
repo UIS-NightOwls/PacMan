@@ -14,13 +14,15 @@ $(document).ready(function(){
     var gameStarted = false;
     
     var character = function(){
-        this.gridX           = 15,
-        this.gridY           = 24,
-        this.coordX          = this.gridX * gridBlockSize,
-        this.coordY          = this.gridY * gridBlockSize + gridBlockSize/2,
-        this.speed           = 5,
-        this.curDirection    = "right",
-        this.desDirection    = "right"
+        this.gridX           = 15;
+        this.gridY           = 24;
+        this.coordX          = this.gridX * gridBlockSize;
+        this.coordY          = this.gridY * gridBlockSize + gridBlockSize/2;
+        // characters velocity is displacement/milliseconds ( 5px per 100 milliseconds)
+        this.displacement    = 5; //in pixels
+        this.milliseconds     = 100;
+        this.curDirection    = "right";
+        this.desDirection    = "right";
     };
     var pacMan = new character();
 
@@ -92,7 +94,7 @@ $(document).ready(function(){
         if(pacMan.isMoving){
             setTimeout(function(){
                 movePacMan();
-            }, 100);
+            }, pacMan.milliseconds);
         }
     }
     
@@ -116,11 +118,11 @@ $(document).ready(function(){
         }
     }
     function moveCharacterRight(char){
-        var tempCoordX = char.coordX + char.speed;
+        var tempCoordX = char.coordX + char.displacement;
         moveCharacterHorizontal(tempCoordX, char);
     }
     function moveCharacterLeft(char){
-        var tempCoordX = char.coordX - char.speed;
+        var tempCoordX = char.coordX - char.displacement;
         moveCharacterHorizontal(tempCoordX, char);
     }
     function moveCharacterHorizontal(x, char){
@@ -142,11 +144,11 @@ $(document).ready(function(){
         drawPacMan();
     }
     function moveCharacterUp(char){
-        var tempCoordY = char.coordY - char.speed;
+        var tempCoordY = char.coordY - char.displacement;
         moveCharacterVertical(tempCoordY, char);
     }
     function moveCharacterDown(char){
-        var tempCoordY = char.coordY + char.speed;
+        var tempCoordY = char.coordY + char.displacement;
         
         moveCharacterVertical(tempCoordY, char);
     }
