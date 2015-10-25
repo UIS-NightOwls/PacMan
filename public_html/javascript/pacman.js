@@ -6,12 +6,44 @@ $(document).ready(function(){
     setTimeout(function () {
         $("#credits").html("Credits: 1")
     }, 200);
-    var pacManCanvas = document.getElementById("pacman");
+    var pacManCanvas = document.getElementById("pacMan");
     var pacManContext = pacManCanvas.getContext("2d");
     
-    var pacManRadius = gridBlockSize - gridBlockSize/4;
-    var pacManMouth = Math.PI/6;
+    var ghost1Canvas = document.getElementById("ghost1");
+    var ghost1Context = ghost1Canvas.getContext("2d");
+
+    var ghost2Canvas = document.getElementById("ghost2");
+    var ghost2Context = ghost2Canvas.getContext("2d");
+
+    var ghost3Canvas = document.getElementById("ghost3");
+    var ghost3Context = ghost3Canvas.getContext("2d");
+
+    var ghost4Canvas = document.getElementById("ghost4");
+    var ghost4Context = ghost4Canvas.getContext("2d");
+
+    var spriteSize = 32;
+
     var gameStarted = false;
+    
+    function renderContent(){
+        context.save();
+        pacImg.onload = function(){
+           drawPacMan(); 
+        }; 
+        ghost1.onload = function(){
+            drawGhost1();
+        };
+        ghost2.onload = function(){
+            drawGhost2();
+        };
+        ghost3.onload = function(){
+            drawGhost3();
+        };
+        ghost4.onload = function(){
+            drawGhost4();   
+        };
+        context.restore();
+    }
     
     var character = function(){
         this.gridX           = 15;
@@ -19,27 +51,84 @@ $(document).ready(function(){
         this.coordX          = this.gridX * gridBlockSize;
         this.coordY          = this.gridY * gridBlockSize + gridBlockSize/2;
         // characters velocity is displacement/milliseconds ( 5px per 100 milliseconds)
-        this.displacement    = 5; //in pixels
-        this.milliseconds     = 100;
+        this.displacement    = 5;       //in pixels needs to be a factor of gridBlockSize 
+        this.milliseconds     = 100;    // change this first to make character move faster or slower
         this.curDirection    = "right";
         this.desDirection    = "right";
     };
+    
     var pacMan = new character();
+    var blinky = new character();
+    var inky = new character();
+    var clyde = new character();
+    var pinky = new character();
+    
+    // Set or change defaults for characters
+    blinky.coordX = 266;
+    blinky.gridX =  blinky.coordX / gridBlockSize;
+    blinky.coordY = 300;
+    blinky.gridY = (blinky.coordY - gridBlockSize/2) / gridBlockSize;
 
-    function renderContent(){
-        context.save();
-        drawPacMan();
-        context.restore();
+    inky.coordX = 300;
+    inky.gridX =  inky.coordX / gridBlockSize;
+    inky.coordY = 300;
+    inky.gridY = (inky.coordY - gridBlockSize/2) / gridBlockSize;
+
+    clyde.coordX = 334;
+    clyde.gridX =  clyde.coordX / gridBlockSize;
+    clyde.coordY = 300;
+    clyde.gridY = (clyde.coordY - gridBlockSize/2) / gridBlockSize;
+    
+    pinky.coordX = 300;
+    pinky.gridX =  pinky.coordX / gridBlockSize;
+    pinky.coordY = 334;
+    pinky.gridY = (pinky.coordY - gridBlockSize/2) / gridBlockSize;
+    
+    // Images
+    var pacImg = new Image();
+    pacImg.src = "images/sprites/pacman-right-1.png";
+
+    var ghost1 = new Image();
+    ghost1.src = "images/sprites/ghost1-right.png";
+
+    var ghost2 = new Image();
+    ghost2.src = "images/sprites/ghost2-right.png";
+
+    var ghost3 = new Image();
+    ghost3.src = "images/sprites/ghost3-right.png";
+
+    var ghost4 = new Image();
+    ghost4.src = "images/sprites/ghost4-right.png";
+    
+
+    function drawSprite(img, x, y, dir, charContext) {
+        charContext.drawImage(img, x, y);
+    }
+    
+    function drawPacMan(){
+        drawSprite(pacImg, pacMan.coordX - spriteSize / 2, pacMan.coordY - spriteSize / 2, pacMan.curDirection, pacManContext);
     }
 
-    function drawPacMan(){
-            pacManContext.lineWidth = pacManRadius;
-            pacManContext.strokeStyle = "yellow";
-
-            pacManContext.beginPath();
-        pacManContext.arc(pacMan.coordX, pacMan.coordY, pacManRadius/2, pacManMouth , 2 * Math.PI - (pacManMouth));
-            pacManContext.stroke();
-        }
+    // Blinky - Red - ghost 1
+    // Inky - blue - ghost 2
+    // Clyde - orange - ghost 3
+    // Pinky - pink - ghost 4
+    
+    function drawGhost1(){
+        drawSprite(ghost1, blinky.coordX - spriteSize / 2, blinky.coordY - spriteSize / 2, blinky.curDirection, ghost1Context);
+    }
+    
+    function drawGhost2(){
+        drawSprite(ghost2, inky.coordX - spriteSize / 2, inky.coordY - spriteSize / 2, inky.curDirection, ghost2Context);
+    }
+    
+    function drawGhost3(){
+        drawSprite(ghost3, clyde.coordX - spriteSize / 2, clyde.coordY - spriteSize / 2, clyde.curDirection, ghost3Context);
+    }
+    
+    function drawGhost4(){
+        drawSprite(ghost4, pinky.coordX - spriteSize / 2, pinky.coordY - spriteSize / 2, pinky.curDirection, ghost4Context);
+    }
     
     // User moves Pac Man
     function checkKey(e){
@@ -198,7 +287,17 @@ $(document).ready(function(){
         }
 
     }
-    
+
+
+    function keyEventListener(event) {
+        var x = event.keyCode;
+        console.log("keyCode:",x);
+        if (x == 83) {  // 83 is the 's' key
+
+            document.getElementById("song1").play();
+        }
+    }
+    document.body.addEventListener("keyup", keyEventListener, false);
     window.addEventListener('keydown',checkKey,true);
     renderContent();
 });
