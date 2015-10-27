@@ -34,9 +34,11 @@ $(document).ready(function () {
     var testGridColor = "red";
 
 
-    
+    function outputGameGrid(){
+        return gameGridArray;
+    }
     var gameGridArray = [   
-        'e','0','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','0','f', 
+        'e','0','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','0','f',
         '0','5','3','3','3','3','3','3','3','3','3','3','3','3','6','5','3','3','3','3','3','3','3','3','3','3','3','3','6','0', 
         'b','4','1','1','1','1','1','1','1','1','1','1','1','1','4','4','1','1','1','1','1','1','1','1','1','1','1','1','4','d',
         'b','4','1','5','3','3','6','1','5','3','3','3','6','1','4','4','1','5','3','3','3','6','1','5','3','3','6','1','4','d',
@@ -70,7 +72,13 @@ $(document).ready(function () {
         '0','8','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','7','0',
         'h','0','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','0','g'
         ];
-    
+    function initialize(){
+        clearContent();
+        for( var i = 0; i < gameGridArray.length; i++){
+            gameGridArray[i] = '0';
+        }
+        renderContent();
+    }
     function renderContent(){
         context.save();
         //draw things
@@ -100,17 +108,51 @@ $(document).ready(function () {
             context.moveTo(j, 0);
             context.lineTo(j, canvas.height);
             context.closePath();
+
             context.stroke();
         }
         context.restore();
     }
-    
+    function clearContent(){
+        context.fillStyle = '#000000';
+        console.log('clear');
+        context.fillRect(0,0, canvas.width, canvas.height);
+        //context.fillRect(x * (canvas.width / gridBlockSize), y * (canvas.width / gridBlockSize), canvas.width / gridBlockSize, canvas.height / gridBlockSize);
+        //var startX = gridX * gridBlockSize;
+        //var startY = gridY * gridBlockSize + (gridBlockSize/2);
+    }
+
+    context.canvas.addEventListener('click',
+        function(evnt){
+            var choice = ['0', '1','2','3','4','5','6','7','8','a','b','c','d','e','f','g','h','i','j','k','l'];
+
+
+            var selected = ((Math.floor(evnt.offsetY / gridBlockSize)  - 1) * (canvas.width / gridBlockSize) )+ Math.floor(evnt.offsetX / gridBlockSize);
+            var current = gameGridArray[selected];
+
+            clearContent();
+            gameGridArray[selected] = choice[(choice.indexOf(current) + 1) % choice.length];
+            renderContent()
+
+        });
+    function createLevel(){
+
+
+        renderContent();
+    }
+
+
+
     function drawGame(){
         var maxGridx = canvas.width / gridBlockSize;
         var maxGridy = canvas.height / gridBlockSize;
+        //console.log(gameGridArray);
+        //console.log(maxGridx);
+        //console.log(maxGridy);
         var gridCount = 0;
         for(var y=0; y <= maxGridy; y++){
             for(var x=0; x < maxGridx;x++){
+                //console.log('x: ' + x + ' y: ' + y + ' x * y + x: ' + (x * y + 1));
                 switch (gameGridArray[gridCount]){
                     case '0':
                         break;
@@ -452,5 +494,15 @@ $(document).ready(function () {
         }
     }
     document.body.addEventListener("keyup", keyEventListener, false);
-  
+    //initialize();
+    var startPaint = document.createElement('button');
+    startPaint.appendChild(document.createTextNode('Draw Level'));
+    startPaint.setAttribute('style', 'position: absolute; top: 30px;');
+    startPaint.onclick = initialize;
+    var finishPaint = document.createElement('button');
+    finishPaint.appendChild(document.createTextNode('Finish'))
+    finishPaint.setAttribute('style', 'position: absolute; top: 60px;');
+    finishPaint.onclick = outputGameGrid;
+    document.body.appendChild(startPaint);
+    document.body.appendChild(finishPaint);
 });

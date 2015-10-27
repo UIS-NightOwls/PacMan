@@ -2,46 +2,68 @@
  * Created by bzweifel on 9/22/15.
  */
 $(document).ready(function () {
-
-
     console.log("JQuery is Ready")
     setTimeout(function () {
         $("#credits").html("Credits: 1")
     }, 200);
     var canvas = document.getElementById("myCanvas");
     var context = canvas.getContext("2d");
+    // resize the canvas to fill browser window dynamically
+    window.addEventListener('resize', resizeCanvas, false);
+
+    function resizeCanvas() {
+        var ratio = $("#canvas-container").width() / 600 ;
+        console.log(ratio);
+        context.scale(ratio, ratio);
+        //  canvas.setAttribute('style', 'width: ' + (width * scale) + '; height: ' + (height * scale) + ';');
+        // canvas.width = $("#canvas-container").width();
+        // canvas.height = $("#canvas-container").height();
+
+        /**
+         * Your drawings need to be inside this function otherwise they will be reset when
+         * you resize the browser window and the canvas goes will be cleared.
+         */
+        //drawStuff();
+    }
+    resizeCanvas();
+
+
     var gridBlockSize = 20;
     var wallLineWidth = 2;
     var wallColor = "blue";
     var testGridColor = "red";
-    
-    var gameGridArray = [   
-        'e','0','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','0','f', 
-        '0','5','3','3','3','3','3','3','3','3','3','3','3','3','6','5','3','3','3','3','3','3','3','3','3','3','3','3','6','0', 
+
+
+    function outputGameGrid(){
+        return gameGridArray;
+    }
+    var gameGridArray = [
+        'e','0','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','0','f',
+        '0','5','3','3','3','3','3','3','3','3','3','3','3','3','6','5','3','3','3','3','3','3','3','3','3','3','3','3','6','0',
         'b','4','1','1','1','1','1','1','1','1','1','1','1','1','4','4','1','1','1','1','1','1','1','1','1','1','1','1','4','d',
         'b','4','1','5','3','3','6','1','5','3','3','3','6','1','4','4','1','5','3','3','3','6','1','5','3','3','6','1','4','d',
         'b','4','2','4','0','0','4','1','4','0','0','0','4','1','4','4','1','4','0','0','0','4','1','4','0','0','4','2','4','d',
-        'b','4','1','8','3','3','7','1','8','3','3','3','7','1','8','7','1','8','3','3','3','7','1','8','3','3','7','1','4','d', 
+        'b','4','1','8','3','3','7','1','8','3','3','3','7','1','8','7','1','8','3','3','3','7','1','8','3','3','7','1','4','d',
         'b','4','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','4','d',
         'b','4','1','5','3','3','6','1','5','6','1','5','3','3','3','3','3','3','6','1','5','6','1','5','3','3','6','1','4','d',
         'b','4','1','8','3','3','7','1','4','4','1','8','3','3','6','5','3','3','7','1','4','4','1','8','3','3','7','1','4','d',
         'b','4','1','1','1','1','1','1','4','4','1','1','1','1','4','4','1','1','1','1','4','4','1','1','1','1','1','1','4','d',
-        '0','8','3','3','3','3','6','1','4','8','3','3','6','0','4','4','0','5','3','3','7','4','1','5','3','3','3','3','7','0', 
+        '0','8','3','3','3','3','6','1','4','8','3','3','6','0','4','4','0','5','3','3','7','4','1','5','3','3','3','3','7','0',
         'h','0','a','a','a','j','4','1','4','5','3','3','7','0','4','4','0','8','3','3','6','4','1','4','i','a','a','a','0','g',
         '0','0','0','0','0','b','4','1','4','4','0','0','0','0','8','7','0','0','0','0','4','4','1','4','d','0','0','0','0','0',
         '0','c','c','c','c','k','4','1','4','4','0','0','c','c','c','c','c','c','0','0','4','4','1','4','l','c','c','c','c','0',
         '0','3','3','3','3','3','7','1','8','7','0','b','0','0','0','0','0','0','d','0','8','7','1','8','3','3','3','3','3','0',
-        '0','0','0','0','0','0','0','1','0','0','0','b','0','0','0','0','0','0','d','0','0','0','1','0','0','0','0','0','0','0', 
+        '0','0','0','0','0','0','0','1','0','0','0','b','0','0','0','0','0','0','d','0','0','0','1','0','0','0','0','0','0','0',
         '0','3','3','3','3','3','6','1','5','6','0','b','0','0','0','0','0','0','d','0','5','6','1','5','3','3','3','3','3','0',
         '0','a','a','a','a','j','4','1','4','4','0','0','a','a','a','a','a','a','0','0','4','4','1','4','i','a','a','a','a','0',
         '0','0','0','0','0','b','4','1','4','4','0','0','0','0','0','0','0','0','0','0','4','4','1','4','d','0','0','0','0','0',
         'e','0','c','c','c','k','4','1','4','4','0','5','3','3','3','3','3','3','6','0','4','4','1','4','l','c','c','c','0','f',
-        '0','5','3','3','3','3','7','1','8','7','0','8','3','3','6','5','3','3','7','0','8','7','1','8','3','3','3','3','6','0', 
+        '0','5','3','3','3','3','7','1','8','7','0','8','3','3','6','5','3','3','7','0','8','7','1','8','3','3','3','3','6','0',
         'b','4','1','1','1','1','1','1','1','1','1','1','1','1','4','4','1','1','1','1','1','1','1','1','1','1','1','1','4','d',
         'b','4','1','5','3','3','6','1','5','3','3','3','6','1','4','4','1','5','3','3','3','6','1','5','3','3','6','1','4','d',
         'b','4','1','8','3','6','4','1','8','3','3','3','7','1','8','7','1','8','3','3','3','7','1','4','5','3','7','1','4','d',
         'b','4','2','1','1','4','4','1','1','1','1','1','1','1','0','0','1','1','1','1','1','1','1','4','4','1','1','2','4','d',
-        'b','8','3','6','1','4','4','1','5','6','1','5','3','3','3','3','3','3','6','1','5','6','1','4','4','1','5','3','7','d', 
+        'b','8','3','6','1','4','4','1','5','6','1','5','3','3','3','3','3','3','6','1','5','6','1','4','4','1','5','3','7','d',
         'b','5','3','7','1','8','7','1','4','4','1','8','3','3','6','5','3','3','7','1','4','4','1','8','7','1','8','3','6','d',
         'b','4','1','1','1','1','1','1','4','4','1','1','1','1','4','4','1','1','1','1','4','4','1','1','1','1','1','1','4','d',
         'b','4','1','5','3','3','3','3','7','8','3','3','6','1','4','4','1','5','3','3','7','8','3','3','3','3','6','1','4','d',
@@ -49,8 +71,14 @@ $(document).ready(function () {
         'b','4','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','4','d',
         '0','8','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','7','0',
         'h','0','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','0','g'
-        ];
-    
+    ];
+    function initialize(){
+        clearContent();
+        for( var i = 0; i < gameGridArray.length; i++){
+            gameGridArray[i] = '0';
+        }
+        renderContent();
+    }
     function renderContent(){
         context.save();
         //draw things
@@ -59,14 +87,11 @@ $(document).ready(function () {
 
         context.restore();
     }
-
-
-
     function drawTestGrid(color){
         context.save();
         context.lineWidth = 1;
         context.strokeStyle = color;
-        
+
         // horizontal grid lines
         for(var i = 0; i <= canvas.height; i = i + gridBlockSize)
         {
@@ -83,17 +108,79 @@ $(document).ready(function () {
             context.moveTo(j, 0);
             context.lineTo(j, canvas.height);
             context.closePath();
+
             context.stroke();
         }
         context.restore();
     }
-    
+    function clearContent(){
+        context.fillStyle = '#000000';
+        console.log('clear');
+        context.fillRect(0,0, canvas.width, canvas.height);
+        //context.fillRect(x * (canvas.width / gridBlockSize), y * (canvas.width / gridBlockSize), canvas.width / gridBlockSize, canvas.height / gridBlockSize);
+        //var startX = gridX * gridBlockSize;
+        //var startY = gridY * gridBlockSize + (gridBlockSize/2);
+    }
+
+    context.canvas.addEventListener('click',
+        function(evnt){
+            var choice = ['0', '1','2','3','4','5','6','7','8','a','b','c','d','e','f','g','h','i','j','k','l'];
+
+
+            var selected = ((Math.floor(evnt.offsetY / gridBlockSize)  - 1) * (canvas.width / gridBlockSize) )+ Math.floor(evnt.offsetX / gridBlockSize);
+            var current = gameGridArray[selected];
+
+            clearContent();
+            gameGridArray[selected] = choice[(choice.indexOf(current) + 1) % choice.length];
+            renderContent()
+
+        });
+
+
+    var currentLit;
+    function removeHighlight(v1){
+
+        currentLit = v1;
+        context.beginPath();
+        context.lineWidth = 1;
+        context.strokeStyle = '#000000';
+        context.rect(Math.floor(v1 % (context.canvas.width / gridBlockSize)), 0, gridBlockSize, gridBlockSize);
+        context.stroke();
+    }
+    function addHighLight(v1){
+        if(currentLit !== v1) {
+            console.log(v1);
+            removeHighlight(v1);
+            context.beginPath();
+            context.lineWidth = 1;
+            context.strokeStyle = '#ffffff';
+            context.rect(Math.floor(v1 / (context.canvas.width / gridBlockSize)), 0, gridBlockSize, gridBlockSize);
+            context.stroke();
+
+        }
+    }
+
+    context.canvas.addEventListener('mousemove', function(evnt){
+        addHighLight(((Math.floor(evnt.offsetY / gridBlockSize)  - 1) * (canvas.width / gridBlockSize) )+ Math.floor(evnt.offsetX / gridBlockSize));
+    });
+    function createLevel(){
+
+
+        renderContent();
+    }
+
+
+
     function drawGame(){
         var maxGridx = canvas.width / gridBlockSize;
         var maxGridy = canvas.height / gridBlockSize;
+        //console.log(gameGridArray);
+        //console.log(maxGridx);
+        //console.log(maxGridy);
         var gridCount = 0;
         for(var y=0; y <= maxGridy; y++){
             for(var x=0; x < maxGridx;x++){
+                //console.log('x: ' + x + ' y: ' + y + ' x * y + x: ' + (x * y + 1));
                 switch (gameGridArray[gridCount]){
                     case '0':
                         break;
@@ -164,16 +251,16 @@ $(document).ready(function () {
             }
         }
     }
-    
+
     function drawHorizontalWall(gridX, gridY){
         // starting (x,y) pixels
         var startX = gridX * gridBlockSize;
         var startY = gridY * gridBlockSize + (gridBlockSize/2);
-        
+
         // create a line based
         createWall(startX,startY,startX+gridBlockSize,startY);
     }
-    
+
     function drawVerticalWall(gridX, gridY){
         // starting (x,y) pixels
         var startX = gridX * gridBlockSize + (gridBlockSize/2);
@@ -182,16 +269,16 @@ $(document).ready(function () {
         // create a line based
         createWall(startX,startY,startX,startY+gridBlockSize);
     }
-    
+
     function drawBottomLeftArc(gridX, gridY){
         //starting (x,y) pixels
         var centerX = gridX * gridBlockSize;
         var centerY = gridY * gridBlockSize + gridBlockSize;
-        
+
         //create arc
         createArc(centerX, centerY, gridBlockSize/2, 1.5 * Math.PI, 0); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
     }
-    
+
     function drawBottomRightArc(gridX, gridY){
         //starting (x,y) pixels
         var centerX = gridX * gridBlockSize + gridBlockSize;
@@ -200,7 +287,7 @@ $(document).ready(function () {
         //create arc
         createArc(centerX, centerY, gridBlockSize/2, Math.PI, 1.5 * Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
     }
-    
+
     function drawTopLeftArc(gridX, gridY){
         //starting (x,y) pixels
         var centerX = gridX * gridBlockSize;
@@ -209,7 +296,7 @@ $(document).ready(function () {
         //create arc
         createArc(centerX, centerY, gridBlockSize/2, 0, .5 * Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
     }
-    
+
     function drawTopRightArc(gridX, gridY){
         //starting (x,y) pixels
         var centerX = gridX * gridBlockSize + gridBlockSize;
@@ -218,7 +305,7 @@ $(document).ready(function () {
         //create arc
         createArc(centerX, centerY, gridBlockSize/2, .5 * Math.PI, Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
     }
-    
+
     function drawPacDot(gridX, gridY){
         context.save();
         context.lineWidth = wallLineWidth;
@@ -238,27 +325,27 @@ $(document).ready(function () {
 
         context.restore();
     }
-    
-     function drawPacPowerDots(gridX, gridY){
-         context.save();
-         context.lineWidth = wallLineWidth;
-         context.strokeStyle = "yellow";
 
-         //starting (x,y) pixels
-         var centerX = gridX * gridBlockSize + gridBlockSize/2;
-         var centerY = gridY * gridBlockSize + gridBlockSize/2;
+    function drawPacPowerDots(gridX, gridY){
+        context.save();
+        context.lineWidth = wallLineWidth;
+        context.strokeStyle = "yellow";
 
-         //create arc
-         context.beginPath();
-         context.arc(centerX, centerY, gridBlockSize/2, 0, 2*Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-         context.fillStyle = "yellow";
-         context.fill();
-         context.closePath();
-         context.stroke();
+        //starting (x,y) pixels
+        var centerX = gridX * gridBlockSize + gridBlockSize/2;
+        var centerY = gridY * gridBlockSize + gridBlockSize/2;
 
-         context.restore();
-     }
-    
+        //create arc
+        context.beginPath();
+        context.arc(centerX, centerY, gridBlockSize/2, 0, 2*Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
+        context.fillStyle = "yellow";
+        context.fill();
+        context.closePath();
+        context.stroke();
+
+        context.restore();
+    }
+
     function drawOuterWallRight(gridX,gridY){
         // starting (x,y) pixels
         var startX = gridX * gridBlockSize + gridBlockSize;
@@ -267,7 +354,7 @@ $(document).ready(function () {
         // create a line based
         createWall(startX,startY,startX,startY+gridBlockSize);
     }
-    
+
     function drawOuterWallLeft(gridX,gridY){
         // starting (x,y) pixels
         var startX = gridX * gridBlockSize;
@@ -294,7 +381,7 @@ $(document).ready(function () {
         // create a line based
         createWall(startX,startY,startX+gridBlockSize,startY);
     }
-    
+
     function drawOuterWallTopLeft(gridX,gridY){
         drawOuterWallTop(gridX,gridY);
         drawOuterWallLeft(gridX,gridY);
@@ -320,7 +407,7 @@ $(document).ready(function () {
         //create arc
         createArc(centerX, centerY, gridBlockSize, 1.5 * Math.PI, 0); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
     }
-    
+
     function drawOuterBottomRightArc(gridX, gridY){
         //starting (x,y) pixels
         var centerX = gridX * gridBlockSize + gridBlockSize*2;
@@ -330,7 +417,7 @@ $(document).ready(function () {
         createArc(centerX, centerY, gridBlockSize, Math.PI, 1.5 * Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
 
     }
-    
+
     function drawOuterTopLeftArc(gridX, gridY){
         //starting (x,y) pixels
         var centerX = gridX * gridBlockSize - gridBlockSize;
@@ -339,7 +426,7 @@ $(document).ready(function () {
         //create arc
         createArc(centerX, centerY, gridBlockSize, 0, .5 * Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
     }
-    
+
     function drawOuterTopRightArc(gridX, gridY){
         //starting (x,y) pixels
         var centerX = gridX * gridBlockSize + gridBlockSize*2;
@@ -348,19 +435,19 @@ $(document).ready(function () {
         //create arc
         createArc(centerX, centerY, gridBlockSize, .5 * Math.PI, Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
     }
-    
+
     function createArc(centerX, centerY, radius, radianStart, radianEnd){
         context.save();
         context.lineWidth = wallLineWidth;
         context.strokeStyle = wallColor;
-        
+
         context.beginPath();
         context.arc(centerX, centerY, radius, radianStart, radianEnd); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
         context.stroke();
 
         context.restore();
     }
-    
+
     function createWall(startX, startY, endX, endY){
         context.save();
         context.lineWidth = wallLineWidth;
@@ -375,6 +462,75 @@ $(document).ready(function () {
 
         context.restore();
     }
-    
-    renderContent();
+
+
+
+
+
+
+    function drawSprite(img, x, y, dir) {
+        context.drawImage(img, x, y);
+    }
+
+    var spriteSize = 32;
+    var img = new Image();
+    img.src = "images/sprites/pacman-right-1.png";
+
+    img.onload = function () {
+        renderContent();
+        drawSprite(img, 300 - spriteSize / 2, 490 - spriteSize / 2, null);
+    }
+
+    var ghost1 = new Image();
+    ghost1.src = "images/sprites/ghost1-right.png";
+
+    ghost1.onload = function () {
+        renderContent();
+        drawSprite(ghost1, 266 - spriteSize / 2, 300 - spriteSize / 2, null);
+    }
+
+    var ghost2 = new Image();
+    ghost2.src = "images/sprites/ghost2-right.png";
+
+    ghost2.onload = function () {
+        renderContent();
+        drawSprite(ghost2, 300 - spriteSize / 2, 300 - spriteSize / 2, null);
+    }
+
+    var ghost3 = new Image();
+    ghost3.src = "images/sprites/ghost3-right.png";
+
+    ghost3.onload = function () {
+        renderContent();
+        drawSprite(ghost3, 334 - spriteSize / 2, 300 - spriteSize / 2, null);
+    }
+
+    var ghost4 = new Image();
+    ghost4.src = "images/sprites/ghost4-right.png";
+
+    ghost4.onload = function () {
+        renderContent();
+        drawSprite(ghost4, 300 - spriteSize / 2, 334 - spriteSize / 2, null);
+    }
+
+    function keyEventListener(event) {
+        var x = event.keyCode;
+        console.log("keyCode:",x);
+        if (x == 83) {  // 83 is the 's' key
+
+            document.getElementById("song1").play();
+        }
+    }
+    document.body.addEventListener("keyup", keyEventListener, false);
+    //initialize();
+    var startPaint = document.createElement('button');
+    startPaint.appendChild(document.createTextNode('Draw Level'));
+    startPaint.setAttribute('style', 'position: absolute; top: 30px;');
+    startPaint.onclick = initialize;
+    var finishPaint = document.createElement('button');
+    finishPaint.appendChild(document.createTextNode('Finish'))
+    finishPaint.setAttribute('style', 'position: absolute; top: 60px;');
+    finishPaint.onclick = outputGameGrid;
+    document.body.appendChild(startPaint);
+    document.body.appendChild(finishPaint);
 });
