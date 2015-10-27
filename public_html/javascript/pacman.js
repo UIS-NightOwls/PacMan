@@ -47,21 +47,13 @@ var gameOver = false;
 var livesLeft = 2;
 var playersCollided = false;
 
-
 // Set or change defaults for characters
 var pacMan = new character();
-
 var blinky = new character();
-
 var inky = new character();
-
 var clyde = new character();
-
 var pinky = new character();
-
 var ghosts = [blinky, inky, clyde, pinky];
-
-
 
 $(document).ready(function(){
     //console.log("JQuery is Ready")
@@ -181,7 +173,6 @@ $(document).ready(function(){
         pinky.readyToRelease = true;
         pinky.curDirection = 'left';
     }
-    
     
     /*
      Blinky - Red - ghost 1
@@ -552,10 +543,6 @@ $(document).ready(function(){
         return y;
     }
 
-    function getGameIndexFromGridXY(x, y){
-        return y * blocksPerRow + x;
-    }
-
     // User moves Pac Man
     function checkKey(e){
         e = e || window.event;
@@ -616,13 +603,6 @@ $(document).ready(function(){
         }
     }
     
-    //function keyEventListener(event) {
-    //    var x = event.keyCode;
-    //    //console.log("keyCode:",x);
-    //    if (x == 83) {  // 83 is the 's' key
-    //        document.getElementById("song1").play();
-    //    }
-    //}
     
     function backToStartingPosition(){
         pacMan.myContext.clearRect(0, 0, canvas.width, canvas.height);
