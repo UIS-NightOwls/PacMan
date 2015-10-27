@@ -60,49 +60,11 @@ function moveCharacterLeft(char){
 
 function moveCharacterHorizontal(x, char){
     var tempGridX = Math.floor(x / gridBlockSize);
-    var gameGridIndex = char.gridY * blocksPerRow + tempGridX;
-    var previousCoordX = char.gridX * gridBlockSize;
-    var previousCoordY = char.gridY * gridBlockSize;
 
-    if(char.myName == 'pacMan' ){
-        if(gameGridArray[gameGridIndex] == "1"){
-            dotsRemaining--;
-            dotsConsumed++;
-            score = score + 10;
-            document.getElementById("score").innerHTML = "" + score;
-        }
-        else if(gameGridArray[gameGridIndex] == "2"){
-            dotsRemaining--;
-            dotsConsumed++;
-            score = score + 10;
-            document.getElementById("score").innerHTML = "" + score;
-            
-            // POWER UP!!
-            for(var i = 0; i < ghosts.length; i++){
-                if(ghosts[i].isActive){
-                    ghosts[i].mode = 'scared';
-                    reverseDirection(ghosts[i]);
-
-                }
-            }
-
-            setTimeout(setBackToChase, 7000);
-        }
-
-        if(dotsConsumed == 30){
-            inky.readyToRelease = true;
-        }
-
-        if(dotsConsumed > dotsRemaining*2){
-            clyde.readyToRelease = true;
-        }
-        
-        gameGridArray[gameGridIndex] = "0";
-
-        context.clearRect(previousCoordX-wallLineWidth, previousCoordY-wallLineWidth, gridBlockSize+wallLineWidth*2, gridBlockSize+wallLineWidth*2);
-    }
     char.coordX = x;
     char.gridX = tempGridX;
+    
+    moveCharacter(char);
     
     char.myContext.clearRect(0,0,canvas.width,canvas.height);
     
@@ -118,10 +80,21 @@ function moveCharacterDown(char){
 }
 function moveCharacterVertical(y, char){
     var tempGridY = Math.floor(y / gridBlockSize);
-    var gameGridIndex = tempGridY * blocksPerRow + char.gridX;
+    
+    char.coordY = y;
+    char.gridY = tempGridY;
+    
+    moveCharacter(char);
+
+    char.myContext.clearRect(0, 0, canvas.width, canvas.height);
+    
+    drawCharacter(char);
+}
+
+function moveCharacter(char){
     var previousCoordX = char.gridX * gridBlockSize;
     var previousCoordY = char.gridY * gridBlockSize;
-
+    var gameGridIndex = char.gridY * blocksPerRow + char.gridX;
     if(char.myName == 'pacMan'){
         if(gameGridArray[gameGridIndex] == "1"){
             dotsRemaining--;
@@ -142,28 +115,27 @@ function moveCharacterVertical(y, char){
                     reverseDirection(ghosts[i]);
                 }
             }
-            
+
             setTimeout(setBackToChase, 7000);
         }
-        
-        if(dotsConsumed == 30){
+
+        if(dotsRemaining == 0){
+            document.getElementById('gameWon').style.display = '';
+            gameOver = true;
+        }
+
+        if(dotsConsumed == 30 && !inky.isActive){
             inky.readyToRelease = true;
         }
-        
+
         if(dotsConsumed > dotsRemaining*2){
             clyde.readyToRelease = true;
         }
-        
+
         gameGridArray[gameGridIndex] = "0";
 
         context.clearRect(previousCoordX-wallLineWidth, previousCoordY-wallLineWidth, gridBlockSize+wallLineWidth*2, gridBlockSize+wallLineWidth*2);
     }
-    char.coordY = y;
-    char.gridY = tempGridY;
-
-    char.myContext.clearRect(0, 0, canvas.width, canvas.height);
-    
-    drawCharacter(char);
 }
 
 function reverseDirection(char){

@@ -43,6 +43,11 @@ var character = function(){
     this.countMode         = 0;
 };
 
+var gameOver = false;
+var livesLeft = 2;
+var playersCollided = false;
+
+
 // Set or change defaults for characters
 var pacMan = new character();
 
@@ -117,6 +122,12 @@ $(document).ready(function(){
     function setDefaults(){
         pacMan.myImage = pacImg;
         pacMan.myContext = pacManContext;
+        pacMan.gridX              = 15;
+        pacMan.gridY              = 24;
+        pacMan.coordX             = pacMan.gridX * gridBlockSize;
+        pacMan.coordY             = pacMan.gridY * gridBlockSize + gridBlockSize/2;
+        pacMan.curDirection       = "right";
+        pacMan.desDirection       = "right";
 
         blinky.myContext = ghost1Context;
         blinky.coordX = 302;
@@ -128,6 +139,7 @@ $(document).ready(function(){
         blinky.myName = 'blinky';
         blinky.displacement = 4;
         blinky.myImage = ghost1;
+        blinky.curDirection = "right";
 
         inky.myContext = ghost2Context;
         inky.coordX = 302;
@@ -140,6 +152,7 @@ $(document).ready(function(){
         inky.myName = 'inky';
         inky.myImage = ghost2;
         inky.displacement = 4;
+        inky.curDirection = "right";
 
         clyde.myContext = ghost3Context;
         clyde.coordX = 334;
@@ -152,6 +165,7 @@ $(document).ready(function(){
         clyde.myName = 'clyde';
         clyde.myImage = ghost3;
         clyde.displacement = 4;
+        clyde.curDirection = 'right';
 
         pinky.myContext = ghost4Context;
         pinky.coordX = 266;
@@ -165,6 +179,7 @@ $(document).ready(function(){
         pinky.myImage = ghost4;
         pinky.displacement = 4;
         pinky.readyToRelease = true;
+        pinky.curDirection = 'left';
     }
     
     
@@ -545,6 +560,7 @@ $(document).ready(function(){
     function checkKey(e){
         e = e || window.event;
         tempPause=false;
+        playersCollided = false;
         switch (e.keyCode){
             case 38:	// UP Arrow Key pressed
             case 87:	// W pressed
@@ -566,6 +582,7 @@ $(document).ready(function(){
                 break;
         }
         if(!gameStarted){
+            document.getElementById('readyPlayer').style.display = 'none';
             pacMan.isMoving = true;
             gameStarted = true;
             runGame();
@@ -585,7 +602,7 @@ $(document).ready(function(){
             }
             else{
                 if(canCharacterMoveInDirection(pacMan, pacMan.curDirection)){
-                    pacMan.desDirection = pacMan.curDirection;
+                    //pacMan.desDirection = pacMan.curDirection;
                     moveCharInCurrentDirection(pacMan);
                 }
                 else{
@@ -607,17 +624,68 @@ $(document).ready(function(){
     //    }
     //}
     
+    function backToStartingPosition(){
+        pacMan.myContext.clearRect(0, 0, canvas.width, canvas.height);
+
+        for(var i = 0; i < ghosts.length ; i++) {
+            ghosts[i].myContext.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        
+        setDefaults();
+        
+        drawCharacter(pacMan);
+        drawCharacter(blinky);
+        drawCharacter(inky);
+        drawCharacter(clyde);
+        drawCharacter(pinky);
+    }
+    
+    function playerCollision(){
+        for(var i = 0; i < ghosts.length && !playersCollided; i++){
+            if(ghosts[i].gridX == pacMan.gridX && ghosts[i] && ghosts[i].gridY == pacMan.gridY && ghosts[i].mode != 'scared'){
+                livesLeft--;
+                playersCollided = true;
+                if(livesLeft < 0){
+                    gameOver = true;
+                    document.getElementById("gameOver").style.display = '';
+                }
+                else{
+                    // return characters back to starting positions
+                    backToStartingPosition();
+                    pacMan.isMoving = false;
+                    gameStarted = false;
+                    // Remove life image
+                    if(livesLeft==1){
+                        document.getElementById("life2").style.display = 'none';
+                    }
+                    else if(livesLeft ==0 ){
+                        document.getElementById("life1").style.display = 'none';
+                    }
+                }
+            }
+        }
+        
+    }
+    
     function runGame(){
-        if(!tempPause){
+        if(!tempPause && !gameOver){
+            
+            // Move PacMan First
             if(pacMan.isMoving){
                 movePacMan();
             }
-
+            
+            // Then move ghosts
             moveGhosts();
+            
+            // Check for collisions
+            playerCollision();
 
-            setTimeout(function(){
-                runGame();
-            }, gameSpeed); 
+            if(!playersCollided){
+                setTimeout(function(){
+                    runGame();
+                }, gameSpeed);
+            }
         }
     }
     

@@ -36,7 +36,13 @@
                                     <span class="game_font" style="top:20px;left:0px;position:absolute">1UP</span>
                                     <span class="game_font" style="top:20px;left:0px;right:0px;position:absolute">HIGH SCORE</span>
                                     <span class="game_font" style="top:20px;right:0px;position:absolute">2UP</span>
-                                    <span class="game_font" style="top:850px;left:0px;position:absolute;display:none">CREDIT</span>
+                                    <span class="game_font" style="top:780px;left:0px;position:absolute;">
+                                        Lives: <img id="life1" src="images/sprites/pacman-right-1.png">&nbsp;
+                                        <img id="life2" src="images/sprites/pacman-right-1.png">
+                                    </span>
+                                    <span class="game_font" id="readyPlayer" style="top:470px; right: 0px; left:-17px; font-size: 15px; position: absolute; z-index: 7;">READY PLAYER 1</span>
+                                    <span class="game_font" id="gameOver" style="top:360px; right: 0px; left:0px; position: absolute; z-index: 7; display: none"> GAME OVER</span>
+                                    <span class="game_font" id="gameWon" style="top:360px; right: 0px; left:0px; position: absolute; z-index: 7; display: none"> YOU WON!</span>
                                     <span class="game_font" id="score" style="top:40px;left:0px;right:0px;position:absolute">0</span>
                                 </div>
                             </div>
@@ -58,21 +64,21 @@
                             <canvas id="ghost4" width="600" height="640" style="position: absolute; top:200px;left: 0px">
                             </canvas>
                         </div>
-                        <div id="debug-help" style="text-align: center; clear: both; color:white; position: absolute; top:840px">
-                            Debug info during testing
-                        </div>
-                        <div id="debug-help2" style="text-align: center; clear: both; color:white;position: absolute; top:870px">
-                            debug info during testing
-                        </div>
-                        <div id="debug-help3" style="text-align: center; clear: both; color:white;position: absolute; top:900px">
-                            debug info during testing
-                        </div>
-                        <div id="debug-help4" style="text-align: center; clear: both; color:white;position: absolute; top:930px">
-                            debug info during testing
-                        </div>
-                        <div id="debug-help5" style="text-align: center; clear: both; color:white;position: absolute; top:960px">
-                            debug info during testing
-                        </div>
+                        <!--<div id="debug-help" style="text-align: center; clear: both; color:white; position: absolute; top:840px">-->
+                            <!--Debug info during testing-->
+                        <!--</div>-->
+                        <!--<div id="debug-help2" style="text-align: center; clear: both; color:white;position: absolute; top:870px">-->
+                            <!--debug info during testing-->
+                        <!--</div>-->
+                        <!--<div id="debug-help3" style="text-align: center; clear: both; color:white;position: absolute; top:900px">-->
+                            <!--debug info during testing-->
+                        <!--</div>-->
+                        <!--<div id="debug-help4" style="text-align: center; clear: both; color:white;position: absolute; top:930px">-->
+                            <!--debug info during testing-->
+                        <!--</div>-->
+                        <!--<div id="debug-help5" style="text-align: center; clear: both; color:white;position: absolute; top:960px">-->
+                            <!--debug info during testing-->
+                        <!--</div>-->
                     </div>
                     
                     <!-- in Game Controls -->
