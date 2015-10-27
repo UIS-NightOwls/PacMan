@@ -7,6 +7,7 @@ $(document).ready(function () {
         $("#credits").html("Credits: 1")
     }, 200);
     var canvas = document.getElementById("myCanvas");
+    canvas.setAttribute('style', 'border: double thin white;')
     var context = canvas.getContext("2d");
     // resize the canvas to fill browser window dynamically
     window.addEventListener('resize', resizeCanvas, false);
@@ -35,7 +36,7 @@ $(document).ready(function () {
 
 
     function outputGameGrid(){
-        return gameGridArray;
+        console.log(gameGridArray);
     }
     var gameGridArray = [
         'e','0','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','0','f',
@@ -127,7 +128,7 @@ $(document).ready(function () {
             var choice = ['0', '1','2','3','4','5','6','7','8','a','b','c','d','e','f','g','h','i','j','k','l'];
 
 
-            var selected = ((Math.floor(evnt.offsetY / gridBlockSize)  - 1) * (canvas.width / gridBlockSize) )+ Math.floor(evnt.offsetX / gridBlockSize);
+            var selected = ((Math.floor(evnt.offsetY / gridBlockSize)  - 0) * (canvas.width / gridBlockSize) )+ Math.floor(evnt.offsetX / gridBlockSize);
             var current = gameGridArray[selected];
 
             clearContent();
@@ -137,31 +138,39 @@ $(document).ready(function () {
         });
 
 
-    var currentLit;
-    function removeHighlight(v1){
-
-        currentLit = v1;
-        context.beginPath();
+    var currentLitX;
+    var currentLitY;
+    function removeHighlight(v1, v2){
+        //drawGame();
+        currentLitX = v1;
+        currentLitY = v2;
+        //context.beginPath();
         context.lineWidth = 1;
         context.strokeStyle = '#000000';
         context.rect(Math.floor(v1 % (context.canvas.width / gridBlockSize)), 0, gridBlockSize, gridBlockSize);
         context.stroke();
     }
-    function addHighLight(v1){
-        if(currentLit !== v1) {
-            console.log(v1);
-            removeHighlight(v1);
+    function addHighLight(v1, v2){
+        if(currentLitX !== v1 || currentLitY !== v2) {
+            clearContent();
+            renderContent()
+            //console.log(v1);
+            //console.log((context.canvas.width / gridBlockSize));
+            //removeHighlight(v1, v2);
             context.beginPath();
             context.lineWidth = 1;
             context.strokeStyle = '#ffffff';
-            context.rect(Math.floor(v1 / (context.canvas.width / gridBlockSize)), 0, gridBlockSize, gridBlockSize);
+            console.log(v1);
+            context.rect(v1, v2, gridBlockSize, gridBlockSize);
+
             context.stroke();
 
         }
     }
 
     context.canvas.addEventListener('mousemove', function(evnt){
-        addHighLight(((Math.floor(evnt.offsetY / gridBlockSize)  - 1) * (canvas.width / gridBlockSize) )+ Math.floor(evnt.offsetX / gridBlockSize));
+        //addHighLight(((Math.floor(evnt.offsetY / gridBlockSize)  - 0) * (canvas.width / gridBlockSize) )+ Math.floor(evnt.offsetX / gridBlockSize));
+        addHighLight(Math.floor(evnt.offsetX / gridBlockSize) * gridBlockSize, Math.floor(evnt.offsetY / gridBlockSize) * gridBlockSize);
     });
     function createLevel(){
 
