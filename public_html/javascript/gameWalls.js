@@ -1,7 +1,7 @@
 /**
  * Created by bzweifel on 10/24/15.
  */
-var dots = 0;
+var dotsRemaining = 0;
 var gameGridArray = [
     //   1           4   5                   10                 15                   20                 25              29
     'e','0','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','0','f',
@@ -19,15 +19,15 @@ var gameGridArray = [
 
     //   1           4   5                   10                 15                   20                 25              29
     '0','8','3','3','3','3','6','1','4','8','3','3','6','0','4','4','0','5','3','3','7','4','1','5','3','3','3','3','7','0', //10
-    'h','0','a','a','a','j','4','1','4','5','3','3','7','0','4','4','0','8','3','3','6','4','1','4','i','a','a','a','0','g',
-    '0','0','0','0','0','b','4','1','4','4','0','0','0','0','8','7','0','0','0','0','4','4','1','4','d','0','0','0','0','0',
-    '0','c','c','c','c','k','4','1','4','4','0','0','c','c','c','c','c','c','0','0','4','4','1','4','l','c','c','c','c','0',
+    'h','0','a','a','a','j','4','1','4','5','3','3','7','0','8','7','0','8','3','3','6','4','1','4','i','a','a','a','0','g',
+    '0','0','0','0','0','b','4','1','4','4','0','0','0','0','0','0','0','0','0','0','4','4','1','4','d','0','0','0','0','0',
+    '0','c','c','c','c','k','4','1','4','4','0','e','c','c','c','c','c','c','f','0','4','4','1','4','l','c','c','c','c','0',
     '0','3','3','3','3','3','7','1','8','7','0','b','0','0','0','0','0','0','d','0','8','7','1','8','3','3','3','3','3','0',
 
     //   1           4   5                   10                 15                   20                 25              29
     '0','0','0','0','0','0','0','1','0','0','0','b','0','0','0','0','0','0','d','0','0','0','1','0','0','0','0','0','0','0', //15
     '0','3','3','3','3','3','6','1','5','6','0','b','0','0','0','0','0','0','d','0','5','6','1','5','3','3','3','3','3','0',
-    '0','a','a','a','a','j','4','1','4','4','0','0','a','a','a','a','a','a','0','0','4','4','1','4','i','a','a','a','a','0',
+    '0','a','a','a','a','j','4','1','4','4','0','h','a','a','a','a','a','a','g','0','4','4','1','4','i','a','a','a','a','0',
     '0','0','0','0','0','b','4','1','4','4','0','0','0','0','0','0','0','0','0','0','4','4','1','4','d','0','0','0','0','0',
     'e','0','c','c','c','k','4','1','4','4','0','5','3','3','3','3','3','3','6','0','4','4','1','4','l','c','c','c','0','f',
 
@@ -54,9 +54,10 @@ var context = canvas.getContext("2d");
 var blocksPerRow = 30;
 var gridBlockSize = canvas.width/blocksPerRow;
 var wallLineWidth = 2;
+var maxDots = 0;
 
 $(document).ready(function(){
-    console.log("JQuery is Ready")
+    console.log("JQuery is Ready");
     setTimeout(function () {
         $("#credits").html("Credits: 1")
     }, 200);
@@ -64,12 +65,12 @@ $(document).ready(function(){
     var wallColor = "blue";
     var testGridColor = "red";
 
-
     function renderContent(){
         context.save();
         //draw things
         //drawTestGrid(testGridColor);
         drawGame();
+        maxDots = dotsRemaining;
         context.restore();
     }
 
@@ -244,7 +245,7 @@ $(document).ready(function(){
         context.closePath();
         context.stroke();
         
-        dots = dots+1;
+        dotsRemaining = dotsRemaining + 1;
     }
 
     function drawPacPowerDots(gridX, gridY){
@@ -263,7 +264,7 @@ $(document).ready(function(){
         context.closePath();
         context.stroke();
 
-        dots = dots+1;
+        dotsRemaining = dotsRemaining + 1;
     }
 
     function drawOuterWallRight(gridX,gridY){
@@ -375,7 +376,6 @@ $(document).ready(function(){
         context.closePath();
         context.stroke();
     }
-
     
     renderContent();
 });
