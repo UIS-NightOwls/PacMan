@@ -216,11 +216,11 @@ $(document).ready(function(){
             var ghost = ghosts[i];
             if(ghost.isActive){
                 // chase; scatter; scared; consumed
-                if(ghost.mode != 'consumed'){
                     // Is ghost at cross roads? (more than one option to move)
-                    setTargetGrid(ghost);
                     
                     if((isAtCrossRoads(ghost) && isCharacterInCenter(ghost)) || (!canCharacterMoveInDirection(ghost, ghost.curDirection) && isCharacterInCenter(ghost))){
+                        setTargetGrid(ghost);
+
                         var ghostOptions = getOptions(ghost);
 
                         var minLength = -1;
@@ -252,7 +252,7 @@ $(document).ready(function(){
                             console.log("cannot move!!")
                         }
                     }
-                }
+                
             }
             else if(ghost.readyToRelease){
                 if(!ghost.centerOfCage){
@@ -634,6 +634,7 @@ $(document).ready(function(){
                     backToStartingPosition();
                     pacMan.isMoving = false;
                     gameStarted = false;
+                    
                     // Remove life image
                     if(livesLeft==1){
                         document.getElementById("life2").style.display = 'none';
@@ -644,7 +645,6 @@ $(document).ready(function(){
                 }
             }
         }
-        
     }
     
     function runGame(){
@@ -653,6 +653,17 @@ $(document).ready(function(){
             // Move PacMan First
             if(pacMan.isMoving){
                 movePacMan();
+                if( (pacMan.gridX >= blocksPerRow || pacMan.gridX < 0) && isCharacterInCenter(pacMan) ){
+                    if(pacMan.gridX >= blocksPerRow){
+                        pacMan.gridX = -1;
+                        pacMan.coordX = pacMan.gridX * gridBlockSize + gridBlockSize / 2;
+                    }
+                    else{
+                        pacMan.gridX = blocksPerRow;
+                        pacMan.coordX = pacMan.gridX * gridBlockSize; + gridBlockSize / 2;
+
+                    }
+                }
             }
             
             // Then move ghosts
