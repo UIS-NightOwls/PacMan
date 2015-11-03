@@ -29,7 +29,8 @@ function moveCharInThisDirection(char,dir){
     }
 }
 
-function moveCharInCurrentDirection(char){
+function moveCharInCurrentDirection(char) {
+   
     switch (char.curDirection){
         case UP:
             moveCharacterUp(char);
@@ -48,7 +49,8 @@ function moveCharInCurrentDirection(char){
     }
 }
 
-function moveCharacterRight(char){
+function moveCharacterRight(char) {
+   
     var tempCoordX = char.coordX + char.displacement;
     moveCharacterHorizontal(tempCoordX, char);
 }
@@ -65,16 +67,21 @@ function moveCharacterHorizontal(x, char){
     char.gridX = tempGridX;
     
     moveCharacter(char);
+
+   // console.log("moveCharacterHorizontal",char)
     
-    char.myContext.clearRect(0,0,canvas.width,canvas.height);
+    char.context.clearRect(0, 0, char.canvas.width, char.canvas.height);
     
     drawCharacter(char);
 }
-function moveCharacterUp(char){
+function moveCharacterUp(char) {
+  //  console.log("moveCharacterUp",  eval(char.sprite.animationDef))
+  
     var tempCoordY = char.coordY - char.displacement;
     moveCharacterVertical(tempCoordY, char);
 }
-function moveCharacterDown(char){
+function moveCharacterDown(char) {
+   
     var tempCoordY = char.coordY + char.displacement;
     moveCharacterVertical(tempCoordY, char);
 }
@@ -86,7 +93,7 @@ function moveCharacterVertical(y, char){
     
     moveCharacter(char);
 
-    char.myContext.clearRect(0, 0, canvas.width, canvas.height);
+    char.context.clearRect(0, 0, char.canvas.width, char.canvas.height);
     
     drawCharacter(char);
 }
@@ -95,17 +102,26 @@ function moveCharacter(char){
     var previousCoordX = char.gridX * gridBlockSize;
     var previousCoordY = char.gridY * gridBlockSize;
     var gameGridIndex = char.gridY * blocksPerRow + char.gridX;
-    if(char.myName == 'pacMan'){
+
+   // console.log("moveCharacter",char.myName)
+
+    if (char.myName == 'pacMan') {
+
+     //   console.log("moveCharacter pacMan",char)
+
+
+
         if(gameGridArray[gameGridIndex] == "1"){
             dotsRemaining--;
             dotsConsumed++;
             score = score + 10;
             document.getElementById("score").innerHTML = "" + score;
         }
-        else if(gameGridArray[gameGridIndex] == "2"){
+        else if (gameGridArray[gameGridIndex] == "2") {
+            console.log("POWER UP")
             dotsRemaining--;
             dotsConsumed++;
-            score = score + 10;
+            score = score + 50;
             document.getElementById("score").innerHTML = "" + score;
 
             // POWER UP!!
@@ -115,6 +131,15 @@ function moveCharacter(char){
                     reverseDirection(ghosts[i]);
                 }
             }
+            setTimeout(function () {
+              
+                for (var i = 0; i < ghosts.length; i++) {
+                    if (ghosts[i].isActive) {
+                        ghosts[i].mode = 'blinking';
+                       // reverseDirection(ghosts[i]);
+                    }
+                }
+            }, 5000);
 
             setTimeout(setBackToChase, 7000);
         }
@@ -200,12 +225,8 @@ function drawSprite(img, x, y, dir, charContext) {
     charContext.drawImage(img, x, y);
 }
 
-function drawCharacter(char){
-    if(char.mode == 'scared'){
-        drawSprite(char.scaredImage, char.coordX - spriteSize / 2, char.coordY - spriteSize / 2, char.curDirection, char.myContext);
-    }
-    else{
-        drawSprite(char.myImage, char.coordX - spriteSize / 2, char.coordY - spriteSize / 2, char.curDirection, char.myContext);
-    }
+function drawCharacter(char) {
+   
+    
 }
         

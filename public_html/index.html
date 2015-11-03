@@ -28,40 +28,40 @@
                         <div id="canvas-overlay-container" >
                             <div id="canvas-overlay-content">                              
                                 <div id="title">
-                                    <img src="images/pacman-logo.png" style="width:60%" alt="Pac Man Font">
+                                    <img src="images/pacman-logo.png" style="width:60%;margin:0 auto; display:block;" alt="Pac Man">
                                 </div>
                                 
-                                <div style="position:relative;width:600px;">
+                                <div style="position:relative;width:585px;">
                                     <!--<p id="startbutton">Press 's' to Start</p>-->
-                                    <span class="game_font" style="top:20px;left:0px;position:absolute">1UP</span>
-                                    <span class="game_font" style="top:20px;left:0px;right:0px;position:absolute">HIGH SCORE</span>
-                                    <span class="game_font" style="top:20px;right:0px;position:absolute">2UP</span>
-                                    <span class="game_font" style="top:780px;left:0px;position:absolute;">
+                                    <span class="game_font" style="top:20px;left:0;position:absolute">1UP</span>
+                                    <span class="game_font" style="top:20px;left:200px;right:0;position:absolute">HIGH SCORE</span>
+                                    <span class="game_font" style="top:20px;right:0;position:absolute">2UP</span>
+                                    <span class="game_font" style="top:780px;left:0;position:absolute;">
                                         Lives: <img id="life1" src="images/sprites/pacman-right-1.png">&nbsp;
                                         <img id="life2" src="images/sprites/pacman-right-1.png">
                                     </span>
-                                    <span class="game_font" id="readyPlayer" style="top:470px; right: 0px; left:-17px; font-size: 15px; position: absolute; z-index: 7;">READY PLAYER 1</span>
-                                    <span class="game_font" id="gameOver" style="top:360px; right: 0px; left:0px; position: absolute; z-index: 7; display: none"> GAME OVER</span>
-                                    <span class="game_font" id="gameWon" style="top:360px; right: 0px; left:0px; position: absolute; z-index: 7; display: none"> YOU WON!</span>
-                                    <span class="game_font" id="score" style="top:40px;left:0px;right:0px;position:absolute">0</span>
+                                    <span class="game_font" id="readyPlayer" style="text-align:center;top:470px; right: 0; left:0; font-size: 15px; position: absolute; z-index: 7;">READY PLAYER 1</span>
+                                    <span class="game_font" id="gameOver" style="color:red;text-align:center;top:470px; right: 0; left:0; position: absolute; z-index: 7; display: none"> GAME OVER</span>
+                                    <span class="game_font" id="gameWon" style="text-align:center;top:470px; right: 0; left:0; position: absolute; z-index: 7; display: none"> YOU WON!</span>
+                                    <span class="game_font" id="score" style="top:40px;left:0;right:0;position:absolute">0</span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- size should change? -->
                         <div class="canvas-content">
-                            <canvas id="myCanvas" width="600" height="640" style="position: absolute; top: 200px; left: 0px">
+                            <canvas id="myCanvas" width="600" height="640" style="position: absolute; top: 200px; left: 0">
                                 <p>Canvas not supported</p>
+                            </canvas>                            
+                            <canvas id="pacMan" width="600" height="640" style="position: absolute; top:200px;left: 0">
                             </canvas>
-                            <canvas id="pacMan" width="600" height="640" style="position: absolute; top:200px;left: 0px">
+                            <canvas id="ghost1" width="600" height="640" style="position: absolute; top:200px;left: 0">
                             </canvas>
-                            <canvas id="ghost1" width="600" height="640" style="position: absolute; top:200px;left: 0px">
+                            <canvas id="ghost2" width="600" height="640" style="position: absolute; top:200px;left: 0">
                             </canvas>
-                            <canvas id="ghost2" width="600" height="640" style="position: absolute; top:200px;left: 0px">
+                            <canvas id="ghost3" width="600" height="640" style="position: absolute; top:200px;left: 0">
                             </canvas>
-                            <canvas id="ghost3" width="600" height="640" style="position: absolute; top:200px;left: 0px">
-                            </canvas>
-                            <canvas id="ghost4" width="600" height="640" style="position: absolute; top:200px;left: 0px">
+                            <canvas id="ghost4" width="600" height="640" style="position: absolute; top:200px;left: 0">
                             </canvas>
                         </div>
                     </div>
@@ -88,7 +88,11 @@
 
     <script src="javascript/gameWalls.js" type="text/javascript"></script>
     <script src="javascript/character.js" type="text/javascript"></script>
-    <script src="javascript/pacman.js" type="text/javascript"></script>
+    <script src="javascript/sprite.js" type="text/javascript"></script>
+    <script src="javascript/models/player.js" type="text/javascript"></script>
+    <script src="javascript/models/pacman.js" type="text/javascript"></script>
+    <script src="javascript/models/ghost.js" type="text/javascript"></script>
+    <script src="javascript/game.js" type="text/javascript"></script>
     
     <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Owl-576542.svg" alt="Night Owls" title="Night Owls" height="30" style="position:absolute;bottom:0;left:0;" />
 </body>
