@@ -18,7 +18,7 @@ function player(options) {
    // obj.canvas.width = obj.spriteSize;
    // obj.canvas.height = obj.spriteSize;
 
-    obj.animationPlaying = options.animatinPlaying || false;
+    obj.animationPlaying = options.animationPlaying || false;
  
     // Create animated sprite
     obj.image = new Image();
@@ -37,11 +37,8 @@ function player(options) {
         startingFrame: obj.startingFrame || 0,
         ticksPerFrame: obj.ticksPerFrame || 4,
         onLoaded: function () {
-
-           
          //   console.log("move", obj.coordX, obj.coordY)
          //   obj.context.moveTo(obj.coordX, obj.coordY);
-
         }
 
     });

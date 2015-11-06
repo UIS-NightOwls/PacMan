@@ -680,10 +680,7 @@ $(document).ready(function () {
             document.getElementById('readyPlayer').style.display = 'none';
             pacMan.isMoving = true;
             gameStarted = true;
-            sound_pacman_background1.play();
-
-          
-
+            //sound_pacman_background1.play();
         }
 
         if (!pacMan.isMoving) {
@@ -698,8 +695,6 @@ $(document).ready(function () {
             requestAnimFrame(animloop);
             if (!playersCollided && gameStarted) {
                 runGame()
-
-
             }
         }, 1000 / GAMESPEED);
 
@@ -732,7 +727,7 @@ $(document).ready(function () {
 
 
     function backToStartingPosition() {
-        console.log("backToStartingPosition")
+        console.log("backToStartingPosition");
         setDefaults();
         pacMan.context.clearRect(0, 0, pacMan.canvas.width, pacMan.canvas.height);
 
@@ -750,23 +745,36 @@ $(document).ready(function () {
         //drawCharacter(pinky);
     }
 
+    function portalMove(char){
+        if( (char.gridX >= blocksPerRow -1 || char.gridX <= 0) && isCharacterInCenter(char) ){
+            if(char.gridX >= blocksPerRow -1){
+                char.gridX = 0;
+                char.coordX = char.gridX * gridBlockSize + gridBlockSize / 2;
+            }
+            else{
+                char.gridX = blocksPerRow-1;
+                char.coordX = char.gridX * gridBlockSize; + gridBlockSize / 2;
+            }
+        }
+    }
+
     function playerCollision() {
         for (var i = 0; i < ghosts.length && !playersCollided; i++) {
             if (ghosts[i].gridX == pacMan.gridX && ghosts[i] && ghosts[i].gridY == pacMan.gridY) {
-                sound_pacman_background1.stop();
-                console.log("PLAYERS COLLIDE:", ghosts[i].myName,ghosts[i].mode)
+                //sound_pacman_background1.stop();
+                console.log("PLAYERS COLLIDE:", ghosts[i].myName,ghosts[i].mode);
 
                 if (ghosts[i].mode == 'scared' || ghosts[i].mode == 'blinking') {
                     ghosts[i].mode = 'consumed';
-                    console.log("PACMAN EATS ", ghosts[i].myName)
-                    sound_pacman_getghost.play()
+                    console.log("PACMAN EATS ", ghosts[i].myName);
+                    //sound_pacman_getghost.play()
                 }
                 else if (ghosts[i].mode == 'consumed') {
                 
                 }
                 else {
                     //PACMAN DIES
-                    sound_pacman_death.play();
+                    //sound_pacman_death.play();
                     livesLeft--;
                     playersCollided = true;
                     if (livesLeft < 0) {
@@ -804,14 +812,18 @@ $(document).ready(function () {
                 }
             }
 
-
             // Move PacMan First
             if (pacMan.isMoving) {
                 movePacMan();
+                portalMove(pacMan);
             }
 
             // Then move ghosts
             moveGhosts();
+
+            for(var i = 0; i < ghosts.length; i++){
+                portalMove(ghosts[i]);
+            }
 
             // Check for collisions
             playerCollision();
@@ -819,7 +831,7 @@ $(document).ready(function () {
 
         }
         else {
-            sound_pacman_background1.stop();
+            //sound_pacman_background1.stop();
         }
     }
 
@@ -834,24 +846,19 @@ $(document).ready(function () {
                 };
     })();
 
-    var sound_pacman_song1 = new sound({
-        url: "sounds/pacman_song1.mp3",
-        callback: function () {
-            this.play();
-            //setTimeout(function () {
-            //    pacman_song1.pause();
-            //    setTimeout(function () {
-            //        pacman_song1.play();
-            //    }, 1000);
-            //}, 3000)
-        }
-    });
-
-   
-   
-
-
-
+    //var sound_pacman_song1 = new sound({
+    //    url: "sounds/pacman_song1.mp3",
+    //    callback: function () {
+    //        this.play();
+    //        //setTimeout(function () {
+    //        //    pacman_song1.pause();
+    //        //    setTimeout(function () {
+    //        //        pacman_song1.play();
+    //        //    }, 1000);
+    //        //}, 3000)
+    //    }
+    //});
+    
     //document.body.addEventListener("keyup", keyEventListener, false);
     window.addEventListener('keydown', checkKey, true);
     renderContent();

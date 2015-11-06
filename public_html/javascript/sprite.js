@@ -118,7 +118,7 @@ function sprite(options) {
                         break;
                     case "down":
                         if (that.parent.mode == "consumed") {
-                            that.animationDef = that.parent.animationLoopCONSUMEDDOWN;
+                            that.animationDef = that.parent.animationLoopCONSUMEDOWN;
                         }
                         else {
                             that.animationDef = that.parent.animationLoopDOWN;

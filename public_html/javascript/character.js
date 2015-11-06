@@ -108,9 +108,7 @@ function moveCharacter(char){
     if (char.myName == 'pacMan') {
 
      //   console.log("moveCharacter pacMan",char)
-
-
-
+        
         if(gameGridArray[gameGridIndex] == "1"){
             dotsRemaining--;
             dotsConsumed++;
@@ -118,20 +116,18 @@ function moveCharacter(char){
             document.getElementById("score").innerHTML = "" + score;
            // console.log(char.gridY, char.gridX, (char.gridX % 2 == 0 || char.gridY % 2 == 0))
             if ((char.gridX % 2==0 || char.gridY % 2==0) &! (char.gridX % 2==0 && char.gridY % 2==0)) {
-              
-                sound_dot2.play();
-               
+                //sound_dot2.play();
             }
             else {
-                sound_dot.play();
+                //sound_dot.play();
             }
            
         }
         else if (gameGridArray[gameGridIndex] == "2") {
 
-            sound_pacman_power1.play();
+            //sound_pacman_power1.play();
 
-            console.log("POWER UP")
+            console.log("POWER UP");
             dotsRemaining--;
             dotsConsumed++;
             score = score + 50;
@@ -200,7 +196,7 @@ function setBackToChase(){
             ghosts[i].mode = 'chase';
         }
     }
-    sound_pacman_power1.stop();
+    //sound_pacman_power1.stop();
 }
 
 function isCharacterInCenter(character){
