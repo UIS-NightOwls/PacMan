@@ -6,17 +6,17 @@ function sprite(options) {
         i = 0, //frameIndex
         ticksPerFrame = options.ticksPerFrame || 0,
         numberOfFrames = options.animationDef.length || 1;
-        that.parent = options.parent;
-        that.context = options.context;
-        that.spriteSize = options.spriteSize || 32;
-        that.width = numberOfFrames * that.spriteSize;
-        that.height = that.spriteSize;
-        that.image = options.image;
-        that.tickCount = 0;
-        that.animationPlaying = options.animationPlaying || false;
-        that.startingFrame = options.startingFrame || 0;
-        that.animationDef = options.animationDef;
-        that.loaded = false;
+    that.parent = options.parent;
+    that.context = options.context;
+    that.spriteSize = options.spriteSize || 32;
+    that.width = numberOfFrames * that.spriteSize;
+    that.height = that.spriteSize;
+    that.image = options.image;
+    that.tickCount = 0;
+    that.animationPlaying = options.animationPlaying || false;
+    that.startingFrame = options.startingFrame || 0;
+    that.animationDef = options.animationDef;
+    that.loaded = false;
 
     that.image.addEventListener("load", spriteImageLoaded);
     that.image.src = options.src;
@@ -60,7 +60,7 @@ function sprite(options) {
         that.loaded = true;
         that.animationPlaying = false;
 
-      //  console.log("firstLoad", that.parent.myName)
+        //  console.log("firstLoad", that.parent.myName)
 
         // console.log(that.animationDef,that.startingFrame, that.spriteSize)
 
@@ -79,7 +79,7 @@ function sprite(options) {
          // that.parent.coordY +
           that.spriteSize);
           numberOfFrames = options.animationDef.length
-    }
+    };
 
     that.render = function () {
        
@@ -134,9 +134,7 @@ function sprite(options) {
                         break;
                 }
             }
-
-
-
+            
             //   console.log("frameIndex:", i, that.animationDef[i][0] * spriteSize, that.animationDef[i][1] * spriteSize)
             // Clear the canvas
             that.context.clearRect(0, 0, that.width, that.height);

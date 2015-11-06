@@ -1,50 +1,7 @@
 /**
  * Created by bzweifel on 9/22/15.
  */
-
-
-
-// Images
-//var pacImg = new Image();
-//pacImg.src = "images/sprites/pacman-right-1.png";
-
-//var ghost1 = new Image();
-//ghost1.src = "images/sprites/ghost1-right.png";
-
-//var ghost2 = new Image();
-//ghost2.src = "images/sprites/ghost2-right.png";
-
-//var ghost3 = new Image();
-//ghost3.src = "images/sprites/ghost3-right.png";
-
-//var ghost4 = new Image();
-//ghost4.src = "images/sprites/ghost4-right.png";
-
-//var ghostScared = new Image();
-//ghostScared.src = "images/sprites/ghost-run-right.png";
-
-//var character = function(){
-//    this.myName             = 'pacMan';
-//    this.gridX              = 15;
-//    this.gridY              = 24;
-//    this.coordX             = this.gridX * gridBlockSize;
-//    this.coordY             = this.gridY * gridBlockSize + gridBlockSize/2;
-//    // characters velocity is displacement/milliseconds ( 5px per 100 milliseconds) milliseconds is gameSpeed
-//    this.displacement       = 5;       // in pixels needs to be a factor of gridBlockSize 
-//    this.curDirection       = "right";
-//    this.desDirection       = "right";
-//    this.myContext          = "";
-//    this.mode               = 'chase'; // modes for ghosts: chase, scatter, consumed
-//    this.isActive           = true;
-//    this.targetX            = 0;
-//    this.targetY            = 0;
-//    this.myImage            = "";
-//    this.scaredImage        = ghostScared;
-//    this.readyToRelease     = false;
-//    this.centerOfCage       = false;
-//    this.countMode         = 0;
-//};
-
+    
 var GAMESPEED = 45;
 
 var gameOver = false;
@@ -61,8 +18,6 @@ var pacMan = new pacman({
     startingFrame: 2,
     isActive: false
 });
-
-
 
 var blinky = new ghost({
     canvas: document.getElementById("ghost1"),
@@ -108,34 +63,6 @@ $(document).ready(function () {
     setTimeout(function () {
         $("#credits").html("Credits: 1")
     }, 200);
-    // var pacManCanvas = document.getElementById("pacMan");
-    // var pacManContext = pacManCanvas.getContext("2d");
-
-
-    var pacManCanvas = pacMan.canvas;
-    var pacManContext = pacMan.context;
-
-    var ghost1Canvas = blinky.canvas;
-    var ghost1Context = blinky.context;
-    var ghost2Canvas = inky.canvas;
-    var ghost2Context = inky.context;
-    var ghost3Canvas = clyde.canvas;
-    var ghost3Context = clyde.context;
-    var ghost4Canvas = pinky.canvas;
-    var ghost4Context = pinky.context;
-
-
-    //var ghost1Canvas = document.getElementById("ghost1");
-    //var ghost1Context = ghost1Canvas.getContext("2d");
-
-    //var ghost2Canvas = document.getElementById("ghost2");
-    //var ghost2Context = ghost2Canvas.getContext("2d");
-
-    //var ghost3Canvas = document.getElementById("ghost3");
-    //var ghost3Context = ghost3Canvas.getContext("2d");
-
-    //var ghost4Canvas = document.getElementById("ghost4");
-    //var ghost4Context = ghost4Canvas.getContext("2d");
 
     var gameStarted = false;
 
@@ -155,21 +82,6 @@ $(document).ready(function () {
     function renderContent() {
         context.save();
         setDefaults();
-        //  pacMan.sprite.image.onload = function(){
-        //       drawCharacter(pacMan);
-        // }; 
-        //  ghost1.sprite.image.onload = function(){
-        //     drawCharacter(blinky);
-        // };
-        // ghost2.sprite.image.onload = function () {
-        //     drawCharacter(inky);
-        //  };
-        // ghost3.sprite.image.onload = function () {
-        //      drawCharacter(clyde);
-        // };
-        // ghost4.sprite.image.onload = function () {
-        //    drawCharacter(pinky);   
-        // };
         context.restore();
     }
 
@@ -178,19 +90,15 @@ $(document).ready(function () {
         //  pacMan.myContext = pacManContext;
         
         pacMan.sprite.animationDef = pacMan.animationLoopRIGHT;
-      
-     
+           
         pacMan.gridX = 15;
         pacMan.gridY = 24;
         pacMan.coordX = pacMan.gridX * gridBlockSize;
         pacMan.coordY = pacMan.gridY * gridBlockSize + gridBlockSize / 2;
         pacMan.curDirection = "right";
         pacMan.desDirection = "right";
-       
         pacMan.isActive = false;
-      
-
-       
+        
        // pacMan.sprite.animationPlaying = false;
         pacMan.sprite.startingFrame = 2;
        // pacMan.sprite.firstLoad();
@@ -204,7 +112,7 @@ $(document).ready(function () {
         blinky.gridY = (blinky.coordY - gridBlockSize / 2) / gridBlockSize;
         blinky.targetX = blocksPerRow * gridBlockSize;
         blinky.targetY = 0;
-        blinky.displacement = 4;
+        blinky.displacement = 2;
         blinky.curDirection = "right";
         blinky.isActive = true;
         blinky.isMoving = true;
@@ -222,7 +130,7 @@ $(document).ready(function () {
         inky.isActive = false;
         inky.targetX = blocksPerRow * gridBlockSize;
         inky.targetY = blocksPerRow * gridBlockSize;
-        inky.displacement = 4;
+        inky.displacement = 2;
         inky.curDirection = "right";
         inky.isActive = false;
         inky.sprite.loaded = false;
@@ -230,8 +138,6 @@ $(document).ready(function () {
         inky.isMoving = false;
        // inky.sprite.animationPlaying = false;
         inky.sprite.animationDef = inky.animationLoopRIGHT;
-
-
 
         //  pinky.myContext = ghost4Context;
         pinky.mode = 'chase';
@@ -241,18 +147,15 @@ $(document).ready(function () {
         pinky.gridY = (pinky.coordY - gridBlockSize / 2) / gridBlockSize;     
         pinky.targetX = 0;
         pinky.targetY = 0;  
-        pinky.displacement = 4;
+        pinky.displacement = 2;
         pinky.readyToRelease = true;
         pinky.curDirection = 'left';
         pinky.isActive = false;
         pinky.sprite.loaded = false;
         pinky.isMoving = false;
-       
-
        // pinky.sprite.animationPlaying = false;
         pinky.sprite.animationDef = pinky.animationLoopRIGHT;
-
-
+        
         //  clyde.myContext = ghost3Context;
         clyde.mode = 'chase';
         clyde.coordX = 338;
@@ -261,7 +164,7 @@ $(document).ready(function () {
         clyde.gridY = (clyde.coordY - gridBlockSize / 2) / gridBlockSize;      
         clyde.targetX = 0;
         clyde.targetY = blocksPerRow * gridBlockSize;
-        clyde.displacement = 4;
+        clyde.displacement = 2;
         clyde.curDirection = 'right';
         clyde.isActive = false;
         clyde.isMoving = false;
@@ -306,56 +209,60 @@ $(document).ready(function () {
          release after 1/3 of pac dots have been consumed and not during the first level
          scatter tile = bottom left corner outside of map
      */
-
-
+    
     function moveGhosts() {
+        // Loop through each ghost and move them
         for (var i = 0; i < ghosts.length; i++) {
             var ghost = ghosts[i];
          
+            // Move ghost if it is on playing field
             if (ghost.isActive) {
                 ghost.isMoving = true;
-               // console.log("moveGhosts", ghost.myName)
-                // chase; scatter; scared; consumed
-                if (ghost.mode != 'consumed') {
-                    // Is ghost at cross roads? (more than one option to move)
+                // console.log("moveGhosts", ghost.myName)
+                // chase; scatter; scared; consumed  (this can be blinking now??)
+                
+                // Is ghost at cross roads? (more than one option to move) && is in a position to move
+                if ((isAtCrossRoads(ghost) && isCharacterInCenter(ghost)) || (!canCharacterMoveInDirection(ghost, ghost.curDirection) && isCharacterInCenter(ghost))) {
+                    var ghostOptions = getOptions(ghost);
                     setTargetGrid(ghost);
 
-                    if ((isAtCrossRoads(ghost) && isCharacterInCenter(ghost)) || (!canCharacterMoveInDirection(ghost, ghost.curDirection) && isCharacterInCenter(ghost))) {
-                        var ghostOptions = getOptions(ghost);
+                    var minLength = -1;
+                    var dir = ghost.curDirection;
+                    
+                    // Find shortest straight line distance between options at the cross roads
+                    for (var j = 0; j < ghostOptions.length; j++) {
 
-                        var minLength = -1;
-                        var dir = ghost.curDirection;
-                        for (var j = 0; j < ghostOptions.length; j++) {
+                        var a = getXTileFromCharAndDir(ghost, ghostOptions[j]) - ghost.targetX;
+                        a = Math.pow(a, 2);
 
-                            var a = getXTileFromCharAndDir(ghost, ghostOptions[j]) - ghost.targetX;
-                            a = Math.pow(a, 2);
+                        var b = getYTileFromCharAndDir(ghost, ghostOptions[j]) - ghost.targetY;
+                        b = Math.pow(b, 2);
 
-                            var b = getYTileFromCharAndDir(ghost, ghostOptions[j]) - ghost.targetY;
-                            b = Math.pow(b, 2);
+                        var c = a + b;
+                        c = Math.sqrt(c);
 
-                            var c = a + b;
-                            c = Math.sqrt(c);
-
-                            if (c < minLength || minLength == -1) {
-                                minLength = c;
-                                dir = ghostOptions[j];
-                            }
+                        if (c < minLength || minLength == -1) {
+                            minLength = c;
+                            dir = ghostOptions[j];
                         }
-                        ghost.curDirection = dir;
+                    }
+                    ghost.curDirection = dir;
+                    moveCharInCurrentDirection(ghost);
+                }
+                else {
+                    // Keep moving in current direction if possible
+                    if (canCharacterMoveInDirection(ghost, ghost.curDirection) || !isCharacterInCenter(ghost)) {
                         moveCharInCurrentDirection(ghost);
                     }
                     else {
-                        if (canCharacterMoveInDirection(ghost, ghost.curDirection) || !isCharacterInCenter(ghost)) {
-                            moveCharInCurrentDirection(ghost);
-                        }
-                        else {
-                            console.log("cannot move!!")
-                        }
+                        console.log("cannot move!!")
                     }
                 }
             }
+            // Ghost is not on the playing field, are they ready to be release from the gate
             else if (ghost.readyToRelease) {
                 ghost.isMoving = true;
+                // Move the ghost to the center then to playing field
                 if (!ghost.centerOfCage) {
                     moveGhostToCenterOfCage(ghost);
                 }
@@ -367,23 +274,28 @@ $(document).ready(function () {
     }
 
     function moveGhostToCenterOfCage(char) {
-       
+        // HORIZONTAL MOVE
         if (Math.abs(char.coordX - ghostCageCenterX) <= char.displacement && (char.coordX != ghostCageCenterX)) {
+            // Ghost is close enough to the center, just move them there already!
             moveCharacterHorizontal(ghostCageCenterX, char);
         }
         else if (char.coordX != ghostCageCenterX) {
+            // Move in the direction of the center of cage
             if (char.coordX < ghostCageCenterX) {
-                // Move to the right towards the center
                 moveCharacterRight(char);
             }
             else {
                 moveCharacterLeft(char);
             }
         }
+        
+        // VERTICAL MOVE
         else if (Math.abs(char.coordY - ghostCageCenterY) <= char.displacement && (char.coordY != ghostCageCenterY)) {
+            // Ghost is close enough to the center, just move them there already!
             moveCharacterVertical(ghostCageCenterY, char);
         }
         else if (char.coordY != ghostCageCenterY) {
+            // Move in the direction of the center of cage
             if (char.coordY > ghostCageCenterY) {
                 moveCharacterUp(char);
             }
@@ -392,6 +304,7 @@ $(document).ready(function () {
             }
         }
 
+        // Is ghost in center of the cage and ready to move to the field
         if (char.coordX == ghostCageCenterX && char.coordY == ghostCageCenterY) {
             char.centerOfCage = true;
         }
@@ -399,22 +312,28 @@ $(document).ready(function () {
 
     function moveGhostToFieldFromCage(char) {
        
+        // HORIZONTAL
         if (Math.abs(char.coordX - ghostStartingX) <= char.displacement && (char.coordX != ghostStartingX)) {
+            // Ghost is close enough to the center, just move them there already!
             moveCharacterHorizontal(ghostStartingX, char);
         }
         else if (char.coordX != ghostStartingX) {
+            // Move in the direction of the center of cage
             if (char.coordX < ghostStartingX) {
-                // Move to the right towards the center
                 moveCharacterRight(char);
             }
             else {
                 moveCharacterLeft(char);
             }
         }
+        
+        // VERTICAL
         else if (Math.abs(char.coordY - ghostStartingY) <= char.displacement && (char.coordY != ghostStartingY)) {
+            // Ghost is close enough to the center, just move them there already!
             moveCharacterVertical(ghostStartingY, char);
         }
         else if (char.coordY != ghostStartingY) {
+            // Move in the direction of the center of cage
             if (char.coordY > ghostStartingY) {
                 moveCharacterUp(char);
             }
@@ -423,6 +342,7 @@ $(document).ready(function () {
             }
         }
 
+        // Ghost is ready, go get that evil pacMan!!
         if (char.coordX == ghostStartingX && char.coordY == ghostStartingY) {
             char.isActive = true;
             char.readyToRelease = false;
@@ -431,11 +351,10 @@ $(document).ready(function () {
     }
 
     function setTargetGrid(ghost) {
-      //  console.log("setTargetGrid", ghost.myName);
+        // Each ghost moves towards a target location based on game logic, set that location per ghost
         switch (ghost.myName) {
             case 'blinky':
-               
-                //Blinky always attemts to move to pacmans current location in chase mode.
+                //Blinky always attempts to move to pacMans current location in chase mode.
                 if (ghost.mode == 'chase') {
                     ghost.targetX = pacMan.gridX;
                     ghost.targetY = pacMan.gridY;
@@ -448,6 +367,11 @@ $(document).ready(function () {
                     ghost.countMode++;
                 }
                 else if (ghost.mode == 'consumed') {
+                    // TO DO:
+                    // set target location of tile right above ghost gate
+                    // move really really fast there
+                    // move into gate
+                    // set back to chase
                 }
                 break;
             case 'pinky':
@@ -481,6 +405,12 @@ $(document).ready(function () {
 
                 }
                 else if (ghost.mode == 'consumed') {
+                    // TO DO:
+                    // set target location of tile right above ghost gate
+                    // move really really fast there
+                    // move into gate
+                    // set back to chase
+                    
                 }
                 break;
             case 'clyde':
@@ -502,10 +432,13 @@ $(document).ready(function () {
                     ghost.targetX = 0;
                     ghost.targetY = blocksPerRow * gridBlockSize;
                     ghost.countMode++;
-
                 }
                 else if (ghost.mode == 'consumed') {
-                    ghost.countMode = 0;
+                    // TO DO:
+                    // set target location of tile right above ghost gate
+                    // move really really fast there
+                    // move into gate
+                    // set back to chase
                 }
                 break;
             case 'inky':
@@ -543,14 +476,20 @@ $(document).ready(function () {
                     ghost.targetX = blocksPerRow * gridBlockSize;
                     ghost.targetY = blocksPerRow * gridBlockSize;
                     ghost.countMode++;
-
                 }
                 else if (ghost.mode == 'consumed') {
-
+                    // TO DO:
+                    // set target location of tile right above ghost gate
+                    // move really really fast there
+                    // move into gate
+                    // set back to chase
                 }
                 break;
         }
 
+        // Each move goes to ghost.countMode counter, currently using that
+        // to calculate when to switch modes between chase and scatter
+        
         // Chase mode for 20 seconds then scatter for 7 seconds and repeat
         if (ghost.countMode > Math.floor(timeToChase / gameSpeed) && ghost.mode == 'chase') {
             ghost.mode = 'scatter';
@@ -565,9 +504,11 @@ $(document).ready(function () {
         }
     }
 
+    // Used for Ghost AI
     function isAtCrossRoads(char) {
         var numOfOptions = 0;
 
+        // Can the character move in different directions (Except backwards silly, can't move backwards!)
         if (canCharacterMoveInDirection(char, UP) && char.curDirection != DOWN) {
             numOfOptions++;
             //console.log("Can move up");
@@ -595,9 +536,11 @@ $(document).ready(function () {
         return false;
     }
 
+    // Used for ghost AI
     function getOptions(char) {
         var charOptions = [];
 
+        // Return an array of directions the character can move
         if (canCharacterMoveInDirection(char, UP) && char.curDirection != DOWN) {
             charOptions.push(UP);
         }
@@ -619,6 +562,7 @@ $(document).ready(function () {
 
     function getXTileFromCharAndDir(char, dir) {
         var x;
+        // if they move in a direction what grid X will they be in?
         switch (dir) {
             case UP:
             case DOWN:
@@ -636,6 +580,7 @@ $(document).ready(function () {
 
     function getYTileFromCharAndDir(char, dir) {
         var y;
+        // if they move in a direction what grid Y will they be in?
         switch (dir) {
             case UP:
                 y = char.gridY - 1;
@@ -651,11 +596,9 @@ $(document).ready(function () {
         return y;
     }
 
-    // User moves Pac Man
+    // User moves Pac Man with key board
     function checkKey(e) {
         e = e || window.event;
-        tempPause = false;
-        playersCollided = false;
         switch (e.keyCode) {
             case 38:	// UP Arrow Key pressed
             case 87:	// W pressed
@@ -676,6 +619,13 @@ $(document).ready(function () {
             default:
                 break;
         }
+        
+        userInput();
+    }
+    
+    function userInput(){
+        playersCollided = false;
+
         if (!gameStarted) {
             document.getElementById('readyPlayer').style.display = 'none';
             pacMan.isMoving = true;
@@ -686,9 +636,29 @@ $(document).ready(function () {
         if (!pacMan.isMoving) {
             pacMan.isMoving = true;
         }
-        //runGame();
     }
 
+    // User moves Pac Man with Swipe
+    Hammer('.container').on("swiperight", function(event) {
+            event.gesture.preventDefault();
+            pacMan.desDirection = "right";
+            userInput();
+    });
+    Hammer('.container').on("swipeleft", function(event) {
+            event.gesture.preventDefault();
+            pacMan.desDirection = "left";
+            userInput();
+    });
+    Hammer('.container').on("swipeup", function(event) {
+            event.gesture.preventDefault();
+            pacMan.desDirection = "up";
+            userInput();
+    });
+    Hammer('.container').on("swipedown", function(event) {
+            event.gesture.preventDefault();
+            pacMan.desDirection = "down";
+            userInput();
+    });
   
     (function animloop() {
         setTimeout(function () {
@@ -701,20 +671,25 @@ $(document).ready(function () {
 
     })();
 
+    // Move Pac Man
     function movePacMan() {
+        
+        // Pac Man can only move when in center of current grid, those be the rules.. well our rules.
         if (isCharacterInCenter(pacMan)) {
+            // Can Pac Man move in the direction they want?
             if (canCharacterMoveInDirection(pacMan, pacMan.desDirection)) {
                 pacMan.curDirection = pacMan.desDirection;
+                pacMan.sprite.animationPlaying = true;
                 moveCharInCurrentDirection(pacMan);
             }
             else {
+                // Can Pac Man keep moving in current direction
                 if (canCharacterMoveInDirection(pacMan, pacMan.curDirection)) {
-                    //pacMan.desDirection = pacMan.curDirection;
                     pacMan.sprite.animationPlaying = true;
                     moveCharInCurrentDirection(pacMan);
                 }
                 else {
-                    // stop PacMan
+                    // Stop PacMan
                     pacMan.isMoving = false;
                     pacMan.sprite.animationPlaying = false;
                 }
@@ -724,29 +699,27 @@ $(document).ready(function () {
             moveCharInCurrentDirection(pacMan);
         }
     }
-
-
+    
     function backToStartingPosition() {
         console.log("backToStartingPosition");
+        // Set the defaults
         setDefaults();
+        
+        // Clear the canvases 
         pacMan.context.clearRect(0, 0, pacMan.canvas.width, pacMan.canvas.height);
 
         for (var i = 0; i < ghosts.length ; i++) {
             ghosts[i].context.clearRect(0, 0, ghosts[i].canvas.width, ghosts[i].canvas.height);
             ghosts[i].mode = "chase";
         }
-
-     
-
-        //drawCharacter(pacMan);
-        //drawCharacter(blinky);
-        //drawCharacter(inky);
-        //drawCharacter(clyde);
-        //drawCharacter(pinky);
     }
 
     function portalMove(char){
+        // Jump from one side of field to the other.. like magic!
+        
+        // Check if the character's position is greater than or less than grid 
         if( (char.gridX >= blocksPerRow -1 || char.gridX <= 0) && isCharacterInCenter(char) ){
+            // change grid to opposite side (and coordinates, don't forget)
             if(char.gridX >= blocksPerRow -1){
                 char.gridX = 0;
                 char.coordX = char.gridX * gridBlockSize + gridBlockSize / 2;
@@ -759,29 +732,40 @@ $(document).ready(function () {
     }
 
     function playerCollision() {
+        // Loop through ghosts and see if they have collided with Pac Man.... may he rest in peace, oh look a quarter!
         for (var i = 0; i < ghosts.length && !playersCollided; i++) {
+            
+            // Are they in the same grid coordinates
             if (ghosts[i].gridX == pacMan.gridX && ghosts[i] && ghosts[i].gridY == pacMan.gridY) {
                 //sound_pacman_background1.stop();
                 console.log("PLAYERS COLLIDE:", ghosts[i].myName,ghosts[i].mode);
 
+                // Can PacMan eat them??
                 if (ghosts[i].mode == 'scared' || ghosts[i].mode == 'blinking') {
                     ghosts[i].mode = 'consumed';
                     console.log("PACMAN EATS ", ghosts[i].myName);
                     //sound_pacman_getghost.play()
                 }
                 else if (ghosts[i].mode == 'consumed') {
-                
+                    // TO DO:
+                    // set target location of tile right above ghost gate
+                    // move really really fast there
+                    // move into gate
+                    // set back to chase
                 }
                 else {
                     //PACMAN DIES
                     //sound_pacman_death.play();
                     livesLeft--;
                     playersCollided = true;
+                    
+                    // GAME OVER!!!!
                     if (livesLeft < 0) {
                         gameOver = true;
                         document.getElementById("gameOver").style.display = '';
                     }
                     else {
+                        // Try Again User!
                         // return characters back to starting positions
                         backToStartingPosition();
                         pacMan.isMoving = false;
@@ -795,17 +779,17 @@ $(document).ready(function () {
                         }
                     }
                 }
-              
             }
         }
-
     }
 
     function runGame() {
-        // console.log("runGame()")
+        // Check if game is over or pauced
         if (!tempPause && !gameOver) {
-          
-            pacMan.sprite.animationPlaying = true;
+            
+            // Commenting out for now, I think this might be a problem when pacMan is stopped
+            // pacMan.sprite.animationPlaying = true;
+            
             for (var i = 0; i < ghosts.length ; i++) {
                 if (ghosts[i].isMoving) {
                     ghosts[i].sprite.animationPlaying = true;
@@ -815,20 +799,20 @@ $(document).ready(function () {
             // Move PacMan First
             if (pacMan.isMoving) {
                 movePacMan();
+                // Check for portal move for PacMan
                 portalMove(pacMan);
             }
 
             // Then move ghosts
             moveGhosts();
 
+            // Check for portal move for ghosts
             for(var i = 0; i < ghosts.length; i++){
                 portalMove(ghosts[i]);
             }
 
             // Check for collisions
             playerCollision();
-
-
         }
         else {
             //sound_pacman_background1.stop();

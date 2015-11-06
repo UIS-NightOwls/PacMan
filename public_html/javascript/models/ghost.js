@@ -1,7 +1,7 @@
 ﻿// Define the ghost constructor. Ghosts are players (inheritance), but with several unique properties
 function ghost(options) {
     //console.log("GHOST OPTIONS:", options)
-    this.mode = 'chase';    //  modes for ghosts: chase, scatter, consumed, blinking
+    this.mode = 'chase';    //  modes for ghosts: chase, scatter, consumed, blinking -- (blinking vs scared)??
     this.targetX = 0;       //  ghosts have targets they are trying to reach
     this.targetY = 0;
     //this.myImage = "";
