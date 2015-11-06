@@ -442,7 +442,7 @@ $(document).ready(function () {
                 }
                 break;
             case 'inky':
-                //inky always attemts to ambush pacman from behind his current location in chase mode.
+                //inky always attempts to ambush pacman from behind his current location in chase mode.
                 if (ghost.mode == 'chase') {
                     var tempTargetX = 0;
                     var tempTargetY = 0;
@@ -630,7 +630,7 @@ $(document).ready(function () {
             document.getElementById('readyPlayer').style.display = 'none';
             pacMan.isMoving = true;
             gameStarted = true;
-            //sound_pacman_background1.play();
+            sound_pacman_background1.play();
         }
 
         if (!pacMan.isMoving) {
@@ -667,8 +667,7 @@ $(document).ready(function () {
                 runGame()
             }
         }, 1000 / GAMESPEED);
-
-
+        
     })();
 
     // Move Pac Man
@@ -737,14 +736,14 @@ $(document).ready(function () {
             
             // Are they in the same grid coordinates
             if (ghosts[i].gridX == pacMan.gridX && ghosts[i] && ghosts[i].gridY == pacMan.gridY) {
-                //sound_pacman_background1.stop();
+                sound_pacman_background1.stop();
                 console.log("PLAYERS COLLIDE:", ghosts[i].myName,ghosts[i].mode);
 
                 // Can PacMan eat them??
                 if (ghosts[i].mode == 'scared' || ghosts[i].mode == 'blinking') {
                     ghosts[i].mode = 'consumed';
                     console.log("PACMAN EATS ", ghosts[i].myName);
-                    //sound_pacman_getghost.play()
+                    sound_pacman_getghost.play()
                 }
                 else if (ghosts[i].mode == 'consumed') {
                     // TO DO:
@@ -755,7 +754,7 @@ $(document).ready(function () {
                 }
                 else {
                     //PACMAN DIES
-                    //sound_pacman_death.play();
+                    sound_pacman_death.play();
                     livesLeft--;
                     playersCollided = true;
                     
@@ -815,7 +814,7 @@ $(document).ready(function () {
             playerCollision();
         }
         else {
-            //sound_pacman_background1.stop();
+            sound_pacman_background1.stop();
         }
     }
 
@@ -830,18 +829,18 @@ $(document).ready(function () {
                 };
     })();
 
-    //var sound_pacman_song1 = new sound({
-    //    url: "sounds/pacman_song1.mp3",
-    //    callback: function () {
-    //        this.play();
-    //        //setTimeout(function () {
-    //        //    pacman_song1.pause();
-    //        //    setTimeout(function () {
-    //        //        pacman_song1.play();
-    //        //    }, 1000);
-    //        //}, 3000)
-    //    }
-    //});
+    var sound_pacman_song1 = new sound({
+        url: "sounds/pacman_song1.mp3",
+        callback: function () {
+            this.play();
+            //setTimeout(function () {
+            //    pacman_song1.pause();
+            //    setTimeout(function () {
+            //        pacman_song1.play();
+            //    }, 1000);
+            //}, 3000)
+        }
+    });
     
     //document.body.addEventListener("keyup", keyEventListener, false);
     window.addEventListener('keydown', checkKey, true);

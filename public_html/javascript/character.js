@@ -99,16 +99,16 @@ function moveCharacter(char){
             document.getElementById("score").innerHTML = "" + score;
            // console.log(char.gridY, char.gridX, (char.gridX % 2 == 0 || char.gridY % 2 == 0))
             if ((char.gridX % 2==0 || char.gridY % 2==0) &! (char.gridX % 2==0 && char.gridY % 2==0)) {
-                //sound_dot2.play();
+                sound_dot2.play();
             }
             else {
-                //sound_dot.play();
+                sound_dot.play();
             }
            
         }
         // Consume Power Dot
         else if (gameGridArray[gameGridIndex] == "2") {
-            //sound_pacman_power1.play();
+            sound_pacman_power1.play();
             console.log("POWER UP");
             
             // record consumption of dot
@@ -188,7 +188,7 @@ function setBackToChase(){
             ghosts[i].mode = 'chase';
         }
     }
-    //sound_pacman_power1.stop();
+    sound_pacman_power1.stop();
 }
 
 function isCharacterInCenter(character){
