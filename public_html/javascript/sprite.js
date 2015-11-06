@@ -6,31 +6,34 @@ function sprite(options) {
         i = 0, //frameIndex
         ticksPerFrame = options.ticksPerFrame || 0,
         numberOfFrames = options.animationDef.length || 1;
-    that.parent = options.parent;
-    that.context = options.context;
-    that.spriteSize = options.spriteSize || 32;
-    that.width = numberOfFrames * that.spriteSize;
-    that.height = that.spriteSize;
-    that.image = options.image;
-    that.tickCount = 0;
-    that.animationPlaying = options.animationPlaying || false;
-    that.startingFrame = options.startingFrame || 0;
-    that.animationDef = options.animationDef;
-    that.loaded = false;
+        that.parent = options.parent;
+        that.context = options.context;
+        that.spriteSize = options.spriteSize || 32;
+        that.width = numberOfFrames * that.spriteSize;
+        that.height = that.spriteSize;
+        that.image = options.image;
+        that.tickCount = 0;
+        that.animationPlaying = options.animationPlaying || false;
+        that.startingFrame = options.startingFrame || 0;
+        that.animationDef = options.animationDef;
+        that.loaded = false;
 
     that.image.addEventListener("load", spriteImageLoaded);
     that.image.src = options.src;
+
+    var parent = this;
 
     function spriteImageLoaded() {
         //  console.log("spriteImageLoaded")
         if (!that.loaded) {
             that.firstLoad();
-            console.log(options)
+          //  console.log(options)
             options.onLoaded();
         }
-
-        window.requestAnimationFrame(spriteImageLoaded);
+       
+        window.requestAnimationFrame(spriteImageLoaded);       
         that.update();
+      
         that.render();
 
     }
@@ -53,10 +56,11 @@ function sprite(options) {
     that.spriteSizeHalf = that.spriteSize / 2;
 
     that.firstLoad = function () {
+
         that.loaded = true;
         that.animationPlaying = false;
 
-        //console.log("firstLoad", that.parent.coordX)
+      //  console.log("firstLoad", that.parent.myName)
 
         // console.log(that.animationDef,that.startingFrame, that.spriteSize)
 
@@ -78,7 +82,12 @@ function sprite(options) {
     }
 
     that.render = function () {
+       
         if (that.animationPlaying) {
+            if (that.parent.myName == 'clyde') {
+                console.log("clyde")
+            }
+           
           //  if(that.parent.mode) console.log("rendering sprite...", that.parent.mode)
 
             //  modes for ghosts: chase, scatter, consumed  

@@ -13,10 +13,10 @@ function ghost(options) {
     this.animationLoopSCARED = [[0, 4], [1, 4]];
     this.animationLoopBLINK = [[0, 4], [1, 4], [2, 4], [3, 4]]; 
 
-    this.animationLoopCONSUMEDRIGHT = [[4, 4]];
-    this.animationLoopCONSUMEDUP = [[4, 5]];
-    this.animationLoopCONSUMEDOWN = [[4, 6]];
-    this.animationLoopCONSUMEDLEFT = [[4, 7]];
+    this.animationLoopCONSUMEDRIGHT = [[4, 4], [4, 4]];
+    this.animationLoopCONSUMEDUP = [[4, 5], [4, 5]];
+    this.animationLoopCONSUMEDOWN = [[4, 6], [4, 6]];
+    this.animationLoopCONSUMEDLEFT = [[4, 7], [4, 7]];
    
 
     if (options.myName == 'blinky') {     

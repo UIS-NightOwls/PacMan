@@ -45,6 +45,8 @@
 //    this.countMode         = 0;
 //};
 
+var GAMESPEED = 45;
+
 var gameOver = false;
 var livesLeft = 2;
 var playersCollided = false;
@@ -66,9 +68,9 @@ var blinky = new ghost({
     canvas: document.getElementById("ghost1"),
     myName: 'blinky',
     src: "images/sprites/pacman-sprites.png",
-    animationPlaying: false,
+    animationPlaying: true,
     ticksPerFrame: 30,
-    isActive:false
+    isActive:true
 });
 var inky = new ghost({
     canvas: document.getElementById("ghost2"),
@@ -174,18 +176,28 @@ $(document).ready(function () {
     function setDefaults() {
         //  pacMan.myImage = pacImg;
         //  pacMan.myContext = pacManContext;
+        
+        pacMan.sprite.animationDef = pacMan.animationLoopRIGHT;
+      
+     
         pacMan.gridX = 15;
         pacMan.gridY = 24;
         pacMan.coordX = pacMan.gridX * gridBlockSize;
         pacMan.coordY = pacMan.gridY * gridBlockSize + gridBlockSize / 2;
         pacMan.curDirection = "right";
         pacMan.desDirection = "right";
+       
         pacMan.isActive = false;
+      
+
+       
        // pacMan.sprite.animationPlaying = false;
         pacMan.sprite.startingFrame = 2;
+       // pacMan.sprite.firstLoad();
         pacMan.sprite.loaded = false;
 
         //blinky.myContext = ghost1Context;
+        blinky.mode = 'chase';
         blinky.coordX = 302;
         blinky.gridX = blinky.coordX / gridBlockSize;
         blinky.coordY = 250;
@@ -194,12 +206,15 @@ $(document).ready(function () {
         blinky.targetY = 0;
         blinky.displacement = 4;
         blinky.curDirection = "right";
-        blinky.isActive = false;
+        blinky.isActive = true;
+        blinky.isMoving = true;
         blinky.sprite.loaded = false;
+        blinky.readyToRelease = true;
         //blinky.sprite.animationPlaying = false;
         blinky.sprite.animationDef = blinky.animationLoopRIGHT;
 
         //inky.myContext = ghost2Context;
+        inky.mode = 'chase';
         inky.coordX = 266;
         inky.gridX = inky.coordX / gridBlockSize;
         inky.coordY = 300;
@@ -211,12 +226,15 @@ $(document).ready(function () {
         inky.curDirection = "right";
         inky.isActive = false;
         inky.sprite.loaded = false;
+        inky.readyToRelease = false;
+        inky.isMoving = false;
        // inky.sprite.animationPlaying = false;
         inky.sprite.animationDef = inky.animationLoopRIGHT;
 
 
 
         //  pinky.myContext = ghost4Context;
+        pinky.mode = 'chase';
         pinky.coordX = 302;
         pinky.gridX = pinky.coordX / gridBlockSize;
         pinky.coordY = 300;
@@ -228,11 +246,15 @@ $(document).ready(function () {
         pinky.curDirection = 'left';
         pinky.isActive = false;
         pinky.sprite.loaded = false;
+        pinky.isMoving = false;
+       
+
        // pinky.sprite.animationPlaying = false;
         pinky.sprite.animationDef = pinky.animationLoopRIGHT;
 
 
         //  clyde.myContext = ghost3Context;
+        clyde.mode = 'chase';
         clyde.coordX = 338;
         clyde.gridX = clyde.coordX / gridBlockSize;
         clyde.coordY = 300;
@@ -242,8 +264,9 @@ $(document).ready(function () {
         clyde.displacement = 4;
         clyde.curDirection = 'right';
         clyde.isActive = false;
+        clyde.isMoving = false;
         clyde.sprite.loaded = false;
-       // clyde.sprite.animationPlaying = false;
+        clyde.sprite.animationPlaying = false;
         clyde.sprite.animationDef = clyde.animationLoopRIGHT;
     }
 
@@ -288,7 +311,10 @@ $(document).ready(function () {
     function moveGhosts() {
         for (var i = 0; i < ghosts.length; i++) {
             var ghost = ghosts[i];
+         
             if (ghost.isActive) {
+                ghost.isMoving = true;
+               // console.log("moveGhosts", ghost.myName)
                 // chase; scatter; scared; consumed
                 if (ghost.mode != 'consumed') {
                     // Is ghost at cross roads? (more than one option to move)
@@ -329,6 +355,7 @@ $(document).ready(function () {
                 }
             }
             else if (ghost.readyToRelease) {
+                ghost.isMoving = true;
                 if (!ghost.centerOfCage) {
                     moveGhostToCenterOfCage(ghost);
                 }
@@ -340,6 +367,7 @@ $(document).ready(function () {
     }
 
     function moveGhostToCenterOfCage(char) {
+       
         if (Math.abs(char.coordX - ghostCageCenterX) <= char.displacement && (char.coordX != ghostCageCenterX)) {
             moveCharacterHorizontal(ghostCageCenterX, char);
         }
@@ -370,6 +398,7 @@ $(document).ready(function () {
     }
 
     function moveGhostToFieldFromCage(char) {
+       
         if (Math.abs(char.coordX - ghostStartingX) <= char.displacement && (char.coordX != ghostStartingX)) {
             moveCharacterHorizontal(ghostStartingX, char);
         }
@@ -402,9 +431,10 @@ $(document).ready(function () {
     }
 
     function setTargetGrid(ghost) {
+      //  console.log("setTargetGrid", ghost.myName);
         switch (ghost.myName) {
             case 'blinky':
-
+               
                 //Blinky always attemts to move to pacmans current location in chase mode.
                 if (ghost.mode == 'chase') {
                     ghost.targetX = pacMan.gridX;
@@ -650,6 +680,7 @@ $(document).ready(function () {
             document.getElementById('readyPlayer').style.display = 'none';
             pacMan.isMoving = true;
             gameStarted = true;
+            sound_pacman_background1.play();
 
           
 
@@ -670,7 +701,7 @@ $(document).ready(function () {
 
 
             }
-        }, 1000 / 60);
+        }, 1000 / GAMESPEED);
 
 
     })();
@@ -722,15 +753,20 @@ $(document).ready(function () {
     function playerCollision() {
         for (var i = 0; i < ghosts.length && !playersCollided; i++) {
             if (ghosts[i].gridX == pacMan.gridX && ghosts[i] && ghosts[i].gridY == pacMan.gridY) {
-
+                sound_pacman_background1.stop();
                 console.log("PLAYERS COLLIDE:", ghosts[i].myName,ghosts[i].mode)
 
                 if (ghosts[i].mode == 'scared' || ghosts[i].mode == 'blinking') {
                     ghosts[i].mode = 'consumed';
-                    console.log("PACMAN EATS ",ghosts[i].myName)
+                    console.log("PACMAN EATS ", ghosts[i].myName)
+                    sound_pacman_getghost.play()
+                }
+                else if (ghosts[i].mode == 'consumed') {
+                
                 }
                 else {
                     //PACMAN DIES
+                    sound_pacman_death.play();
                     livesLeft--;
                     playersCollided = true;
                     if (livesLeft < 0) {
@@ -760,10 +796,12 @@ $(document).ready(function () {
     function runGame() {
         // console.log("runGame()")
         if (!tempPause && !gameOver) {
-
+          
             pacMan.sprite.animationPlaying = true;
             for (var i = 0; i < ghosts.length ; i++) {
-                ghosts[i].sprite.animationPlaying = true;
+                if (ghosts[i].isMoving) {
+                    ghosts[i].sprite.animationPlaying = true;
+                }
             }
 
 
@@ -780,6 +818,9 @@ $(document).ready(function () {
 
 
         }
+        else {
+            sound_pacman_background1.stop();
+        }
     }
 
     //http://www.paulirish.com/2011/requestanimationframe-for-smart-animating/
@@ -793,9 +834,21 @@ $(document).ready(function () {
                 };
     })();
 
+    var sound_pacman_song1 = new sound({
+        url: "sounds/pacman_song1.mp3",
+        callback: function () {
+            this.play();
+            //setTimeout(function () {
+            //    pacman_song1.pause();
+            //    setTimeout(function () {
+            //        pacman_song1.play();
+            //    }, 1000);
+            //}, 3000)
+        }
+    });
 
-  
-
+   
+   
 
 
 

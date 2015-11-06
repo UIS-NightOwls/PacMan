@@ -26,9 +26,6 @@ function player(options) {
     obj.startingFrame = options.startingFrame || 0;
     obj.ticksPerFrame = options.ticksPerFrame || 4;
 
-  
-
-
     obj.sprite = sprite({
         parent:obj,
         context: obj.context,

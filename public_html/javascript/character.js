@@ -116,8 +116,21 @@ function moveCharacter(char){
             dotsConsumed++;
             score = score + 10;
             document.getElementById("score").innerHTML = "" + score;
+           // console.log(char.gridY, char.gridX, (char.gridX % 2 == 0 || char.gridY % 2 == 0))
+            if ((char.gridX % 2==0 || char.gridY % 2==0) &! (char.gridX % 2==0 && char.gridY % 2==0)) {
+              
+                sound_dot2.play();
+               
+            }
+            else {
+                sound_dot.play();
+            }
+           
         }
         else if (gameGridArray[gameGridIndex] == "2") {
+
+            sound_pacman_power1.play();
+
             console.log("POWER UP")
             dotsRemaining--;
             dotsConsumed++;
@@ -187,6 +200,7 @@ function setBackToChase(){
             ghosts[i].mode = 'chase';
         }
     }
+    sound_pacman_power1.stop();
 }
 
 function isCharacterInCenter(character){
