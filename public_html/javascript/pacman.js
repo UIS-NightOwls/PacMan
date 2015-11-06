@@ -647,27 +647,37 @@ $(document).ready(function(){
         }
     }
     
+    function portalMove(char){
+        if( (char.gridX >= blocksPerRow -1 || char.gridX <= 0) && isCharacterInCenter(char) ){
+            if(char.gridX >= blocksPerRow -1){
+                char.gridX = 0;
+                char.coordX = char.gridX * gridBlockSize + gridBlockSize / 2;
+            }
+            else{
+                char.gridX = blocksPerRow-1;
+                char.coordX = char.gridX * gridBlockSize; + gridBlockSize / 2;
+            }
+        }
+    }
+    
     function runGame(){
         if(!tempPause && !gameOver){
             
             // Move PacMan First
             if(pacMan.isMoving){
                 movePacMan();
-                if( (pacMan.gridX >= blocksPerRow || pacMan.gridX < 0) && isCharacterInCenter(pacMan) ){
-                    if(pacMan.gridX >= blocksPerRow){
-                        pacMan.gridX = -1;
-                        pacMan.coordX = pacMan.gridX * gridBlockSize + gridBlockSize / 2;
-                    }
-                    else{
-                        pacMan.gridX = blocksPerRow;
-                        pacMan.coordX = pacMan.gridX * gridBlockSize; + gridBlockSize / 2;
-
-                    }
-                }
+                portalMove(pacMan);
             }
+
+            // Check for collisions
+            playerCollision();
             
             // Then move ghosts
             moveGhosts();
+            
+            for(var i = 0; i < ghosts.length; i++){
+                portalMove(ghosts[i]);
+            }
             
             // Check for collisions
             playerCollision();

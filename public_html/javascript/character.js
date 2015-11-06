@@ -124,7 +124,7 @@ function moveCharacter(char){
             gameOver = true;
         }
 
-        if(dotsConsumed == 30 && !inky.isActive){
+        if(dotsConsumed > 30){
             inky.readyToRelease = true;
         }
 
