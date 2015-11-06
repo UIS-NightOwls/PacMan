@@ -10,7 +10,7 @@ function player(options) {
     obj.coordX = this.gridX * gridBlockSize;
     obj.coordY = this.gridY * gridBlockSize + gridBlockSize / 2;
     // characters velocity is displacement/milliseconds ( 5px per 100 milliseconds) milliseconds is gameSpeed
-    obj.displacement = 5;       // in pixels needs to be a factor of gridBlockSize 
+    obj.displacement = 2.5;       // in pixels needs to be a factor of gridBlockSize 
     obj.curDirection = "right";
     obj.desDirection = "right";
     obj.spriteSize = 32;
