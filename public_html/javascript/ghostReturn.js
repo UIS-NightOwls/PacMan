@@ -1,30 +1,3 @@
-/*
-var st = 2;
-var ed  = 4;
-var ar = [1,2,3,4,5,6,7,8,9,10];
-(function fromTo(start,end,arr,columns){
-	var posGrid = [];
-
-
-	(function genPosGrid(start,end,posGrid){
-
-		if(start !== end){
-			posGrid.push(start);
-			genPosGrid(start + 1, end, posGrid);
-			genPosGrid(start + 1, end, posGrid);
-
-		}else{
-			console.log("fun: " + posGrid);
-			return;
-		}
-	})(start,end,posGrid);
-
-
-
-
-})(st,ed,ar,1);
-
-*/
 
 
 var grid = [];
