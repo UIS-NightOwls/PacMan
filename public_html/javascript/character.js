@@ -2,15 +2,26 @@
  * Created by bzweifel on 10/27/15.
  */
 // Below are functions to be used by Ghosts and PacMan
-var spriteSize = 32;
 var dotsConsumed = 0;
 var score = 0;
 var UP = 'up';
 var DOWN = 'down';
 var LEFT = 'left';
 var RIGHT = 'right';
+// Modes
+var CHASE = 'chase';
+var SCARED = 'scared';
+var BLINKING = 'blinking';
+var SCATTER = 'scatter';
+var CONSUMED = 'consumed';
 
-var startPowerTimer = "";
+// (300,300) middle of ghost cage
+var ghostCageCenterX = 300;
+var ghostCageCenterY = 300;
+
+// (300,250) starting location of Active ghost
+var ghostStartingX = 300;
+var ghostStartingY = 250;
 
 function moveCharInCurrentDirection(char) {
    
@@ -58,8 +69,6 @@ function moveCharacterHorizontal(x, char){
 
 // START VERTICAL MOVE
 function moveCharacterUp(char) {
-  //  console.log("moveCharacterUp",  eval(char.sprite.animationDef))
-  
     var tempCoordY = char.coordY - char.displacement;
     moveCharacterVertical(tempCoordY, char);
 }
@@ -97,19 +106,16 @@ function moveCharacter(char){
             dotsConsumed++;
             score = score + 10;
             document.getElementById("score").innerHTML = "" + score;
-           // console.log(char.gridY, char.gridX, (char.gridX % 2 == 0 || char.gridY % 2 == 0))
             if ((char.gridX % 2==0 || char.gridY % 2==0) &! (char.gridX % 2==0 && char.gridY % 2==0)) {
                 sound_dot2.play();
             }
             else {
                 sound_dot.play();
             }
-           
         }
         // Consume Power Dot
         else if (gameGridArray[gameGridIndex] == "2") {
             sound_pacman_power1.play();
-            console.log("POWER UP");
             
             // record consumption of dot
             dotsRemaining--;
@@ -119,20 +125,11 @@ function moveCharacter(char){
 
             // POWER UP!!
             for(var i = 0; i < ghosts.length; i++){
-                if(ghosts[i].isActive){
-                    ghosts[i].mode = 'scared';
+                if(ghost.mode != CONSUMED){
+                    ghosts[i].mode = BLINKING;
                     reverseDirection(ghosts[i]);
                 }
             }
-            //setTimeout(function () {
-            //  
-            //    for (var i = 0; i < ghosts.length; i++) {
-            //        if (ghosts[i].isActive) {
-            //            ghosts[i].mode = 'blinking';
-            //           // reverseDirection(ghosts[i]);
-            //        }
-            //    }
-            //}, 5000);
             
             // Ghosts are scared, wait some time and send them back to chase
             setTimeout(setBackToChase, 7000);
@@ -184,8 +181,8 @@ function reverseDirection(char){
 // Set ghosts to chase mode!!!
 function setBackToChase(){
     for(var i = 0; i < ghosts.length; i++){
-        if(ghosts[i].isActive){
-            ghosts[i].mode = 'chase';
+        if(ghosts[i].mode != CONSUMED){
+            ghosts[i].mode = CHASE;
         }
     }
     sound_pacman_power1.stop();
@@ -222,4 +219,306 @@ function canCharacterMoveInDirection(character, direction){
         default:
             return false;
     }
-}  
+}
+
+function playerCollision() {
+    // Loop through ghosts and see if they have collided with Pac Man.... may he rest in peace, oh look a quarter!
+    for (var i = 0; i < ghosts.length && !playersCollided; i++) {
+
+        // Are they in the same grid coordinates
+        if (ghosts[i].gridX == pacMan.gridX && ghosts[i] && ghosts[i].gridY == pacMan.gridY) {
+            sound_pacman_background1.stop();
+
+            // Can PacMan eat them??
+            if (ghosts[i].mode == SCARED || ghosts[i].mode == BLINKING) {
+                ghosts[i].mode = CONSUMED;
+                sound_pacman_getghost.play();
+                switch (numOfGhostsAte){
+                    case 0:
+                        score += 200;
+                        numOfGhostsAte++;
+                        break;
+                    case 1:
+                        score += 400;
+                        numOfGhostsAte++;
+                        break;
+                    case 2:
+                        score += 800;
+                        numOfGhostsAte++;
+                        break;
+                    case 3:
+                        score += 1600;
+                        numOfGhostsAte++;
+                        break;
+                }
+            }
+            else if (ghosts[i].mode == CONSUMED) {
+                // Do nothing
+            }
+            else {
+                //PACMAN DIES
+                sound_pacman_death.play();
+                livesLeft--;
+                playersCollided = true;
+
+                // GAME OVER!!!!
+                if (livesLeft < 0) {
+                    gameOver = true;
+                    document.getElementById("gameOver").style.display = '';
+                }
+                else {
+                    // Try Again User!
+                    // return characters back to starting positions
+                    backToStartingPosition();
+                    pacMan.isMoving = false;
+                    gameStarted = false;
+                    // Remove life image
+                    if (livesLeft == 1) {
+                        document.getElementById("life2").style.display = 'none';
+                    }
+                    else if (livesLeft == 0) {
+                        document.getElementById("life1").style.display = 'none';
+                    }
+                }
+            }
+        }
+    }
+}
+
+function moveGhostToCenterOfCage(char) {
+    // HORIZONTAL MOVE
+    if (Math.abs(char.coordX - ghostCageCenterX) <= char.displacement && (char.coordX != ghostCageCenterX)) {
+        // Ghost is close enough to the center, just move them there already!
+        moveCharacterHorizontal(ghostCageCenterX, char);
+    }
+    else if (char.coordX != ghostCageCenterX) {
+        // Move in the direction of the center of cage
+        if (char.coordX < ghostCageCenterX) {
+            moveCharacterRight(char);
+        }
+        else {
+            moveCharacterLeft(char);
+        }
+    }
+
+    // VERTICAL MOVE
+    else if (Math.abs(char.coordY - ghostCageCenterY) <= char.displacement && (char.coordY != ghostCageCenterY)) {
+        // Ghost is close enough to the center, just move them there already!
+        moveCharacterVertical(ghostCageCenterY, char);
+    }
+    else if (char.coordY != ghostCageCenterY) {
+        // Move in the direction of the center of cage
+        if (char.coordY > ghostCageCenterY) {
+            moveCharacterUp(char);
+        }
+        else {
+            moveCharacterDown(char);
+        }
+    }
+
+    // Is ghost in center of the cage and ready to move to the field
+    char.centerOfCage = (char.coordX == ghostCageCenterX && char.coordY == ghostCageCenterY);
+}
+
+function moveGhostToFieldFromCage(char) {
+
+    // HORIZONTAL
+    if (Math.abs(char.coordX - ghostStartingX) <= char.displacement && (char.coordX != ghostStartingX)) {
+        // Ghost is close enough to the center, just move them there already!
+        moveCharacterHorizontal(ghostStartingX, char);
+    }
+    else if (char.coordX != ghostStartingX) {
+        // Move in the direction of the center of cage
+        if (char.coordX < ghostStartingX) {
+            moveCharacterRight(char);
+        }
+        else {
+            moveCharacterLeft(char);
+        }
+    }
+
+    // VERTICAL
+    else if (Math.abs(char.coordY - ghostStartingY) <= char.displacement && (char.coordY != ghostStartingY)) {
+        // Ghost is close enough to the center, just move them there already!
+        moveCharacterVertical(ghostStartingY, char);
+    }
+    else if (char.coordY != ghostStartingY) {
+        // Move in the direction of the center of cage
+        if (char.coordY > ghostStartingY) {
+            moveCharacterUp(char);
+        }
+        else {
+            moveCharacterDown(char);
+        }
+    }
+
+    // Ghost is ready, go get that evil pacMan!!
+    if (char.coordX == ghostStartingX && char.coordY == ghostStartingY) {
+        char.isActive = true;
+        char.readyToRelease = false;
+        char.centerOfCage = false;
+    }
+}
+
+function backToStartingPosition() {
+    // Set the defaults
+    setDefaults();
+
+    // Clear the canvases 
+    pacMan.context.clearRect(0, 0, pacMan.canvas.width, pacMan.canvas.height);
+
+    for (var i = 0; i < ghosts.length ; i++) {
+        ghosts[i].context.clearRect(0, 0, ghosts[i].canvas.width, ghosts[i].canvas.height);
+        ghosts[i].mode = CHASE;
+    }
+}
+
+function getXTileFromCharAndDir(char, dir) {
+    var x;
+    // if they move in a direction what grid X will they be in?
+    switch (dir) {
+        case UP:
+        case DOWN:
+            x = char.gridX;
+            break;
+        case LEFT:
+            x = char.gridX - 1;
+            break;
+        case RIGHT:
+            x = char.gridX + 1;
+            break;
+    }
+    return x;
+}
+
+function getYTileFromCharAndDir(char, dir) {
+    var y;
+    // if they move in a direction what grid Y will they be in?
+    switch (dir) {
+        case UP:
+            y = char.gridY - 1;
+            break;
+        case DOWN:
+            y = char.gridY + 1;
+            break;
+        case LEFT:
+        case RIGHT:
+            y = char.gridY;
+            break;
+    }
+    return y;
+}
+
+function isAtCrossRoads(char) {
+    var numOfOptions = 0;
+
+    // Can the character move in different directions (Except backwards silly, can't move backwards!)
+    if (canCharacterMoveInDirection(char, UP) && char.curDirection != DOWN) {
+        numOfOptions++;
+    }
+
+    if (canCharacterMoveInDirection(char, DOWN) && char.curDirection != UP) {
+        numOfOptions++;
+    }
+
+    if (canCharacterMoveInDirection(char, LEFT) && char.curDirection != RIGHT) {
+        numOfOptions++;
+    }
+
+    if (canCharacterMoveInDirection(char, RIGHT) && char.curDirection != LEFT) {
+        numOfOptions++;
+    }
+
+    return (numOfOptions > 1);
+}
+
+function portalMove(char){
+    // Jump from one side of field to the other.. like magic!
+
+    // Check if the character's position is greater than or less than grid 
+    if( (char.gridX >= blocksPerRow -1 || char.gridX <= 0) && isCharacterInCenter(char) ){
+        // change grid to opposite side (and coordinates, don't forget)
+        if(char.gridX >= blocksPerRow -1){
+            char.gridX = 0;
+            char.coordX = char.gridX * gridBlockSize + gridBlockSize / 2;
+        }
+        else{
+            char.gridX = blocksPerRow-1;
+            char.coordX = char.gridX * gridBlockSize + gridBlockSize / 2;
+        }
+    }
+}
+
+function setDefaults() {
+    pacMan.sprite.animationDef = pacMan.animationLoopRIGHT;
+
+    pacMan.gridX = 15;
+    pacMan.gridY = 24;
+    pacMan.coordX = pacMan.gridX * gridBlockSize;
+    pacMan.coordY = pacMan.gridY * gridBlockSize + gridBlockSize / 2;
+    pacMan.curDirection = "right";
+    pacMan.desDirection = "right";
+    pacMan.sprite.startingFrame = 2;
+    pacMan.sprite.loaded = false;
+    pacMan.displacement = 1.25;
+
+    blinky.mode = CHASE;
+    blinky.coordX = ghostStartingX;
+    blinky.gridX = blinky.coordX / gridBlockSize;
+    blinky.coordY = ghostStartingY;
+    blinky.gridY = (blinky.coordY - gridBlockSize / 2) / gridBlockSize;
+    blinky.targetX = blocksPerRow * gridBlockSize;
+    blinky.targetY = 0;
+    blinky.curDirection = "right";
+    blinky.isActive = true;
+    blinky.isMoving = true;
+    blinky.sprite.loaded = false;
+    blinky.readyToRelease = true;
+    blinky.sprite.animationDef = blinky.animationLoopRIGHT;
+    blinky.displacement = 1;
+
+    inky.mode = CHASE;
+    inky.coordX = 266;
+    inky.gridX = inky.coordX / gridBlockSize;
+    inky.coordY = 300;
+    inky.gridY = (inky.coordY - gridBlockSize / 2) / gridBlockSize;
+    inky.isActive = false;
+    inky.targetX = blocksPerRow * gridBlockSize;
+    inky.targetY = blocksPerRow * gridBlockSize;
+    inky.curDirection = "right";
+    inky.isActive = false;
+    inky.sprite.loaded = false;
+    inky.readyToRelease = false;
+    inky.isMoving = false;
+    inky.sprite.animationDef = inky.animationLoopRIGHT;
+    inky.displacement = 1;
+
+    pinky.mode = CHASE;
+    pinky.coordX = 302;
+    pinky.gridX = pinky.coordX / gridBlockSize;
+    pinky.coordY = 300;
+    pinky.gridY = (pinky.coordY - gridBlockSize / 2) / gridBlockSize;
+    pinky.targetX = 0;
+    pinky.targetY = 0;
+    pinky.readyToRelease = true;
+    pinky.curDirection = 'left';
+    pinky.isActive = false;
+    pinky.sprite.loaded = false;
+    pinky.isMoving = false;
+    pinky.sprite.animationDef = pinky.animationLoopRIGHT;
+    pinky.displacement = 1;
+
+    clyde.mode = CHASE;
+    clyde.coordX = 338;
+    clyde.gridX = clyde.coordX / gridBlockSize;
+    clyde.coordY = 300;
+    clyde.gridY = (clyde.coordY - gridBlockSize / 2) / gridBlockSize;
+    clyde.targetX = 0;
+    clyde.targetY = blocksPerRow * gridBlockSize;
+    clyde.curDirection = 'right';
+    clyde.isActive = false;
+    clyde.isMoving = false;
+    clyde.sprite.loaded = false;
+    clyde.sprite.animationDef = clyde.animationLoopRIGHT;
+    clyde.displacement = 1;
+}

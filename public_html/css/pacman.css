@@ -6,7 +6,7 @@ body, html {
 }
 body {
      background-color: #010101;
-     overflow:hidden;
+     /*overflow:hidden;*/
 }
 a,a:visited {
     color:#fff;
@@ -15,6 +15,8 @@ a,a:visited {
 
 .canvas-content{
     text-align: center;
+    width: 600px;
+    height: 640px;
 }
 
 #canvas-container {

@@ -1,7 +1,5 @@
 ﻿//Sprite
 function sprite(options) {
-    // console.log("SPRITE OPTIONS:",options)
-
     var that = {},
         i = 0, //frameIndex
         ticksPerFrame = options.ticksPerFrame || 0,
@@ -24,11 +22,8 @@ function sprite(options) {
     var parent = this;
 
     function spriteImageLoaded() {
-        //  console.log("spriteImageLoaded")
         if (!that.loaded) {
             that.firstLoad();
-          //  console.log(options)
-            options.onLoaded();
         }
        
         window.requestAnimationFrame(spriteImageLoaded);       
@@ -41,7 +36,7 @@ function sprite(options) {
     that.update = function () {
         if (that.animationPlaying) {
             that.tickCount += 1;
-            if (that.tickCount > options.ticksPerFrame) {
+            if (that.tickCount > ticksPerFrame) {
                 that.tickCount = 0;
                 // If the current frame index is in range
                 if (i < numberOfFrames - 1) {
@@ -59,10 +54,6 @@ function sprite(options) {
 
         that.loaded = true;
         that.animationPlaying = false;
-
-        //  console.log("firstLoad", that.parent.myName)
-
-        // console.log(that.animationDef,that.startingFrame, that.spriteSize)
 
         // Load startingFrame
         that.context.drawImage(
@@ -84,12 +75,6 @@ function sprite(options) {
     that.render = function () {
        
         if (that.animationPlaying) {
-            if (that.parent.myName == 'clyde') {
-                console.log("clyde")
-            }
-           
-          //  if(that.parent.mode) console.log("rendering sprite...", that.parent.mode)
-
             //  modes for ghosts: chase, scatter, consumed  
             if (that.parent.mode == "scared") {
                 that.animationDef = that.parent.animationLoopSCARED;
@@ -97,7 +82,6 @@ function sprite(options) {
             else if (that.parent.mode == "blinking") {
                 that.animationDef = that.parent.animationLoopBLINK;
             }
-
             else { //THESE WORK FOR PACMAN AND GHOSTS
                 switch (that.parent.curDirection) {
                     case "right":
@@ -135,7 +119,6 @@ function sprite(options) {
                 }
             }
             
-            //   console.log("frameIndex:", i, that.animationDef[i][0] * spriteSize, that.animationDef[i][1] * spriteSize)
             // Clear the canvas
             that.context.clearRect(0, 0, that.width, that.height);
             // Draw the animation
@@ -145,15 +128,12 @@ function sprite(options) {
               that.animationDef[i][1] * that.spriteSize, //Source y
               that.spriteSize,
               that.spriteSize,
-             // 0,
-            //  0,
               that.parent.coordX - that.spriteSizeHalf,
               that.parent.coordY - that.spriteSizeHalf,
               that.spriteSize,
               that.spriteSize);
 
             numberOfFrames = options.animationDef.length
-
         }
     };
 

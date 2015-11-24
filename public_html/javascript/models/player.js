@@ -1,6 +1,5 @@
 ﻿// Define the player constructor. player is used as a base class for pacman and ghosts. They both share common properties.
 function player(options) {
-    //console.log("PLAYER OPTIONS:",options)
     var obj = this;
     obj.canvas = options.canvas; //canvas element. MUST INCLUDE.
 
@@ -10,19 +9,17 @@ function player(options) {
     obj.coordX = this.gridX * gridBlockSize;
     obj.coordY = this.gridY * gridBlockSize + gridBlockSize / 2;
     // characters velocity is displacement/milliseconds ( 5px per 100 milliseconds) milliseconds is gameSpeed
-    obj.displacement = 2.5;       // in pixels needs to be a factor of gridBlockSize 
+    obj.displacement = 1;           // in pixels needs to be a factor of gridBlockSize / 2 (default for first level is 10)
+    // 10, 5, 2.5, 2, 1.25, 1, .625, .5, .4, .3125, .25
     obj.curDirection = "right";
     obj.desDirection = "right";
     obj.spriteSize = 32;
     obj.context = obj.canvas.getContext("2d");
-   // obj.canvas.width = obj.spriteSize;
-   // obj.canvas.height = obj.spriteSize;
 
     obj.animationPlaying = options.animationPlaying || false;
  
     // Create animated sprite
     obj.image = new Image();
-    obj.spriteTicks = options.spriteTicks || 4;
     obj.startingFrame = options.startingFrame || 0;
     obj.ticksPerFrame = options.ticksPerFrame || 4;
 
@@ -30,21 +27,11 @@ function player(options) {
         parent:obj,
         context: obj.context,
         image: obj.image,
-        ticksPerFrame: obj.spriteTicks,
         animationDef: obj.animationLoopRIGHT,
         src: options.src,
         animationPlaying: obj.animationPlaying,
         startingFrame: obj.startingFrame || 0,
-        ticksPerFrame: obj.ticksPerFrame || 4,
-        onLoaded: function () {
-         //   console.log("move", obj.coordX, obj.coordY)
-         //   obj.context.moveTo(obj.coordX, obj.coordY);
-        }
-
+        ticksPerFrame: obj.ticksPerFrame || 4
     });
-
-    this.sayHello = function () {
-        console.log("hello");
-    }
-  
+    
 }

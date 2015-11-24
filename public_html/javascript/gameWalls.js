@@ -2,7 +2,7 @@
  * Created by bzweifel on 10/24/15.
  */
 var dotsRemaining = 0;
-var gameGridArray = [
+var startingGameGridArray = [
     //   1           4   5                   10                 15                   20                 25              29
     'e','0','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','0','f',
     '0','5','3','3','3','3','3','3','3','3','3','3','3','3','6','5','3','3','3','3','3','3','3','3','3','3','3','3','6','0',
@@ -48,6 +48,7 @@ var gameGridArray = [
     '0','8','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','7','0',
     'h','0','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','a','0','g'
 ];
+var gameGridArray = [];
 var canvas = document.getElementById("myCanvas");
 var context = canvas.getContext("2d");
 
@@ -56,19 +57,21 @@ var gridBlockSize = canvas.width/blocksPerRow;
 var wallLineWidth = 2;
 var maxDots = 0;
 
-$(document).ready(function(){
-    console.log("JQuery is Ready");
     setTimeout(function () {
         $("#credits").html("Credits: 1")
     }, 200);
 
+    document.body.style.zoom=.75;
+    //this.blur();
+    
     var wallColor = "blue";
     var testGridColor = "red";
 
-    function renderContent(){
+    function renderBoard(){
         context.save();
         //draw things
         //drawTestGrid(testGridColor);
+        gameGridArray = startingGameGridArray.slice();
         drawGame();
         maxDots = dotsRemaining;
         context.restore();
@@ -377,5 +380,4 @@ $(document).ready(function(){
         context.stroke();
     }
     
-    renderContent();
-});
+    renderBoard();

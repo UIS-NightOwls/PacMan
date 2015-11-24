@@ -1,7 +1,6 @@
 ﻿// Define the ghost constructor. Ghosts are players (inheritance), but with several unique properties
 function ghost(options) {
-    //console.log("GHOST OPTIONS:", options)
-    this.mode = 'chase';    //  modes for ghosts: chase, scatter, consumed, blinking -- (blinking vs scared)??
+    this.mode = CHASE;    //  modes for ghosts: chase, scatter, consumed, blinking
     this.targetX = 0;       //  ghosts have targets they are trying to reach
     this.targetY = 0;
     //this.myImage = "";
@@ -11,12 +10,12 @@ function ghost(options) {
     this.countMode = 0;
 
     this.animationLoopSCARED = [[0, 4], [1, 4]];
-    this.animationLoopBLINK = [[0, 4], [1, 4], [2, 4], [3, 4]]; 
+    this.animationLoopBLINK = [[0, 4], [3, 4], [2, 4], [3, 4]]; 
 
     this.animationLoopCONSUMEDRIGHT = [[4, 4], [4, 4]];
-    this.animationLoopCONSUMEDUP = [[4, 5], [4, 5]];
-    this.animationLoopCONSUMEDOWN = [[4, 6], [4, 6]];
-    this.animationLoopCONSUMEDLEFT = [[4, 7], [4, 7]];
+    this.animationLoopCONSUMEDUP = [[5, 4], [5, 4]];
+    this.animationLoopCONSUMEDOWN = [[6, 4], [6, 4]];
+    this.animationLoopCONSUMEDLEFT = [[7, 4], [7, 4]];
    
 
     if (options.myName == 'blinky') {     

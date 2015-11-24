@@ -3,8 +3,6 @@ var audioContext = new AudioContext();
 
 var sound = function (options) {
         // https://developer.mozilla.org/en-US/docs/Web/API/AudioBufferSourceNode
-     
-
 
         var that = this;
         that.url = options.url;
@@ -68,26 +66,23 @@ var sound = function (options) {
             }
 
          
-        }
+        };
         this.stop = function () {
             that.source.stop();
-        }
+        };
         this.pause = function () {
             that.paused = true;
-            // console.log(that.source)
             that.currentTime = that.source.context.currentTime;
-            //  console.log(that.currentTime)
             that.source.stop();
-        }
+        };
 
         var request = new XMLHttpRequest();
         request.open('GET', that.url, true);
         request.responseType = 'arraybuffer';
         // Decode asynchronously
         request.onload = function () {
-            audioContext.decodeAudioData(request.response, function (bufffer) {
-                that.buffer = bufffer;
-                //console.log(that.buffer)
+            audioContext.decodeAudioData(request.response, function (buffer) {
+                that.buffer = buffer;
                 if (that.loopEnd == "auto") {
                     that.loopEnd = that.buffer.duration;
                 }
@@ -98,9 +93,9 @@ var sound = function (options) {
             }, function (e, v, t) {
                 console.log("error", e, v, t)
             });
-        }
+        };
         request.send();
-    }
+    };
 
 var sound_dot = new sound({
     url: "sounds/dot.mp3",
