@@ -439,6 +439,7 @@ $(document).ready(function () {
         if (!gameStarted && playersReady) {
             document.getElementById('readyPlayer').style.display = 'none';
             document.getElementById('readyPlayer2').style.display = 'none';
+            document.getElementById('gameWon').style.display = 'none';
             pacMan.isMoving = true;
             sound_pacman_background1.play();
             ghostModeSwitch();   
@@ -475,7 +476,6 @@ $(document).ready(function () {
 
     // Move Pac Man
     function movePacMan() {
-        
         // Pac Man can only move when in center of current grid, those be the rules.. well our rules.
         if (isCharacterInCenter(pacMan)) {
             // Can Pac Man move in the direction they want?
@@ -507,7 +507,7 @@ $(document).ready(function () {
 
     function runGame() {
         // Check if game is over or paused
-        if (!tempPause && !gameOver) {
+        if (!tempPause && !gameOver && gameStarted) {
             
             // Commenting out for now, I think this might be a problem when pacMan is stopped
             // pacMan.sprite.animationPlaying = true;
@@ -593,17 +593,21 @@ $(document).ready(function () {
 
 function restart(){
     gameGridArray = startingGameGridArray.slice();
-
+    player1.active = true;
+    player2.active = false;
+    
     player1.score = 0;       
     player1.lives = 2;          
     player1.dotsConsumed = 0;
     player1.gameOver = false;
+    
     player2.score = 0;
     player2.lives = 2;
     player2.dotsConsumed = 0;
     player2.gameOver = false;
 
     backToStartingPosition();
+    gameOver = false;
     gameStarted = false;
     livesLeft = 2;
     dotsRemaining = 0;
@@ -617,29 +621,29 @@ function restart(){
     document.getElementById("readyPlayers").style.display = '';
     document.getElementById("readyPlayer").style.display = 'none';
     document.getElementById("readyPlayer2").style.display = 'none';
+    document.getElementById("gameWon").style.display = 'none';
     document.getElementById("canvas-content").style.opacity = .5;
     numOfPlayers = 0;
     playersReady = false;
-    console.log("restarting")
 }
 
 function readyOnePlayerGame(){
-    player1.active = true;
-    player2.active = false;
+
     restart();
-    numOfPlayers = 1;
     playersReady = true;
+    player2.gameOver = true;
+    player2.lives = -1;
+    numOfPlayers = 1;
     document.getElementById("readyPlayer").style.display = '';
     document.getElementById("readyPlayers").style.display = 'none';
     document.getElementById("canvas-content").style.opacity = 1;
 
 }
 function readyTwoPlayerGame(){
-    player1.active = true;
-    player2.active = false;
+
     restart();
-    numOfPlayers = 2;   
     playersReady = true;
+    numOfPlayers = 2;   
     document.getElementById("readyPlayer").style.display = '';
     document.getElementById("readyPlayers").style.display = 'none';
     document.getElementById("canvas-content").style.opacity = 1;

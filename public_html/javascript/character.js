@@ -284,7 +284,7 @@ function playerCollision() {
                 playersCollided = true;
 
                 // GAME OVER!!!!
-                if (livesLeft < 0) {
+                if (livesLeft < 0 && !gameOver) {
                     if((player1.active && player2.lives >= 0 && !player2.gameOver) || (player2.active && player1.lives >= 0 && !player1.gameOver)){
                         switchPlayers();
                     }
@@ -311,6 +311,7 @@ function switchPlayers(){
         activePlayer = player2;
         previousPlayer = player1;
         document.getElementById('readyPlayer2').style.display = '';
+        document.getElementById('gameWon').style.display = 'none';
     }
     else if(player2.active && !player1.gameOver && numOfPlayers > 1){
         player1.active = true;
@@ -318,6 +319,7 @@ function switchPlayers(){
         activePlayer = player1;
         previousPlayer = player2;
         document.getElementById('readyPlayer').style.display = '';
+        document.getElementById('gameWon').style.display = 'none';
     }
     else if(player1.active){
         activePlayer = player1;
@@ -356,6 +358,7 @@ function switchPlayers(){
     gameGridArray = activePlayer.gameGrid;
     drawGame(activePlayer.gameGrid);
     backToStartingPosition();
+    
     pacMan.isMoving = false;
     gameStarted = false;
     gameOver = activePlayer.gameOver;
@@ -611,4 +614,5 @@ function setDefaults() {
     clyde.sprite.loaded = false;
     clyde.sprite.animationDef = clyde.animationLoopRIGHT;
     clyde.displacement = 1;
+    clyde.readyToRelease = false;
 }
