@@ -105,7 +105,13 @@ function moveCharacter(char){
             dotsRemaining--;
             dotsConsumed++;
             score = score + 10;
-            document.getElementById("score").innerHTML = "" + score;
+            if(player1.active){
+                document.getElementById("score1").innerHTML = "" + score;
+            }
+            else{
+                document.getElementById("score2").innerHTML = "" + score;
+
+            }
             if ((char.gridX % 2==0 || char.gridY % 2==0) &! (char.gridX % 2==0 && char.gridY % 2==0)) {
                 sound_dot2.play();
             }
@@ -121,8 +127,14 @@ function moveCharacter(char){
             dotsRemaining--;
             dotsConsumed++;
             score = score + 50;
-            document.getElementById("score").innerHTML = "" + score;
+            if(player1.active){
+                document.getElementById("score1").innerHTML = "" + score;
+            }
+            else{
+                document.getElementById("score2").innerHTML = "" + score;
 
+            }
+            
             // POWER UP!!
             for(var i = 0; i < ghosts.length; i++){
                 if(ghost.mode != CONSUMED){
@@ -253,7 +265,17 @@ function playerCollision() {
                 }
             }
             else if (ghosts[i].mode == CONSUMED) {
-                // Do nothing
+                // Increase ghost speed
+                ghosts[i].displacement = 2;
+                
+                // Make sure coordinates are on even numbers
+                // to ensure movement stays on course 
+                if(ghosts[i].coordX % 2 != 0){
+                    ghosts[i].coordX += 1;
+                }
+                else if (ghosts[i].coordY % 2 != 0){
+                    ghosts[i].coordY += 1;
+                }
             }
             else {
                 //PACMAN DIES
@@ -263,25 +285,93 @@ function playerCollision() {
 
                 // GAME OVER!!!!
                 if (livesLeft < 0) {
-                    gameOver = true;
-                    document.getElementById("gameOver").style.display = '';
+                    if((player1.active && player2.lives >= 0 && !player2.gameOver) || (player2.active && player1.lives >= 0 && !player1.gameOver)){
+                        switchPlayers();
+                    }
+                    else{
+                        gameOver = true;
+                        document.getElementById("gameOver").style.display = '';
+                    }
                 }
                 else {
-                    // Try Again User!
-                    // return characters back to starting positions
-                    backToStartingPosition();
-                    pacMan.isMoving = false;
-                    gameStarted = false;
-                    // Remove life image
-                    if (livesLeft == 1) {
-                        document.getElementById("life2").style.display = 'none';
-                    }
-                    else if (livesLeft == 0) {
-                        document.getElementById("life1").style.display = 'none';
-                    }
+                    switchPlayers();
                 }
             }
         }
+    }
+}
+
+function switchPlayers(){
+    var previousPlayer = '';
+    var activePlayer = '';
+    var switched = true;
+    if(player1.active && !player2.gameOver && numOfPlayers > 1){
+        player1.active = false;
+        player2.active = true;
+        activePlayer = player2;
+        previousPlayer = player1;
+        document.getElementById('readyPlayer2').style.display = '';
+    }
+    else if(player2.active && !player1.gameOver && numOfPlayers > 1){
+        player1.active = true;
+        player2.active = false;
+        activePlayer = player1;
+        previousPlayer = player2;
+        document.getElementById('readyPlayer').style.display = '';
+    }
+    else if(player1.active){
+        activePlayer = player1;
+        previousPlayer = player2;
+        switched = false;
+        document.getElementById('readyPlayer').style.display = '';
+    }
+    else{
+        activePlayer = player2;
+        previousPlayer = player1;
+        switched = false;
+        document.getElementById('readyPlayer2').style.display = '';
+    }
+
+    // Load current game state into player
+    if(switched){
+        previousPlayer.gameGrid       =   gameGridArray.slice();
+        previousPlayer.score          =   score.valueOf();
+        previousPlayer.lives          =   livesLeft.valueOf();
+        previousPlayer.dotsConsumed   =   dotsConsumed.valueOf();
+        previousPlayer.gameOver       =   gameOver;
+        document.getElementById("gameWon").style.display = 'none';
+
+    }
+    else
+    {
+        activePlayer.gameGrid       =   gameGridArray.slice();
+        activePlayer.score          =   score.valueOf();
+        activePlayer.lives          =   livesLeft.valueOf();
+        activePlayer.dotsConsumed   =   dotsConsumed.valueOf();
+        activePlayer.gameOver       =   gameOver;
+    }
+    
+    // Draw active players game and set games values to active players state
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    gameGridArray = activePlayer.gameGrid;
+    drawGame(activePlayer.gameGrid);
+    backToStartingPosition();
+    pacMan.isMoving = false;
+    gameStarted = false;
+    gameOver = activePlayer.gameOver;
+    score = activePlayer.score;
+    livesLeft = activePlayer.lives;
+    dotsConsumed = activePlayer.dotsConsumed;
+
+    //display correct amount of life images
+    document.getElementById("life1").style.display = '';
+    document.getElementById("life2").style.display = '';
+    if (activePlayer.lives == 1) {
+        document.getElementById("life2").style.display = 'none';
+    }
+    else if (activePlayer.lives == 0) {
+        document.getElementById("life1").style.display = 'none';
+        document.getElementById("life2").style.display = 'none';
     }
 }
 

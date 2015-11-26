@@ -9,6 +9,8 @@ var livesLeft = 2;
 var playersCollided = false;
 var numOfGhostsAte = 0;
 var gameStarted = false;
+var playersReady = false;
+var numOfPlayers = 0;
 
 // Initialize players
 var pacMan = new pacman({
@@ -54,6 +56,24 @@ var pinky = new ghost({
 });
 
 var ghosts = [blinky, inky, clyde, pinky];
+
+var player1 = {
+    gameGrid:       startingGameGridArray.slice(),
+    score:          score.valueOf(),
+    lives:          livesLeft.valueOf(),
+    dotsConsumed:   dotsConsumed.valueOf(),
+    active:         true,
+    gameOver:       gameOver
+};
+
+var player2 = {
+    gameGrid:       startingGameGridArray.slice(),
+    score:          score.valueOf(),
+    lives:          livesLeft.valueOf(),
+    dotsConsumed:   dotsConsumed.valueOf(),
+    active:         false,
+    gameOver:       gameOver
+};
 
 $(document).ready(function () {
     setTimeout(function () {
@@ -340,7 +360,6 @@ $(document).ready(function () {
         // set target location of tile right above ghost gate
         char.targetX = ghostStartingX / gridBlockSize;
         char.targetY = ghostStartingY / gridBlockSize;
-        char.displacement = 2;
     }
 
     // Returns the directions a character can move to from their current spot
@@ -417,8 +436,9 @@ $(document).ready(function () {
     function userInput(){
         playersCollided = false;
 
-        if (!gameStarted) {
+        if (!gameStarted && playersReady) {
             document.getElementById('readyPlayer').style.display = 'none';
+            document.getElementById('readyPlayer2').style.display = 'none';
             pacMan.isMoving = true;
             sound_pacman_background1.play();
             ghostModeSwitch();   
@@ -504,6 +524,9 @@ $(document).ready(function () {
                 // Check for portal move for PacMan
                 portalMove(pacMan);
             }
+            
+            // Check for collisions
+            playerCollision();
 
             // Then move ghosts
             moveGhosts();
@@ -515,6 +538,14 @@ $(document).ready(function () {
 
             // Check for collisions
             playerCollision();
+        }
+        else if(gameOver){
+            if(player1.active && player2.lives >= 0 && player2.dotsConsumed != maxDots){
+                switchPlayers();
+            }
+            else if(player2.active && player1.lives >= 0 && player1.dotsConsumed != maxDots){
+                switchPlayers();
+            }
         }
         else {
             sound_pacman_background1.stop();
@@ -562,16 +593,55 @@ $(document).ready(function () {
 
 function restart(){
     gameGridArray = startingGameGridArray.slice();
-    console.log(" " + startingGameGridArray + "");
+
+    player1.score = 0;       
+    player1.lives = 2;          
+    player1.dotsConsumed = 0;
+    player1.gameOver = false;
+    player2.score = 0;
+    player2.lives = 2;
+    player2.dotsConsumed = 0;
+    player2.gameOver = false;
+
     backToStartingPosition();
-    dotsRemaining = 0;
-    renderBoard();
     gameStarted = false;
     livesLeft = 2;
+    dotsRemaining = 0;
     dotsConsumed = 0;
     score = 0;
+    renderBoard();
     document.getElementById("life2").style.display = '';
     document.getElementById("life1").style.display = '';
-    document.getElementById("score").innerHTML = "" + score;
+    document.getElementById("score1").innerHTML = "" + 0;
+    document.getElementById("score2").innerHTML = "" + 0;
+    document.getElementById("readyPlayers").style.display = '';
+    document.getElementById("readyPlayer").style.display = 'none';
+    document.getElementById("readyPlayer2").style.display = 'none';
+    document.getElementById("canvas-content").style.opacity = .5;
+    numOfPlayers = 0;
+    playersReady = false;
+    console.log("restarting")
+}
+
+function readyOnePlayerGame(){
+    player1.active = true;
+    player2.active = false;
+    restart();
+    numOfPlayers = 1;
+    playersReady = true;
+    document.getElementById("readyPlayer").style.display = '';
+    document.getElementById("readyPlayers").style.display = 'none';
+    document.getElementById("canvas-content").style.opacity = 1;
 
 }
+function readyTwoPlayerGame(){
+    player1.active = true;
+    player2.active = false;
+    restart();
+    numOfPlayers = 2;   
+    playersReady = true;
+    document.getElementById("readyPlayer").style.display = '';
+    document.getElementById("readyPlayers").style.display = 'none';
+    document.getElementById("canvas-content").style.opacity = 1;
+}
+

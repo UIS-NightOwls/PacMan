@@ -57,327 +57,331 @@ var gridBlockSize = canvas.width/blocksPerRow;
 var wallLineWidth = 2;
 var maxDots = 0;
 
-    setTimeout(function () {
-        $("#credits").html("Credits: 1")
-    }, 200);
+setTimeout(function () {
+    $("#credits").html("Credits: 1")
+}, 200);
 
-    document.body.style.zoom=.75;
-    //this.blur();
-    
-    var wallColor = "blue";
-    var testGridColor = "red";
+//document.body.style.zoom=.75;
+//this.blur();
 
-    function renderBoard(){
-        context.save();
-        //draw things
-        //drawTestGrid(testGridColor);
-        gameGridArray = startingGameGridArray.slice();
-        drawGame();
-        maxDots = dotsRemaining;
-        context.restore();
+var wallColor = "blue";
+var testGridColor = "red";
+
+function renderBoard(){
+    context.save();
+    //draw things
+    //drawTestGrid(testGridColor);
+    gameGridArray = startingGameGridArray.slice();
+    player1.gameGrid = startingGameGridArray.slice();
+    player2.gameGrid = startingGameGridArray.slice();
+    drawGame(gameGridArray);
+    maxDots = dotsRemaining;
+    context.restore();
+}
+
+function drawTestGrid(color){
+    context.lineWidth = 1;
+    context.strokeStyle = color;
+
+    // horizontal grid lines
+    for(var i = 0; i <= canvas.height; i = i + gridBlockSize)
+    {
+        context.beginPath();
+        context.moveTo(0, i);
+        context.lineTo(canvas.width, i);
+        context.closePath();
+        context.stroke();
     }
-
-    function drawTestGrid(color){
-        context.lineWidth = 1;
-        context.strokeStyle = color;
-
-        // horizontal grid lines
-        for(var i = 0; i <= canvas.height; i = i + gridBlockSize)
-        {
-            context.beginPath();
-            context.moveTo(0, i);
-            context.lineTo(canvas.width, i);
-            context.closePath();
-            context.stroke();
-        }
-        // vertical grid lines
-        for(var j = 0; j <= canvas.width; j = j + gridBlockSize)
-        {
-            context.beginPath();
-            context.moveTo(j, 0);
-            context.lineTo(j, canvas.height);
-            context.closePath();
-            context.stroke();
-        }
+    // vertical grid lines
+    for(var j = 0; j <= canvas.width; j = j + gridBlockSize)
+    {
+        context.beginPath();
+        context.moveTo(j, 0);
+        context.lineTo(j, canvas.height);
+        context.closePath();
+        context.stroke();
     }
+}
 
-    function drawGame(){
-        var maxGridx = canvas.width / gridBlockSize;
-        var maxGridy = canvas.height / gridBlockSize;
-        var gridCount = 0;
-        for(var y=0; y <= maxGridy; y++){
-            for(var x=0; x < maxGridx;x++){
-                switch (gameGridArray[gridCount]){
-                    case '0':
-                        break;
-                    case '1':
-                        drawPacDot(x,y);
-                        break;
-                    case '2':
-                        drawPacPowerDots(x,y);
-                        break;
-                    case '3':
-                        drawHorizontalWall(x,y);
-                        break;
-                    case '4':
-                        drawVerticalWall(x,y);
-                        break;
-                    case '5':
-                        drawBottomRightArc(x,y);
-                        break;
-                    case '6':
-                        drawBottomLeftArc(x,y);
-                        break;
-                    case '7':
-                        drawTopLeftArc(x,y);
-                        break;
-                    case '8':
-                        drawTopRightArc(x,y);
-                        break;
-                    case 'a':
-                        drawOuterWallTop(x,y);
-                        break;
-                    case 'b':
-                        drawOuterWallRight(x,y);
-                        break;
-                    case 'c':
-                        drawOuterWallBottom(x,y);
-                        break;
-                    case 'd':
-                        drawOuterWallLeft(x,y);
-                        break;
-                    case 'e':
-                        drawOuterBottomRightArc(x,y);
-                        break;
-                    case 'f':
-                        drawOuterBottomLeftArc(x,y);
-                        break;
-                    case 'g':
-                        drawOuterTopLeftArc(x,y);
-                        break;
-                    case 'h':
-                        drawOuterTopRightArc(x,y);
-                        break;
-                    case'i':
-                        drawOuterWallTopLeft(x,y);
-                        break;
-                    case 'j':
-                        drawOuterWallTopRight(x,y);
-                        break;
-                    case 'k':
-                        drawOuterWallBottomRight(x,y);
-                        break;
-                    case 'l':
-                        drawOuterWallBottomLeft(x,y);
-                        break;
-                    default :
-                        break;
-                }
-                gridCount++;
+function drawGame(gameGrid){
+    var maxGridx = canvas.width / gridBlockSize;
+    var maxGridy = canvas.height / gridBlockSize;
+    var gridCount = 0;
+    dotsRemaining = 0;
+
+    for(var y=0; y <= maxGridy; y++){
+        for(var x=0; x < maxGridx;x++){
+            switch (gameGrid[gridCount]){
+                case '0':
+                    break;
+                case '1':
+                    drawPacDot(x,y);
+                    break;
+                case '2':
+                    drawPacPowerDots(x,y);
+                    break;
+                case '3':
+                    drawHorizontalWall(x,y);
+                    break;
+                case '4':
+                    drawVerticalWall(x,y);
+                    break;
+                case '5':
+                    drawBottomRightArc(x,y);
+                    break;
+                case '6':
+                    drawBottomLeftArc(x,y);
+                    break;
+                case '7':
+                    drawTopLeftArc(x,y);
+                    break;
+                case '8':
+                    drawTopRightArc(x,y);
+                    break;
+                case 'a':
+                    drawOuterWallTop(x,y);
+                    break;
+                case 'b':
+                    drawOuterWallRight(x,y);
+                    break;
+                case 'c':
+                    drawOuterWallBottom(x,y);
+                    break;
+                case 'd':
+                    drawOuterWallLeft(x,y);
+                    break;
+                case 'e':
+                    drawOuterBottomRightArc(x,y);
+                    break;
+                case 'f':
+                    drawOuterBottomLeftArc(x,y);
+                    break;
+                case 'g':
+                    drawOuterTopLeftArc(x,y);
+                    break;
+                case 'h':
+                    drawOuterTopRightArc(x,y);
+                    break;
+                case'i':
+                    drawOuterWallTopLeft(x,y);
+                    break;
+                case 'j':
+                    drawOuterWallTopRight(x,y);
+                    break;
+                case 'k':
+                    drawOuterWallBottomRight(x,y);
+                    break;
+                case 'l':
+                    drawOuterWallBottomLeft(x,y);
+                    break;
+                default :
+                    break;
             }
+            gridCount++;
         }
     }
+}
 
-    function drawHorizontalWall(gridX, gridY){
-        // starting (x,y) pixels
-        var startX = gridX * gridBlockSize;
-        var startY = gridY * gridBlockSize + (gridBlockSize/2);
+function drawHorizontalWall(gridX, gridY){
+    // starting (x,y) pixels
+    var startX = gridX * gridBlockSize;
+    var startY = gridY * gridBlockSize + (gridBlockSize/2);
 
-        // create a line based
-        createWall(startX,startY,startX+gridBlockSize,startY);
-    }
+    // create a line based
+    createWall(startX,startY,startX+gridBlockSize,startY);
+}
 
-    function drawVerticalWall(gridX, gridY){
-        // starting (x,y) pixels
-        var startX = gridX * gridBlockSize + (gridBlockSize/2);
-        var startY = gridY * gridBlockSize ;
+function drawVerticalWall(gridX, gridY){
+    // starting (x,y) pixels
+    var startX = gridX * gridBlockSize + (gridBlockSize/2);
+    var startY = gridY * gridBlockSize ;
 
-        // create a line based
-        createWall(startX,startY,startX,startY+gridBlockSize);
-    }
+    // create a line based
+    createWall(startX,startY,startX,startY+gridBlockSize);
+}
 
-    function drawBottomLeftArc(gridX, gridY){
-        //starting (x,y) pixels
-        var centerX = gridX * gridBlockSize;
-        var centerY = gridY * gridBlockSize + gridBlockSize;
+function drawBottomLeftArc(gridX, gridY){
+    //starting (x,y) pixels
+    var centerX = gridX * gridBlockSize;
+    var centerY = gridY * gridBlockSize + gridBlockSize;
 
-        //create arc
-        createArc(centerX, centerY, gridBlockSize/2, 1.5 * Math.PI, 0); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-    }
+    //create arc
+    createArc(centerX, centerY, gridBlockSize/2, 1.5 * Math.PI, 0); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
+}
 
-    function drawBottomRightArc(gridX, gridY){
-        //starting (x,y) pixels
-        var centerX = gridX * gridBlockSize + gridBlockSize;
-        var centerY = gridY * gridBlockSize + gridBlockSize;
+function drawBottomRightArc(gridX, gridY){
+    //starting (x,y) pixels
+    var centerX = gridX * gridBlockSize + gridBlockSize;
+    var centerY = gridY * gridBlockSize + gridBlockSize;
 
-        //create arc
-        createArc(centerX, centerY, gridBlockSize/2, Math.PI, 1.5 * Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-    }
+    //create arc
+    createArc(centerX, centerY, gridBlockSize/2, Math.PI, 1.5 * Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
+}
 
-    function drawTopLeftArc(gridX, gridY){
-        //starting (x,y) pixels
-        var centerX = gridX * gridBlockSize;
-        var centerY = gridY * gridBlockSize;
+function drawTopLeftArc(gridX, gridY){
+    //starting (x,y) pixels
+    var centerX = gridX * gridBlockSize;
+    var centerY = gridY * gridBlockSize;
 
-        //create arc
-        createArc(centerX, centerY, gridBlockSize/2, 0, .5 * Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-    }
+    //create arc
+    createArc(centerX, centerY, gridBlockSize/2, 0, .5 * Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
+}
 
-    function drawTopRightArc(gridX, gridY){
-        //starting (x,y) pixels
-        var centerX = gridX * gridBlockSize + gridBlockSize;
-        var centerY = gridY * gridBlockSize;
+function drawTopRightArc(gridX, gridY){
+    //starting (x,y) pixels
+    var centerX = gridX * gridBlockSize + gridBlockSize;
+    var centerY = gridY * gridBlockSize;
 
-        //create arc
-        createArc(centerX, centerY, gridBlockSize/2, .5 * Math.PI, Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-    }
+    //create arc
+    createArc(centerX, centerY, gridBlockSize/2, .5 * Math.PI, Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
+}
 
-    function drawPacDot(gridX, gridY){
-        context.lineWidth = wallLineWidth;
-        context.strokeStyle = "yellow";
+function drawPacDot(gridX, gridY){
+    context.lineWidth = wallLineWidth;
+    context.strokeStyle = "yellow";
 
-        //starting (x,y) pixels
-        var centerX = gridX * gridBlockSize + gridBlockSize/2;
-        var centerY = gridY * gridBlockSize + gridBlockSize/2;
+    //starting (x,y) pixels
+    var centerX = gridX * gridBlockSize + gridBlockSize/2;
+    var centerY = gridY * gridBlockSize + gridBlockSize/2;
 
-        //create arc
-        context.beginPath();
-        context.arc(centerX, centerY, gridBlockSize/(gridBlockSize/2), 0, 2*Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-        context.fillStyle = "yellow";
-        context.fill();
-        context.closePath();
-        context.stroke();
-        
-        dotsRemaining = dotsRemaining + 1;
-    }
-
-    function drawPacPowerDots(gridX, gridY){
-        context.lineWidth = wallLineWidth;
-        context.strokeStyle = "yellow";
-
-        //starting (x,y) pixels
-        var centerX = gridX * gridBlockSize + gridBlockSize/2;
-        var centerY = gridY * gridBlockSize + gridBlockSize/2;
-
-        //create arc
-        context.beginPath();
-        context.arc(centerX, centerY, gridBlockSize/2, 0, 2*Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-        context.fillStyle = "yellow";
-        context.fill();
-        context.closePath();
-        context.stroke();
-
-        dotsRemaining = dotsRemaining + 1;
-    }
-
-    function drawOuterWallRight(gridX,gridY){
-        // starting (x,y) pixels
-        var startX = gridX * gridBlockSize + gridBlockSize;
-        var startY = gridY * gridBlockSize ;
-
-        // create a line based
-        createWall(startX,startY,startX,startY+gridBlockSize);
-    }
-
-    function drawOuterWallLeft(gridX,gridY){
-        // starting (x,y) pixels
-        var startX = gridX * gridBlockSize;
-        var startY = gridY * gridBlockSize ;
-
-        // create a line based
-        createWall(startX,startY,startX,startY+gridBlockSize);
-    }
-
-    function drawOuterWallBottom(gridX,gridY){
-        // starting (x,y) pixels
-        var startX = gridX * gridBlockSize ;
-        var startY = gridY * gridBlockSize + gridBlockSize;
-
-        // create a line based
-        createWall(startX,startY,startX+gridBlockSize, startY);
-    }
-
-    function drawOuterWallTop(gridX,gridY){
-        // starting (x,y) pixels
-        var startX = gridX * gridBlockSize ;
-        var startY = gridY * gridBlockSize ;
-
-        // create a line based
-        createWall(startX,startY,startX+gridBlockSize,startY);
-    }
-
-    function drawOuterWallTopLeft(gridX,gridY){
-        drawOuterWallTop(gridX,gridY);
-        drawOuterWallLeft(gridX,gridY);
-    }
-    function drawOuterWallBottomLeft(gridX,gridY){
-        drawOuterWallBottom(gridX,gridY);
-        drawOuterWallLeft(gridX,gridY);
-    }
-    function drawOuterWallTopRight(gridX,gridY){
-        drawOuterWallTop(gridX,gridY);
-        drawOuterWallRight(gridX,gridY);
-    }
-    function drawOuterWallBottomRight(gridX,gridY){
-        drawOuterWallBottom(gridX,gridY);
-        drawOuterWallRight(gridX,gridY);
-    }
-
-    function drawOuterBottomLeftArc(gridX, gridY){
-        //starting (x,y) pixels
-        var centerX = gridX * gridBlockSize - gridBlockSize;
-        var centerY = gridY * gridBlockSize + gridBlockSize*2;
-
-        //create arc
-        createArc(centerX, centerY, gridBlockSize, 1.5 * Math.PI, 0); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-    }
-
-    function drawOuterBottomRightArc(gridX, gridY){
-        //starting (x,y) pixels
-        var centerX = gridX * gridBlockSize + gridBlockSize*2;
-        var centerY = gridY * gridBlockSize + gridBlockSize*2;
-
-        //create arc
-        createArc(centerX, centerY, gridBlockSize, Math.PI, 1.5 * Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-    }
-
-    function drawOuterTopLeftArc(gridX, gridY){
-        //starting (x,y) pixels
-        var centerX = gridX * gridBlockSize - gridBlockSize;
-        var centerY = gridY * gridBlockSize - gridBlockSize;
-
-        //create arc
-        createArc(centerX, centerY, gridBlockSize, 0, .5 * Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-    }
-
-    function drawOuterTopRightArc(gridX, gridY){
-        //starting (x,y) pixels
-        var centerX = gridX * gridBlockSize + gridBlockSize*2;
-        var centerY = gridY * gridBlockSize - gridBlockSize;
-
-        //create arc
-        createArc(centerX, centerY, gridBlockSize, .5 * Math.PI, Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-    }
-
-    function createArc(centerX, centerY, radius, radianStart, radianEnd){
-        context.lineWidth = wallLineWidth;
-        context.strokeStyle = wallColor;
-
-        context.beginPath();
-        context.arc(centerX, centerY, radius, radianStart, radianEnd); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
-        context.stroke();
-    }
-
-    function createWall(startX, startY, endX, endY){
-        context.lineWidth = wallLineWidth;
-        context.strokeStyle = wallColor;
-
-        // create a line based
-        context.beginPath();
-        context.moveTo(startX, startY);
-        context.lineTo(endX , endY);
-        context.closePath();
-        context.stroke();
-    }
+    //create arc
+    context.beginPath();
+    context.arc(centerX, centerY, gridBlockSize/(gridBlockSize/2), 0, 2*Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
+    context.fillStyle = "yellow";
+    context.fill();
+    context.closePath();
+    context.stroke();
     
-    renderBoard();
+    dotsRemaining = dotsRemaining + 1;
+}
+
+function drawPacPowerDots(gridX, gridY){
+    context.lineWidth = wallLineWidth;
+    context.strokeStyle = "yellow";
+
+    //starting (x,y) pixels
+    var centerX = gridX * gridBlockSize + gridBlockSize/2;
+    var centerY = gridY * gridBlockSize + gridBlockSize/2;
+
+    //create arc
+    context.beginPath();
+    context.arc(centerX, centerY, gridBlockSize/2, 0, 2*Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
+    context.fillStyle = "yellow";
+    context.fill();
+    context.closePath();
+    context.stroke();
+
+    dotsRemaining = dotsRemaining + 1;
+}
+
+function drawOuterWallRight(gridX,gridY){
+    // starting (x,y) pixels
+    var startX = gridX * gridBlockSize + gridBlockSize;
+    var startY = gridY * gridBlockSize ;
+
+    // create a line based
+    createWall(startX,startY,startX,startY+gridBlockSize);
+}
+
+function drawOuterWallLeft(gridX,gridY){
+    // starting (x,y) pixels
+    var startX = gridX * gridBlockSize;
+    var startY = gridY * gridBlockSize ;
+
+    // create a line based
+    createWall(startX,startY,startX,startY+gridBlockSize);
+}
+
+function drawOuterWallBottom(gridX,gridY){
+    // starting (x,y) pixels
+    var startX = gridX * gridBlockSize ;
+    var startY = gridY * gridBlockSize + gridBlockSize;
+
+    // create a line based
+    createWall(startX,startY,startX+gridBlockSize, startY);
+}
+
+function drawOuterWallTop(gridX,gridY){
+    // starting (x,y) pixels
+    var startX = gridX * gridBlockSize ;
+    var startY = gridY * gridBlockSize ;
+
+    // create a line based
+    createWall(startX,startY,startX+gridBlockSize,startY);
+}
+
+function drawOuterWallTopLeft(gridX,gridY){
+    drawOuterWallTop(gridX,gridY);
+    drawOuterWallLeft(gridX,gridY);
+}
+function drawOuterWallBottomLeft(gridX,gridY){
+    drawOuterWallBottom(gridX,gridY);
+    drawOuterWallLeft(gridX,gridY);
+}
+function drawOuterWallTopRight(gridX,gridY){
+    drawOuterWallTop(gridX,gridY);
+    drawOuterWallRight(gridX,gridY);
+}
+function drawOuterWallBottomRight(gridX,gridY){
+    drawOuterWallBottom(gridX,gridY);
+    drawOuterWallRight(gridX,gridY);
+}
+
+function drawOuterBottomLeftArc(gridX, gridY){
+    //starting (x,y) pixels
+    var centerX = gridX * gridBlockSize - gridBlockSize;
+    var centerY = gridY * gridBlockSize + gridBlockSize*2;
+
+    //create arc
+    createArc(centerX, centerY, gridBlockSize, 1.5 * Math.PI, 0); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
+}
+
+function drawOuterBottomRightArc(gridX, gridY){
+    //starting (x,y) pixels
+    var centerX = gridX * gridBlockSize + gridBlockSize*2;
+    var centerY = gridY * gridBlockSize + gridBlockSize*2;
+
+    //create arc
+    createArc(centerX, centerY, gridBlockSize, Math.PI, 1.5 * Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
+}
+
+function drawOuterTopLeftArc(gridX, gridY){
+    //starting (x,y) pixels
+    var centerX = gridX * gridBlockSize - gridBlockSize;
+    var centerY = gridY * gridBlockSize - gridBlockSize;
+
+    //create arc
+    createArc(centerX, centerY, gridBlockSize, 0, .5 * Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
+}
+
+function drawOuterTopRightArc(gridX, gridY){
+    //starting (x,y) pixels
+    var centerX = gridX * gridBlockSize + gridBlockSize*2;
+    var centerY = gridY * gridBlockSize - gridBlockSize;
+
+    //create arc
+    createArc(centerX, centerY, gridBlockSize, .5 * Math.PI, Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
+}
+
+function createArc(centerX, centerY, radius, radianStart, radianEnd){
+    context.lineWidth = wallLineWidth;
+    context.strokeStyle = wallColor;
+
+    context.beginPath();
+    context.arc(centerX, centerY, radius, radianStart, radianEnd); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
+    context.stroke();
+}
+
+function createWall(startX, startY, endX, endY){
+    context.lineWidth = wallLineWidth;
+    context.strokeStyle = wallColor;
+
+    // create a line based
+    context.beginPath();
+    context.moveTo(startX, startY);
+    context.lineTo(endX , endY);
+    context.closePath();
+    context.stroke();
+}
+
+renderBoard();
