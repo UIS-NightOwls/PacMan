@@ -140,6 +140,7 @@ function moveCharacter(char){
                 if(ghost.mode != CONSUMED){
                     ghosts[i].mode = BLINKING;
                     reverseDirection(ghosts[i]);
+                    ghosts[i].displacement = .625;
                 }
             }
             
@@ -197,18 +198,31 @@ function setBackToChase(){
     for(var i = 0; i < ghosts.length; i++){
         if(ghosts[i].mode != CONSUMED){
             ghosts[i].mode = CHASE;
+            ghosts[i].displacement = 1;
+            setCharOnPath(ghosts[i]);
         }
     }
     numOfGhostsAte = 0;
     sound_pacman_power1.stop();
 }
 
-function isCharacterInCenter(character){
+function isCharacterInCenter(char){
+    var midX = char.gridX * gridBlockSize + gridBlockSize/2;
+    var midY = char.gridY * gridBlockSize + gridBlockSize/2;
+
+    if(char.coordX > (midX - char.displacement) && char.coordX < (midX + char.displacement) && char.coordX != midX){
+        char.coordX = midX;
+    }
+
+    if(char.coordY > (midY - char.displacement) && char.coordY < (midY + char.displacement)){
+        char.coordY = midY;
+    }
+    console.log("After Coord: (" + char.coordX + ", " + char.coordY + ")");
     // Return weather the character is in the center of their grid
         return (
-        (character.coordX == character.gridX * gridBlockSize + gridBlockSize/2)
+        (char.coordX == midX)
         &&
-        (character.coordY == character.gridY * gridBlockSize + gridBlockSize/2)
+        (char.coordY == midY)
     );
 }
 
@@ -233,6 +247,14 @@ function canCharacterMoveInDirection(character, direction){
             break;
         default:
             return false;
+    }
+}
+function setCharOnPath(char){
+    if(char.coordX % 1 != 0){
+        char.coordX = Math.ceil(char.coordX);
+    }
+    if(char.coordY % 1 != 0){
+        char.coordY = Math.ceil(char.coordY);
     }
 }
 
@@ -277,6 +299,8 @@ function playerCollision() {
             else if (ghosts[i].mode == CONSUMED) {
                 // Increase ghost speed
                 ghosts[i].displacement = 2;
+                
+                setCharOnPath(ghosts[i]);
                 
                 // Make sure coordinates are on even numbers
                 // to ensure movement stays on course 
@@ -565,7 +589,7 @@ function setDefaults() {
     pacMan.sprite.loaded = false;
     pacMan.displacement = 1.25;
 
-    blinky.mode = CHASE;
+    blinky.mode = SCATTER;
     blinky.coordX = ghostStartingX;
     blinky.gridX = blinky.coordX / gridBlockSize;
     blinky.coordY = ghostStartingY;
@@ -580,7 +604,7 @@ function setDefaults() {
     blinky.sprite.animationDef = blinky.animationLoopRIGHT;
     blinky.displacement = 1;
 
-    inky.mode = CHASE;
+    inky.mode = SCATTER;
     inky.coordX = 266;
     inky.gridX = inky.coordX / gridBlockSize;
     inky.coordY = 300;
@@ -596,7 +620,7 @@ function setDefaults() {
     inky.sprite.animationDef = inky.animationLoopRIGHT;
     inky.displacement = 1;
 
-    pinky.mode = CHASE;
+    pinky.mode = SCATTER;
     pinky.coordX = 302;
     pinky.gridX = pinky.coordX / gridBlockSize;
     pinky.coordY = 300;
@@ -611,7 +635,7 @@ function setDefaults() {
     pinky.sprite.animationDef = pinky.animationLoopRIGHT;
     pinky.displacement = 1;
 
-    clyde.mode = CHASE;
+    clyde.mode = SCATTER;
     clyde.coordX = 338;
     clyde.gridX = clyde.coordX / gridBlockSize;
     clyde.coordY = 300;

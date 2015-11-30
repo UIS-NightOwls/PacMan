@@ -340,15 +340,13 @@ $(document).ready(function () {
             var milSecToWait = timeToChase;
             for (var i = 0; i < ghosts.length; i++) {
                 ghost = ghosts[i];
-                if(gameStarted){
-                    if (ghost.mode === SCATTER) {
-                        ghost.mode = CHASE;
-                        milSecToWait = timeToChase;
-                    }
-                    else if (ghost.mode === CHASE) {
-                        ghost.mode = SCATTER;
-                        milSecToWait = timeToScatter;
-                    }
+                if (ghost.mode === SCATTER) {
+                    ghost.mode = CHASE;
+                    milSecToWait = timeToChase;
+                }
+                else if (ghost.mode === CHASE) {
+                    ghost.mode = SCATTER;
+                    milSecToWait = timeToScatter;
                 }
             }
             setTimeout(function(){ghostModeSwitch();}, milSecToWait);
