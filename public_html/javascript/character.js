@@ -14,6 +14,7 @@ var SCARED = 'scared';
 var BLINKING = 'blinking';
 var SCATTER = 'scatter';
 var CONSUMED = 'consumed';
+var powerDot = false;
 
 // (300,300) middle of ghost cage
 var ghostCageCenterX = 300;
@@ -23,38 +24,15 @@ var ghostCageCenterY = 300;
 var ghostStartingX = 300;
 var ghostStartingY = 250;
 
-function moveCharInCurrentDirection(char) {
-   
-    // Move Character in their current direction
-    switch (char.curDirection){
-        case UP:
-            moveCharacterUp(char);
-            break;
-        case DOWN:
-            moveCharacterDown(char);
-            break;
-        case RIGHT:
-            moveCharacterRight(char);
-            break;
-        case LEFT:
-            moveCharacterLeft(char);
-            break;
-        default:
-            return false;
-    }
-}
-
 // START HORIZONTAL MOVE
 function moveCharacterRight(char) {
     var tempCoordX = char.coordX + char.displacement;
     moveCharacterHorizontal(tempCoordX, char);
 }
-
 function moveCharacterLeft(char){
     var tempCoordX = char.coordX - char.displacement;
     moveCharacterHorizontal(tempCoordX, char);
 }
-
 function moveCharacterHorizontal(x, char){
     var tempGridX = Math.floor(x / gridBlockSize);
 
@@ -90,6 +68,49 @@ function moveCharacterVertical(y, char){
 // END VERTICAL MOVE
 
 // MOVE CHARACTER
+function canCharacterMoveInDirection(character, direction){
+    var gameGridIndex;
+    switch (direction){
+        case UP:
+            gameGridIndex = character.gridY * blocksPerRow + character.gridX - blocksPerRow;
+            return (gameGridArray[gameGridIndex] == 0 || gameGridArray[gameGridIndex] ==1 || gameGridArray[gameGridIndex] == 2);
+            break;
+        case DOWN:
+            gameGridIndex = character.gridY * blocksPerRow + character.gridX + blocksPerRow;
+            return (gameGridArray[gameGridIndex] == 0 || gameGridArray[gameGridIndex] ==1 || gameGridArray[gameGridIndex] == 2);
+            break;
+        case RIGHT:
+            gameGridIndex = character.gridY * blocksPerRow + character.gridX + 1;
+            return (gameGridArray[gameGridIndex] == 0 || gameGridArray[gameGridIndex] ==1 || gameGridArray[gameGridIndex] == 2);
+            break;
+        case LEFT:
+            gameGridIndex = character.gridY * blocksPerRow + character.gridX - 1;
+            return (gameGridArray[gameGridIndex] == 0 || gameGridArray[gameGridIndex] ==1 || gameGridArray[gameGridIndex] == 2);
+            break;
+        default:
+            return false;
+    }
+}
+function moveCharInCurrentDirection(char) {
+
+    // Move Character in their current direction
+    switch (char.curDirection){
+        case UP:
+            moveCharacterUp(char);
+            break;
+        case DOWN:
+            moveCharacterDown(char);
+            break;
+        case RIGHT:
+            moveCharacterRight(char);
+            break;
+        case LEFT:
+            moveCharacterLeft(char);
+            break;
+        default:
+            return false;
+    }
+}
 function moveCharacter(char){
     // Get current coordinates and index of game array
     var previousCoordX = char.gridX * gridBlockSize;
@@ -143,7 +164,7 @@ function moveCharacter(char){
                     ghosts[i].displacement = .625;
                 }
             }
-            
+            powerDot = true;
             // Ghosts are scared, wait some time and send them back to chase
             setTimeout(setToBlinking, 7000);
         }
@@ -173,9 +194,8 @@ function moveCharacter(char){
         setHighScore();
     }
 }
-
-// This reverses the direction the character is going... did you guess that?
 function reverseDirection(char){
+    // This reverses the direction the character is going... did you guess that?
     switch (char.curDirection){
         case UP:
             char.curDirection = DOWN;
@@ -190,83 +210,52 @@ function reverseDirection(char){
             char.curDirection = LEFT;
             break;
     }
-    
 }
+// END MOVE CHARACTER
 
 // Set ghosts to chase mode!!!
 function setBackToChase(){
-    for(var i = 0; i < ghosts.length; i++){
-        if(ghosts[i].mode != CONSUMED){
-            ghosts[i].mode = CHASE;
-            ghosts[i].displacement = 1;
-            setCharOnPath(ghosts[i]);
+    if(!powerDot){
+        for(var i = 0; i < ghosts.length; i++){
+            if(ghosts[i].mode != CONSUMED){
+                ghosts[i].mode = CHASE;
+                ghosts[i].displacement = 1;
+            }
         }
+        numOfGhostsAte = 0;
+        sound_pacman_power1.stop();
     }
-    numOfGhostsAte = 0;
-    sound_pacman_power1.stop();
 }
+// Set ghosts to Blinking mode
+// This is when they are almost out of time to be consumed by pacman
 function setToBlinking(){
     for(var i = 0; i < ghosts.length; i++){
         if(ghosts[i].mode != CONSUMED){
             ghosts[i].mode = BLINKING;
-            ghosts[i].displacement = 1;
-            setCharOnPath(ghosts[i]);
         }
     }
+    powerDot = false;
     setTimeout(setBackToChase, 5000);
-    sound_pacman_power1.stop();
 }
 
 function isCharacterInCenter(char){
     var midX = char.gridX * gridBlockSize + gridBlockSize/2;
     var midY = char.gridY * gridBlockSize + gridBlockSize/2;
 
+    // With displacements changing for ghosts make sure they stay on track and don't skip over the center
     if(char.coordX > (midX - char.displacement) && char.coordX < (midX + char.displacement) && char.coordX != midX){
         char.coordX = midX;
     }
-
     if(char.coordY > (midY - char.displacement) && char.coordY < (midY + char.displacement)){
         char.coordY = midY;
     }
-    console.log("After Coord: (" + char.coordX + ", " + char.coordY + ")");
+    
     // Return weather the character is in the center of their grid
-        return (
+    return (
         (char.coordX == midX)
         &&
         (char.coordY == midY)
     );
-}
-
-function canCharacterMoveInDirection(character, direction){
-    var gameGridIndex;
-    switch (direction){
-        case UP:
-            gameGridIndex = character.gridY * blocksPerRow + character.gridX - blocksPerRow;
-            return (gameGridArray[gameGridIndex] == 0 || gameGridArray[gameGridIndex] ==1 || gameGridArray[gameGridIndex] == 2);
-            break;
-        case DOWN:
-            gameGridIndex = character.gridY * blocksPerRow + character.gridX + blocksPerRow;
-            return (gameGridArray[gameGridIndex] == 0 || gameGridArray[gameGridIndex] ==1 || gameGridArray[gameGridIndex] == 2);
-            break;
-        case RIGHT:
-            gameGridIndex = character.gridY * blocksPerRow + character.gridX + 1;
-            return (gameGridArray[gameGridIndex] == 0 || gameGridArray[gameGridIndex] ==1 || gameGridArray[gameGridIndex] == 2);
-            break;
-        case LEFT:
-            gameGridIndex = character.gridY * blocksPerRow + character.gridX - 1;
-            return (gameGridArray[gameGridIndex] == 0 || gameGridArray[gameGridIndex] ==1 || gameGridArray[gameGridIndex] == 2);
-            break;
-        default:
-            return false;
-    }
-}
-function setCharOnPath(char){
-    if(char.coordX % 1 != 0){
-        char.coordX = Math.ceil(char.coordX);
-    }
-    if(char.coordY % 1 != 0){
-        char.coordY = Math.ceil(char.coordY);
-    }
 }
 
 function playerCollision() {
@@ -310,9 +299,7 @@ function playerCollision() {
             else if (ghosts[i].mode == CONSUMED) {
                 // Increase ghost speed
                 ghosts[i].displacement = 2;
-                
-                setCharOnPath(ghosts[i]);
-                
+                                
                 // Make sure coordinates are on even numbers
                 // to ensure movement stays on course 
                 if(ghosts[i].coordX % 2 != 0){
@@ -423,6 +410,7 @@ function switchPlayers(){
     }
 }
 
+//Ghost Move helper functions
 function moveGhostToCenterOfCage(char) {
     // HORIZONTAL MOVE
     if (Math.abs(char.coordX - ghostCageCenterX) <= char.displacement && (char.coordX != ghostCageCenterX)) {
@@ -457,7 +445,6 @@ function moveGhostToCenterOfCage(char) {
     // Is ghost in center of the cage and ready to move to the field
     char.centerOfCage = (char.coordX == ghostCageCenterX && char.coordY == ghostCageCenterY);
 }
-
 function moveGhostToFieldFromCage(char) {
 
     // HORIZONTAL
@@ -497,6 +484,7 @@ function moveGhostToFieldFromCage(char) {
         char.centerOfCage = false;
     }
 }
+// END ghost helper functions
 
 function backToStartingPosition() {
     // Set the defaults
@@ -600,7 +588,7 @@ function setDefaults() {
     pacMan.sprite.loaded = false;
     pacMan.displacement = 1.25;
 
-    blinky.mode = SCATTER;
+    blinky.mode = CHASE;
     blinky.coordX = ghostStartingX;
     blinky.gridX = blinky.coordX / gridBlockSize;
     blinky.coordY = ghostStartingY;
@@ -615,7 +603,7 @@ function setDefaults() {
     blinky.sprite.animationDef = blinky.animationLoopRIGHT;
     blinky.displacement = 1;
 
-    inky.mode = SCATTER;
+    inky.mode = CHASE;
     inky.coordX = 266;
     inky.gridX = inky.coordX / gridBlockSize;
     inky.coordY = 300;
@@ -631,7 +619,7 @@ function setDefaults() {
     inky.sprite.animationDef = inky.animationLoopRIGHT;
     inky.displacement = 1;
 
-    pinky.mode = SCATTER;
+    pinky.mode = CHASE;
     pinky.coordX = 302;
     pinky.gridX = pinky.coordX / gridBlockSize;
     pinky.coordY = 300;
@@ -646,7 +634,7 @@ function setDefaults() {
     pinky.sprite.animationDef = pinky.animationLoopRIGHT;
     pinky.displacement = 1;
 
-    clyde.mode = SCATTER;
+    clyde.mode = CHASE;
     clyde.coordX = 338;
     clyde.gridX = clyde.coordX / gridBlockSize;
     clyde.coordY = 300;
