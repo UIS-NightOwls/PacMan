@@ -343,12 +343,10 @@ $(document).ready(function () {
                 if(gameStarted){
                     if (ghost.mode === SCATTER) {
                         ghost.mode = CHASE;
-                        reverseDirection(ghost);
                         milSecToWait = timeToChase;
                     }
                     else if (ghost.mode === CHASE) {
                         ghost.mode = SCATTER;
-                        reverseDirection(ghost);
                         milSecToWait = timeToScatter;
                     }
                 }
