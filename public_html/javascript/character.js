@@ -230,7 +230,7 @@ function setBackToChase(){
 // This is when they are almost out of time to be consumed by pacman
 function setToBlinking(){
     for(var i = 0; i < ghosts.length; i++){
-        if(ghosts[i].mode != CONSUMED){
+        if(ghosts[i].mode != CONSUMED && ghosts[i].mode != CHASE){
             ghosts[i].mode = BLINKING;
         }
     }

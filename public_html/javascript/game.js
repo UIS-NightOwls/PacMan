@@ -355,7 +355,6 @@ $(document).ready(function () {
                     }
                 }
             }
-
             setTimeout(function(){ghostModeSwitch();}, milSecToWait);
         }
     }
@@ -448,7 +447,6 @@ $(document).ready(function () {
             pacMan.isMoving = true;
             sound_pacman_background1.play();
             gameStarted = true;
-            ghostModeSwitch();
         }
 
         if (!pacMan.isMoving) {
