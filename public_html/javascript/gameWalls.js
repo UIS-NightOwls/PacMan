@@ -119,11 +119,11 @@ function renderBoard(){
     //draw things
     //drawTestGrid(testGridColor);
     gameGridArray = startingGameGridArray.slice();
-    player1.gameGrid = startingGameGridArray.slice();
-    player2.gameGrid = startingGameGridArray.slice();
     drawGame(gameGridArray);
     maxDots = dotsRemaining;
     context.restore();
+    player1.gameGrid = startingGameGridArray.slice();
+    player2.gameGrid = startingGameGridArray.slice();
 }
 
 function drawTestGrid(color){

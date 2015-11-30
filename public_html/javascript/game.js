@@ -11,6 +11,7 @@ var numOfGhostsAte = 0;
 var gameStarted = false;
 var playersReady = false;
 var numOfPlayers = 0;
+var highScore = '';
 
 // Initialize players
 var pacMan = new pacman({
@@ -81,12 +82,13 @@ $(document).ready(function () {
     }, 200);
 
     var tempPause = false;
-    var timeToChase = 20000; 
-    var timeToScatter = 7000;
+    var timeToChase = 30000; 
+    var timeToScatter = 10000;
 
     function renderContent() {
         context.save();
         setDefaults();
+        loadHighScore();
         context.restore();
     }
     
@@ -228,9 +230,9 @@ $(document).ready(function () {
                     ghost.targetX = pacMan.gridX;
                     ghost.targetY = pacMan.gridY;
                 }
-                else if (ghost.mode == SCATTER || ghost.mode == SCARED || ghost.mode == BLINKING) {
+                else if (ghost.mode === SCATTER || ghost.mode === SCARED || ghost.mode === BLINKING) {
                     // Top Right Corner
-                    ghost.targetX = blocksPerRow * gridBlockSize;
+                    ghost.targetX = blocksPerRow;
                     ghost.targetY = 0;
                 }
                 else if (ghost.mode == CONSUMED) {
@@ -239,7 +241,7 @@ $(document).ready(function () {
                 break;
             case 'pinky':
                 //Pinky always attemts to intercept pacman ahead of his current location in chase mode.
-                if (ghost.mode == CHASE) {
+                if (ghost.mode === CHASE) {
                     switch (pacMan.curDirection) {
                         case UP:
                             ghost.targetX = pacMan.gridX;
@@ -259,17 +261,17 @@ $(document).ready(function () {
                             break;
                     }
                 }
-                else if (ghost.mode == SCATTER || ghost.mode == SCARED || ghost.mode == BLINKING) {
+                else if (ghost.mode === SCATTER || ghost.mode === SCARED || ghost.mode === BLINKING) {
                     // Top Left Corner
                     ghost.targetX = 0;
                     ghost.targetY = 0;
                 }
-                else if (ghost.mode == CONSUMED) {
+                else if (ghost.mode === CONSUMED) {
                     isConsumed(ghost);                    
                 }
                 break;
             case 'clyde':
-                if (ghost.mode == CHASE) {
+                if (ghost.mode === CHASE) {
                     var distanceAway = Math.abs(ghost.gridX - pacMan.gridX) + Math.abs(ghost.gridY - pacMan.gridY);
                     if (distanceAway > 8) {
                         ghost.targetX = pacMan.gridX;
@@ -278,21 +280,21 @@ $(document).ready(function () {
                     else {
                         // Bottom Left Corner
                         ghost.targetX = 0;
-                        ghost.targetY = blocksPerRow * gridBlockSize;
+                        ghost.targetY = blocksPerRow ;
                     }
                 }
-                else if (ghost.mode == SCATTER || ghost.mode == SCARED || ghost.mode == BLINKING) {
+                else if (ghost.mode === SCATTER || ghost.mode === SCARED || ghost.mode === BLINKING) {
                     // Bottom Left Corner
                     ghost.targetX = 0;
-                    ghost.targetY = blocksPerRow * gridBlockSize;
+                    ghost.targetY = blocksPerRow;
                 }
-                else if (ghost.mode == CONSUMED) {
+                else if (ghost.mode === CONSUMED) {
                     isConsumed(ghost);
                 }
                 break;
             case 'inky':
                 //inky always attempts to ambush pacman from behind his current location in chase mode.
-                if (ghost.mode == CHASE) {
+                if (ghost.mode === CHASE) {
                     var tempTargetX = 0;
                     var tempTargetY = 0;
                     switch (pacMan.curDirection) {
@@ -319,12 +321,12 @@ $(document).ready(function () {
                     ghost.targetX = tempTargetX + xAwayFromBlinky;
                     ghost.targetY = tempTargetY + yAwayFromBlinky;
                 }
-                else if (ghost.mode == SCATTER || ghost.mode == SCARED || ghost.mode == BLINKING) {
+                else if (ghost.mode === SCATTER || ghost.mode === SCARED || ghost.mode === BLINKING) {
                     // Bottom Right Corner
-                    ghost.targetX = blocksPerRow * gridBlockSize;
-                    ghost.targetY = blocksPerRow * gridBlockSize;
+                    ghost.targetX = blocksPerRow;
+                    ghost.targetY = blocksPerRow;
                 }
-                else if (ghost.mode == CONSUMED) {
+                else if (ghost.mode === CONSUMED) {
                     isConsumed(ghost);
                 }
                 break;
@@ -339,19 +341,19 @@ $(document).ready(function () {
             for (var i = 0; i < ghosts.length; i++) {
                 ghost = ghosts[i];
                 if(gameStarted){
-                    if (ghost.mode == SCATTER) {
+                    if (ghost.mode === SCATTER) {
                         ghost.mode = CHASE;
                         reverseDirection(ghost);
                         milSecToWait = timeToChase;
                     }
-                    else if (ghost.mode == CHASE) {
+                    else if (ghost.mode === CHASE) {
                         ghost.mode = SCATTER;
                         reverseDirection(ghost);
                         milSecToWait = timeToScatter;
                     }
                 }
             }
-            setTimeout(ghostModeSwitch, milSecToWait);
+            setTimeout(function(){ghostModeSwitch();}, milSecToWait);
         }
     }
     
@@ -442,8 +444,8 @@ $(document).ready(function () {
             document.getElementById('gameWon').style.display = 'none';
             pacMan.isMoving = true;
             sound_pacman_background1.play();
-            ghostModeSwitch();   
             gameStarted = true;
+            ghostModeSwitch();
         }
 
         if (!pacMan.isMoving) {
@@ -591,10 +593,30 @@ $(document).ready(function () {
     renderContent();
 });
 
+function setHighScore(){
+    if(score > highScore){
+        document.cookie = 'high-score' + '=' + score + ";";
+        document.getElementById("highScore").innerHTML = "" + score;
+        highScore = score;
+    }
+    
+    if(player1.score > highScore && player1.score > player2.score){
+        document.cookie = 'high-score' + '=' + player1.score + ";";
+        document.getElementById("highScore").innerHTML = "" + player1.score;
+    }
+    else if(player2.score > highScore ){
+        document.cookie = 'high-score' + '=' + player2.score + ";";
+        document.getElementById("highScore").innerHTML = "" + player2.score;
+    }
+     
+}
+
 function restart(){
     gameGridArray = startingGameGridArray.slice();
     player1.active = true;
     player2.active = false;
+    
+    setHighScore();
     
     player1.score = 0;       
     player1.lives = 2;          
@@ -622,6 +644,7 @@ function restart(){
     document.getElementById("readyPlayer").style.display = 'none';
     document.getElementById("readyPlayer2").style.display = 'none';
     document.getElementById("gameWon").style.display = 'none';
+    document.getElementById("gameOver").style.display = 'none';
     document.getElementById("canvas-content").style.opacity = .5;
     numOfPlayers = 0;
     playersReady = false;
@@ -648,4 +671,23 @@ function readyTwoPlayerGame(){
     document.getElementById("readyPlayers").style.display = 'none';
     document.getElementById("canvas-content").style.opacity = 1;
 }
-
+function loadHighScore(){
+    var cname = 'high-score=';
+    var ca = document.cookie.split(';');
+    var cfound = false;
+    for(var i = 0; i <ca.length;i++){
+        var c = ca[i];
+        while(c.charAt(0)==' ') c = c.substring(1);
+        if(c.indexOf(cname) == 0){
+            highScore = c.substring(cname.length, c.length);
+            cfound = true;
+        }
+    }
+    if(cfound){
+        document.getElementById("highScore").innerHTML = "" + highScore;
+    }
+    else{
+        highScore = 0;
+        document.getElementById("highScore").innerHTML = "" + 0;
+    }
+}

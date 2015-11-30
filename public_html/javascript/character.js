@@ -168,6 +168,8 @@ function moveCharacter(char){
 
         // remove dot
         context.clearRect(previousCoordX-wallLineWidth, previousCoordY-wallLineWidth, gridBlockSize+wallLineWidth*2, gridBlockSize+wallLineWidth*2);
+
+        setHighScore();
     }
 }
 
@@ -197,6 +199,7 @@ function setBackToChase(){
             ghosts[i].mode = CHASE;
         }
     }
+    numOfGhostsAte = 0;
     sound_pacman_power1.stop();
 }
 
@@ -262,6 +265,13 @@ function playerCollision() {
                         score += 1600;
                         numOfGhostsAte++;
                         break;
+                }
+                if(player1.active){
+                    document.getElementById("score1").innerHTML = "" + score;
+                }
+                else{
+                    document.getElementById("score2").innerHTML = "" + score;
+
                 }
             }
             else if (ghosts[i].mode == CONSUMED) {
@@ -352,7 +362,7 @@ function switchPlayers(){
         activePlayer.dotsConsumed   =   dotsConsumed.valueOf();
         activePlayer.gameOver       =   gameOver;
     }
-    
+    setHighScore();
     // Draw active players game and set games values to active players state
     context.clearRect(0, 0, canvas.width, canvas.height);
     gameGridArray = activePlayer.gameGrid;
