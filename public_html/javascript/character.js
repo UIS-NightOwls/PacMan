@@ -138,14 +138,14 @@ function moveCharacter(char){
             // POWER UP!!
             for(var i = 0; i < ghosts.length; i++){
                 if(ghost.mode != CONSUMED){
-                    ghosts[i].mode = BLINKING;
+                    ghosts[i].mode = SCARED;
                     reverseDirection(ghosts[i]);
                     ghosts[i].displacement = .625;
                 }
             }
             
             // Ghosts are scared, wait some time and send them back to chase
-            setTimeout(setBackToChase, 7000);
+            setTimeout(setToBlinking, 7000);
         }
 
         // No more dots remain
@@ -203,6 +203,17 @@ function setBackToChase(){
         }
     }
     numOfGhostsAte = 0;
+    sound_pacman_power1.stop();
+}
+function setToBlinking(){
+    for(var i = 0; i < ghosts.length; i++){
+        if(ghosts[i].mode != CONSUMED){
+            ghosts[i].mode = BLINKING;
+            ghosts[i].displacement = 1;
+            setCharOnPath(ghosts[i]);
+        }
+    }
+    setTimeout(setBackToChase, 5000);
     sound_pacman_power1.stop();
 }
 
