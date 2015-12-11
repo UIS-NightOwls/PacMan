@@ -526,10 +526,11 @@ $(document).ready(function () {
                 movePacMan();
                 // Check for portal move for PacMan
                 portalMove(pacMan);
+
+                // Check for collisions
+                playerCollision();
             }
             
-            // Check for collisions
-            playerCollision();
 
             // Then move ghosts
             moveGhosts();

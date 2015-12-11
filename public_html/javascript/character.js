@@ -263,7 +263,7 @@ function playerCollision() {
     for (var i = 0; i < ghosts.length && !playersCollided; i++) {
 
         // Are they in the same grid coordinates
-        if (ghosts[i].gridX == pacMan.gridX && ghosts[i] && ghosts[i].gridY == pacMan.gridY) {
+        if (ghosts[i].gridX == pacMan.gridX && ghosts[i].gridY == pacMan.gridY) {
             sound_pacman_background1.stop();
 
             // Can PacMan eat them??
@@ -305,7 +305,8 @@ function playerCollision() {
                 if(ghosts[i].coordX % 2 != 0){
                     ghosts[i].coordX += 1;
                 }
-                else if (ghosts[i].coordY % 2 != 0){
+                
+                if (ghosts[i].coordY % 2 != 0){
                     ghosts[i].coordY += 1;
                 }
             }
