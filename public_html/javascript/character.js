@@ -158,7 +158,7 @@ function moveCharacter(char){
             
             // POWER UP!!
             for(var i = 0; i < ghosts.length; i++){
-                if(ghost.mode != CONSUMED){
+                if(ghosts[i].mode != CONSUMED){
                     ghosts[i].mode = SCARED;
                     reverseDirection(ghosts[i]);
                     ghosts[i].displacement = .625;
