@@ -125,6 +125,10 @@ function moveCharacter(char){
             // record consumption of dot
             dotsRemaining--;
             dotsConsumed++;
+            /*******************************
+           * Score - Event -  Dot
+           * (Requirements 1.1.1) 
+           *******************************/
             score = score + 10;
             if(player1.active){
                 document.getElementById("score1").innerHTML = "" + score;
@@ -133,20 +137,40 @@ function moveCharacter(char){
                 document.getElementById("score2").innerHTML = "" + score;
 
             }
-            if ((char.gridX % 2==0 || char.gridY % 2==0) &! (char.gridX % 2==0 && char.gridY % 2==0)) {
+            if ((char.gridX % 2 == 0 || char.gridY % 2 == 0) & !(char.gridX % 2 == 0 && char.gridY % 2 == 0)) {
+
+              /*******************************
+              * Sound - Event
+              * (Requirements 2.2.8b) 
+              *******************************/
                 sound_dot2.play();
             }
             else {
+                /*******************************
+             * Sound - Event
+             * (Requirements 2.2.8a) 
+             *******************************/
                 sound_dot.play();
             }
         }
         // Consume Power Dot
         else if (gameGridArray[gameGridIndex] == "2") {
+
+              /*******************************
+              * Sound - Event
+              * (Requirements 2.2.5) 
+              *******************************/
             sound_pacman_power1.play();
             
             // record consumption of dot
             dotsRemaining--;
             dotsConsumed++;
+
+            /*******************************
+            * Score - Event - Power Dot
+            * (Requirements 1.1.2) 
+            *******************************/
+
             score = score + 50;
             if(player1.active){
                 document.getElementById("score1").innerHTML = "" + score;
@@ -169,17 +193,29 @@ function moveCharacter(char){
             setTimeout(setToBlinking, 7000);
         }
 
+        /*******************************
+       * End Game
+       * (Requirements 1.2.2) 
+       *******************************/
         // No more dots remain
         if(dotsRemaining == 0){
             document.getElementById('gameWon').style.display = '';
             gameOver = true;
         }
 
+        /*******************************
+        * Artificial Intellegence - Ghost AI
+        * (Requirements 4.1.8) 
+        *******************************/
         // Release the KRAKEN!!! ... no Kraken? oh well inky will do.
         if(dotsConsumed > 30){
             inky.readyToRelease = true;
         }
 
+        /*******************************
+        * Artificial Intellegence - Ghost AI
+        * (Requirements 4.1.11) 
+        *******************************/
         // Clyde, come out and play!!!
         if(dotsConsumed > dotsRemaining*2){
             clyde.readyToRelease = true;
@@ -226,6 +262,12 @@ function setBackToChase(){
         sound_pacman_power1.stop();
     }
 }
+
+
+/*******************************
+* Collision Detection 3.6
+* (Requirements 6.1.2) 
+*******************************/
 // Set ghosts to Blinking mode
 // This is when they are almost out of time to be consumed by pacman
 function setToBlinking(){
@@ -258,6 +300,10 @@ function isCharacterInCenter(char){
     );
 }
 
+/*******************************
+* Collision Detection 3.6
+* (Requirements 6.1.1 - 6.1.7) 
+*******************************/
 function playerCollision() {
     // Loop through ghosts and see if they have collided with Pac Man.... may he rest in peace, oh look a quarter!
     for (var i = 0; i < ghosts.length && !playersCollided; i++) {
@@ -269,7 +315,18 @@ function playerCollision() {
             // Can PacMan eat them??
             if (ghosts[i].mode == SCARED || ghosts[i].mode == BLINKING) {
                 ghosts[i].mode = CONSUMED;
+
+                /*******************************
+                * Sound - Event - PacMan Eats Ghost
+                * (Requirements 2.2.4) 
+                *******************************/
                 sound_pacman_getghost.play();
+
+
+                /*******************************
+               * Score - Event - PacMan Eats Ghost
+               * (Requirements 1.1.3 - 1.1.6) 
+               *******************************/
                 switch (numOfGhostsAte){
                     case 0:
                         score += 200;
@@ -311,11 +368,20 @@ function playerCollision() {
                 }
             }
             else {
+                /*******************************
+               * Sound - Event - PacMan Death
+               * (Requirements 2.2.2) 
+               *******************************/
                 //PACMAN DIES
                 sound_pacman_death.play();
                 livesLeft--;
                 playersCollided = true;
 
+
+                /*******************************
+               * End Game - Game Over
+               * (Requirements 1.2.1) 
+               *******************************/
                 // GAME OVER!!!!
                 if (livesLeft < 0 && !gameOver) {
                     if((player1.active && player2.lives >= 0 && !player2.gameOver) || (player2.active && player1.lives >= 0 && !player1.gameOver)){
@@ -559,6 +625,10 @@ function isAtCrossRoads(char) {
     return (numOfOptions > 1);
 }
 
+/*******************************
+* Collision
+* (Requirements 6.1.5) 
+*******************************/
 function portalMove(char){
     // Jump from one side of field to the other.. like magic!
 
@@ -575,7 +645,10 @@ function portalMove(char){
         }
     }
 }
-
+/*******************************
+* New Game
+* (Requirements 5.1.1) 
+*******************************/
 function setDefaults() {
     pacMan.sprite.animationDef = pacMan.animationLoopRIGHT;
 

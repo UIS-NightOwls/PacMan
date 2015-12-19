@@ -2,6 +2,12 @@
  * Created by bzweifel on 10/24/15.
  */
 var dotsRemaining = 0;
+
+
+/*******************************
+* Game Board Object
+* (Requirements 1.3.1) 
+*******************************/
 var startingGameGridArray = [
     //   1           4   5                   10                 15                   20                 25              29
     'e','0','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','0','f',
@@ -114,6 +120,10 @@ setTimeout(function () {
 var wallColor = "blue";
 var testGridColor = "red";
 
+/*******************************
+* Game Grid Render Board
+* (Requirements 3.1, Requirements 1.3.2) 
+*******************************/
 function renderBoard(){
     context.save();
     //draw things
@@ -150,6 +160,10 @@ function drawTestGrid(color){
     }
 }
 
+/*******************************
+* Game Grid
+* (Requirements 3.1.1 - 3.1.21) 
+*******************************/
 function drawGame(gameGrid){
     var maxGridx = canvas.width / gridBlockSize;
     var maxGridy = canvas.height / gridBlockSize;
@@ -221,7 +235,11 @@ function drawGame(gameGrid){
                 case 'l':
                     drawOuterWallBottomLeft(x,y);
                     break;
-                default :
+                default:
+                    /*******************************
+                    * Grid Empty
+                    * (Requirements 3.1.1) 
+                    *******************************/
                     break;
             }
             gridCount++;
@@ -229,6 +247,10 @@ function drawGame(gameGrid){
     }
 }
 
+/*******************************
+* Game Grid
+* (Requirements 3.1.4) 
+*******************************/
 function drawHorizontalWall(gridX, gridY){
     // starting (x,y) pixels
     var startX = gridX * gridBlockSize;
@@ -238,6 +260,10 @@ function drawHorizontalWall(gridX, gridY){
     createWall(startX,startY,startX+gridBlockSize,startY);
 }
 
+/*******************************
+* Game Grid
+* (Requirements 3.1.5) 
+*******************************/
 function drawVerticalWall(gridX, gridY){
     // starting (x,y) pixels
     var startX = gridX * gridBlockSize + (gridBlockSize/2);
@@ -247,6 +273,10 @@ function drawVerticalWall(gridX, gridY){
     createWall(startX,startY,startX,startY+gridBlockSize);
 }
 
+/*******************************
+* Game Grid
+* (Requirements 3.1.7) 
+*******************************/
 function drawBottomLeftArc(gridX, gridY){
     //starting (x,y) pixels
     var centerX = gridX * gridBlockSize;
@@ -256,6 +286,10 @@ function drawBottomLeftArc(gridX, gridY){
     createArc(centerX, centerY, gridBlockSize/2, 1.5 * Math.PI, 0); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
 }
 
+/*******************************
+* Game Grid
+* (Requirements 3.1.6) 
+*******************************/
 function drawBottomRightArc(gridX, gridY){
     //starting (x,y) pixels
     var centerX = gridX * gridBlockSize + gridBlockSize;
@@ -265,6 +299,10 @@ function drawBottomRightArc(gridX, gridY){
     createArc(centerX, centerY, gridBlockSize/2, Math.PI, 1.5 * Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
 }
 
+/*******************************
+* Game Grid
+* (Requirements 3.1.9) 
+*******************************/
 function drawTopLeftArc(gridX, gridY){
     //starting (x,y) pixels
     var centerX = gridX * gridBlockSize;
@@ -274,6 +312,10 @@ function drawTopLeftArc(gridX, gridY){
     createArc(centerX, centerY, gridBlockSize/2, 0, .5 * Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
 }
 
+/*******************************
+* Game Grid
+* (Requirements 3.1.8) 
+*******************************/
 function drawTopRightArc(gridX, gridY){
     //starting (x,y) pixels
     var centerX = gridX * gridBlockSize + gridBlockSize;
@@ -283,6 +325,10 @@ function drawTopRightArc(gridX, gridY){
     createArc(centerX, centerY, gridBlockSize/2, .5 * Math.PI, Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
 }
 
+/*******************************
+* Game Grid
+* (Requirements 3.1.2) 
+*******************************/
 function drawPacDot(gridX, gridY){
     context.lineWidth = wallLineWidth;
     context.strokeStyle = "yellow";
@@ -302,6 +348,10 @@ function drawPacDot(gridX, gridY){
     dotsRemaining = dotsRemaining + 1;
 }
 
+/*******************************
+* Game Grid
+* (Requirements 3.1.3) 
+*******************************/
 function drawPacPowerDots(gridX, gridY){
     context.lineWidth = wallLineWidth;
     context.strokeStyle = "yellow";
@@ -321,6 +371,10 @@ function drawPacPowerDots(gridX, gridY){
     dotsRemaining = dotsRemaining + 1;
 }
 
+/*******************************
+* Game Grid
+* (Requirements 3.1.11) 
+*******************************/
 function drawOuterWallRight(gridX,gridY){
     // starting (x,y) pixels
     var startX = gridX * gridBlockSize + gridBlockSize;
@@ -330,6 +384,10 @@ function drawOuterWallRight(gridX,gridY){
     createWall(startX,startY,startX,startY+gridBlockSize);
 }
 
+/*******************************
+* Game Grid
+* (Requirements 3.1.13) 
+*******************************/
 function drawOuterWallLeft(gridX,gridY){
     // starting (x,y) pixels
     var startX = gridX * gridBlockSize;
@@ -339,6 +397,11 @@ function drawOuterWallLeft(gridX,gridY){
     createWall(startX,startY,startX,startY+gridBlockSize);
 }
 
+
+/*******************************
+* Game Grid
+* (Requirements 3.1.12) 
+*******************************/
 function drawOuterWallBottom(gridX,gridY){
     // starting (x,y) pixels
     var startX = gridX * gridBlockSize ;
@@ -348,6 +411,10 @@ function drawOuterWallBottom(gridX,gridY){
     createWall(startX,startY,startX+gridBlockSize, startY);
 }
 
+/*******************************
+* Game Grid
+* (Requirements 3.1.10) 
+*******************************/
 function drawOuterWallTop(gridX,gridY){
     // starting (x,y) pixels
     var startX = gridX * gridBlockSize ;
@@ -357,23 +424,46 @@ function drawOuterWallTop(gridX,gridY){
     createWall(startX,startY,startX+gridBlockSize,startY);
 }
 
+/*******************************
+* Game Grid
+* (Requirements 3.1.19) 
+*******************************/
 function drawOuterWallTopLeft(gridX,gridY){
     drawOuterWallTop(gridX,gridY);
     drawOuterWallLeft(gridX,gridY);
 }
+
+/*******************************
+* Game Grid
+* (Requirements 3.1.20) 
+*******************************/
 function drawOuterWallBottomLeft(gridX,gridY){
     drawOuterWallBottom(gridX,gridY);
     drawOuterWallLeft(gridX,gridY);
 }
+
+/*******************************
+* Game Grid
+* (Requirements 3.1.18) 
+*******************************/
 function drawOuterWallTopRight(gridX,gridY){
     drawOuterWallTop(gridX,gridY);
     drawOuterWallRight(gridX,gridY);
 }
+
+/*******************************
+* Game Grid
+* (Requirements 3.1.21) 
+*******************************/
 function drawOuterWallBottomRight(gridX,gridY){
     drawOuterWallBottom(gridX,gridY);
     drawOuterWallRight(gridX,gridY);
 }
 
+/*******************************
+* Game Grid
+* (Requirements 3.1.15) 
+*******************************/
 function drawOuterBottomLeftArc(gridX, gridY){
     //starting (x,y) pixels
     var centerX = gridX * gridBlockSize - gridBlockSize;
@@ -383,6 +473,10 @@ function drawOuterBottomLeftArc(gridX, gridY){
     createArc(centerX, centerY, gridBlockSize, 1.5 * Math.PI, 0); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
 }
 
+/*******************************
+* Game Grid
+* (Requirements 3.1.14) 
+*******************************/
 function drawOuterBottomRightArc(gridX, gridY){
     //starting (x,y) pixels
     var centerX = gridX * gridBlockSize + gridBlockSize*2;
@@ -392,6 +486,10 @@ function drawOuterBottomRightArc(gridX, gridY){
     createArc(centerX, centerY, gridBlockSize, Math.PI, 1.5 * Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
 }
 
+/*******************************
+* Game Grid
+* (Requirements 3.1.17) 
+*******************************/
 function drawOuterTopLeftArc(gridX, gridY){
     //starting (x,y) pixels
     var centerX = gridX * gridBlockSize - gridBlockSize;
@@ -401,6 +499,10 @@ function drawOuterTopLeftArc(gridX, gridY){
     createArc(centerX, centerY, gridBlockSize, 0, .5 * Math.PI); // arc(X-center, y-center, radius, starting angle in radians, ending angle in radians)
 }
 
+/*******************************
+* Game Grid
+* (Requirements 3.1.16) 
+*******************************/
 function drawOuterTopRightArc(gridX, gridY){
     //starting (x,y) pixels
     var centerX = gridX * gridBlockSize + gridBlockSize*2;

@@ -1,4 +1,9 @@
-﻿window.AudioContext = window.AudioContext || window.webkitAudioContext;
+﻿/*******************************
+* Sound
+* (Requirements 3.2) 
+*******************************/
+
+window.AudioContext = window.AudioContext || window.webkitAudioContext;
 var audioContext = new AudioContext();
 
 var sound = function (options) {
@@ -19,6 +24,11 @@ var sound = function (options) {
         that.volume = options.volume || 0.5;
         that.allowMultipleInstances = options.allowMultipleInstances || false;
 
+
+        /*******************************
+        * Sound
+        * (Requirements 2.3.1, 2.3.2) 
+        *******************************/
         this.play = function () {
 
             if (that.ready) {
@@ -95,31 +105,58 @@ var sound = function (options) {
             });
         };
         request.send();
-    };
+};
 
+/*******************************
+* Sound - Dot Even
+* (Requirements 2.1.1) 
+*******************************/
 var sound_dot = new sound({
     url: "sounds/dot.mp3",
     volume: 0.2,
     allowMultipleInstances:true   
 });
+
+/*******************************
+* Sound - Dot ODD
+* (Requirements 2.1.2) 
+*******************************/
 var sound_dot2 = new sound({
     url: "sounds/dot2.mp3",
     volume: 0.2,
     allowMultipleInstances: true
 });
 
+/*******************************
+* Sound - Background Music
+* (Requirements 2.1.4) 
+*******************************/
 var sound_pacman_background1 = new sound({
     url: "sounds/pacman_background1.mp3",
     loop: true,
     loopEnd: 1.999
 });
+
+/*******************************
+* Sound - Power Dot
+* (Requirements 2.1.10) 
+*******************************/
 var sound_pacman_power1 = new sound({
     url: "sounds/pacman_power1.mp3",
     loop: true
 });
+/*******************************
+* Sound - Power Dot
+* (Requirements 2.1.7) 
+*******************************/
 var sound_pacman_death = new sound({
     url: "sounds/pacman_death.mp3"  
 });
+
+/*******************************
+* Sound - Power Dot
+* (Requirements 2.1.9) 
+*******************************/
 var sound_pacman_getghost = new sound({
     url: "sounds/pacman_getghost.mp3",
     allowMultipleInstances: true

@@ -1,5 +1,8 @@
 
-
+/*******************************
+* Artificial Intellegence - Ghost AI
+* (Requirements 3.4, 4.1.1 - 4.1.12) 
+*******************************/
 var grid = [];
 
 for(var i = 0; i < 15; grid.push(i),i++);	

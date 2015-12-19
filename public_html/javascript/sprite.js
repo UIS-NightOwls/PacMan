@@ -1,4 +1,8 @@
-﻿//Sprite
+﻿/*******************************
+* Graphics - Sprites
+* (Requirements 3.3, 3.4.0) 
+*******************************/
+//Sprite Class
 function sprite(options) {
     var that = {},
         i = 0, //frameIndex
@@ -33,6 +37,7 @@ function sprite(options) {
 
     }
 
+    //Each framerate tick will check to see if its time to move to the next frame of the animation
     that.update = function () {
         if (that.animationPlaying) {
             that.tickCount += 1;
@@ -50,6 +55,7 @@ function sprite(options) {
     };
     that.spriteSizeHalf = that.spriteSize / 2;
 
+    //Load the first defined frame of the animation definition.
     that.firstLoad = function () {
 
         that.loaded = true;
@@ -71,6 +77,11 @@ function sprite(options) {
           that.spriteSize);
           numberOfFrames = options.animationDef.length
     };
+
+    /*******************************
+    * Collision Detection (animation)
+    * (Requirements 3.6, 6.1.1 - 6.1.7) 
+    *******************************/
 
     that.render = function () {
        

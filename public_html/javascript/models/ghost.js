@@ -8,7 +8,10 @@ function ghost(options) {
     this.readyToRelease = false;
     this.centerOfCage = false;
     this.countMode = 0;
-
+    /* ********************************
+    //Ghost Animation Loop Definitiions
+    //(Requirements 3.3.19 - 3.3.51)
+    **********************************/
     this.animationLoopSCARED = [[0, 4], [1, 4]];
     this.animationLoopBLINK = [[0, 4], [3, 4], [2, 4], [3, 4]]; 
 
