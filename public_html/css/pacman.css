@@ -5,12 +5,18 @@ body, html {
     padding: 0;
 }
 body {
-     background-color: #666;
-     overflow:hidden;
+     background-color: #010101;
+     /*overflow:hidden;*/
+}
+a,a:visited {
+    color:#fff;
+    text-decoration:underline;
 }
 
 .canvas-content{
     text-align: center;
+    width: 600px;
+    height: 640px;
 }
 
 #canvas-container {
@@ -25,7 +31,7 @@ body {
 }
 
 #canvas-overlay-container {
-    text-align: center;
+  
     /*width: 100%;*/
     color: #fff;
 }
