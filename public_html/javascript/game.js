@@ -5,6 +5,7 @@
 var GAMESPEED = 240;
 
 var gameOver = false;
+var gameWon = false;
 var livesLeft = 2;
 var playersCollided = false;
 var numOfGhostsAte = 0;
@@ -13,6 +14,7 @@ var playersReady = false;
 var numOfPlayers = 0;
 var highScore = '';
 var firstTime = true;
+var level = 1;
 
 // Initialize players
 var pacMan = new pacman({
@@ -87,6 +89,8 @@ $(document).ready(function () {
     var timeToScatter = 10000;
 
     function renderContent() {
+        player1.gameGrid = startingGameGridArray.slice();
+        player2.gameGrid = startingGameGridArray.slice();
         context.save();
         setDefaults();
         loadHighScore();
@@ -510,7 +514,7 @@ $(document).ready(function () {
 
     function runGame() {
         // Check if game is over or paused
-        if (!tempPause && !gameOver && gameStarted) {
+        if (!tempPause && !gameOver && gameStarted && !gameWon) {
             
             // Commenting out for now, I think this might be a problem when pacMan is stopped
             // pacMan.sprite.animationPlaying = true;
@@ -550,6 +554,10 @@ $(document).ready(function () {
             else if(player2.active && player1.lives >= 0 && player1.dotsConsumed != maxDots){
                 switchPlayers();
             }
+        }
+        else if(gameWon){
+            // Next Level
+            nextLevel();
         }
         else {
             sound_pacman_background1.stop();
@@ -595,6 +603,25 @@ $(document).ready(function () {
     renderContent();
 });
 
+function nextLevel(){
+    level++;
+    backToStartingPosition();
+    if(player1.active){
+        player1.gameGrid = startingGameGridArray.slice();
+        gameGridArray = player1.gameGrid;
+        player1.dotsConsumed = 0;
+    }
+    else if(player2.active){
+        player2.gameGrid = startingGameGridArray.slice();
+        gameGridArray = player2.gameGrid;
+        player2.dotsConsumed = 0;
+    }
+    drawGame(gameGridArray);
+    document.getElementById("level").innerHTML = "" + level;
+    gameWon = false;
+    gameStarted = false;
+}
+
 function setHighScore(){
     if(score > highScore){
         document.cookie = 'high-score' + '=' + score + ";";
@@ -624,11 +651,13 @@ function restart(){
     player1.lives = 2;          
     player1.dotsConsumed = 0;
     player1.gameOver = false;
+    player1.level = 1;
     
     player2.score = 0;
     player2.lives = 2;
     player2.dotsConsumed = 0;
     player2.gameOver = false;
+    player2.level = 1;
 
     backToStartingPosition();
     gameOver = false;
@@ -637,6 +666,7 @@ function restart(){
     dotsRemaining = 0;
     dotsConsumed = 0;
     score = 0;
+    level = 1;
     renderBoard();
     document.getElementById("life2").style.display = '';
     document.getElementById("life1").style.display = '';
@@ -648,6 +678,8 @@ function restart(){
     document.getElementById("gameWon").style.display = 'none';
     document.getElementById("gameOver").style.display = 'none';
     document.getElementById("canvas-content").style.opacity = .5;
+    document.getElementById("level").innerHTML = "" + level;
+
     numOfPlayers = 0;
     playersReady = false;
 }

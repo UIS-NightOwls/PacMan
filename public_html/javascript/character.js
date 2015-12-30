@@ -200,7 +200,7 @@ function moveCharacter(char){
         // No more dots remain
         if(dotsRemaining == 0){
             document.getElementById('gameWon').style.display = '';
-            gameOver = true;
+            gameWon = true;
         }
 
         /*******************************
@@ -440,8 +440,8 @@ function switchPlayers(){
         previousPlayer.lives          =   livesLeft.valueOf();
         previousPlayer.dotsConsumed   =   dotsConsumed.valueOf();
         previousPlayer.gameOver       =   gameOver;
+        previousPlayer.level          =   level;
         document.getElementById("gameWon").style.display = 'none';
-
     }
     else
     {
@@ -450,6 +450,7 @@ function switchPlayers(){
         activePlayer.lives          =   livesLeft.valueOf();
         activePlayer.dotsConsumed   =   dotsConsumed.valueOf();
         activePlayer.gameOver       =   gameOver;
+        activePlayer.level          =   level;
     }
     setHighScore();
     // Draw active players game and set games values to active players state
@@ -464,6 +465,8 @@ function switchPlayers(){
     score = activePlayer.score;
     livesLeft = activePlayer.lives;
     dotsConsumed = activePlayer.dotsConsumed;
+    level = activePlayer.level;
+    document.getElementById("level").innerHTML = "" + level;
 
     //display correct amount of life images
     document.getElementById("life1").style.display = '';
